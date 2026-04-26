@@ -19,10 +19,14 @@ const swagger_1 = require("@nestjs/swagger");
 const list_cliente_dto_1 = require("../dtos/output/list-cliente.dto");
 const update_cliente_dto_1 = require("../dtos/input/update-cliente.dto");
 const estados_clientes_enum_1 = require("../enums/estados-clientes.enum");
+const clientes_service_1 = require("../services/clientes.service");
 let ClientesController = class ClientesController {
-    constructor() { }
+    clientesService;
+    constructor(clientesService) {
+        this.clientesService = clientesService;
+    }
     async crearCliente(dto) {
-        throw new common_1.NotImplementedException();
+        return await this.clientesService.crearCliente(dto);
     }
     async actualizarCliente(id, dto) {
         throw new common_1.NotImplementedException();
@@ -60,6 +64,6 @@ __decorate([
 ], ClientesController.prototype, "obtenerClientes", null);
 exports.ClientesController = ClientesController = __decorate([
     (0, common_1.Controller)('clientes'),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [clientes_service_1.ClientesService])
 ], ClientesController);
 //# sourceMappingURL=clientes.controller.js.map
