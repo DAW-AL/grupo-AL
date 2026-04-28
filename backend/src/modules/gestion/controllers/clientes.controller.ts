@@ -14,15 +14,16 @@ import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
 import { UpdateClienteDto } from '../dtos/input/update-cliente.dto';
 import { EstadosClientesEnum } from '../enums/estados-clientes.enum';
+import { ClientesService } from '../services/clientes.service';
 
 @Controller('clientes')
 export class ClientesController {
-  constructor() {}
+  constructor(private readonly clientesService: ClientesService) {}
 
   @ApiBearerAuth()
   @Post()
   async crearCliente(@Body() dto: CreateClienteDto): Promise<{ id: number }> {
-    throw new NotImplementedException();
+    return await this.clientesService.crearCliente(dto);
   }
 
   @ApiBearerAuth()
