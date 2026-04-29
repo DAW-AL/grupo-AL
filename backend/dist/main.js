@@ -20,8 +20,8 @@ async function bootstrap() {
     app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
     if (process.env.SWAGGER_HABILITADO === 'true') {
         const config = new swagger_1.DocumentBuilder()
-            .setTitle('Sistema de Gestión de Proyectos')
-            .setDescription('Descripción de la API del sistema de gestión de proyectos')
+            .setTitle('Sistema de Gestión de Proyectos - Grupo AL')
+            .setDescription('Descripción de la API del sistema de gestión de proyectos del Grupo AL')
             .addBearerAuth()
             .build();
         const document = swagger_1.SwaggerModule.createDocument(app, config);

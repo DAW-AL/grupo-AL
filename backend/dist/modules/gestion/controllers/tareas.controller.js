@@ -18,6 +18,7 @@ const update_tarea_dto_1 = require("../dtos/input/update-tarea.dto");
 const create_tarea_dto_1 = require("../dtos/input/create-tarea.dto");
 const swagger_1 = require("@nestjs/swagger");
 const tarea_service_1 = require("../services/tarea.service");
+const auth_guard_1 = require("../../auth/guards/auth.guard");
 let TareasController = class TareasController {
     tareasService;
     constructor(tareasService) {
@@ -33,6 +34,7 @@ let TareasController = class TareasController {
 exports.TareasController = TareasController;
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Param)('idProyecto')),
@@ -42,6 +44,7 @@ __decorate([
 ], TareasController.prototype, "crearTarea", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Param)('id')),
