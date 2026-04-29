@@ -1,22 +1,16 @@
-import {
-  Body,
-  Controller,
-  NotImplementedException,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { UpdateTareaDto } from '../dtos/input/update-tarea.dto';
 import { CreateTareaDto } from '../dtos/input/create-tarea.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { TareasService } from '../services/tarea.service';
+import { AuthGuard } from '../../auth/guards/auth.guard';
 
 @Controller('proyectos/:idProyecto/tareas')
 export class TareasController {
   constructor(private readonly tareasService: TareasService) {}
 
   @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Post()
   async crearTarea(
     @Body() dto: CreateTareaDto,
@@ -26,6 +20,7 @@ export class TareasController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Put(':id')
   async actualizarTarea(
     @Body() dto: UpdateTareaDto,

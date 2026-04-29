@@ -24,9 +24,9 @@ async function bootstrap() {
 
   if (process.env.SWAGGER_HABILITADO === 'true') {
     const config = new DocumentBuilder()
-      .setTitle('Sistema de Gestión de Proyectos')
+      .setTitle('Sistema de Gestión de Proyectos - Grupo AL')
       .setDescription(
-        'Descripción de la API del sistema de gestión de proyectos',
+        'Descripción de la API del sistema de gestión de proyectos del Grupo AL',
       )
       .addBearerAuth()
       .build();

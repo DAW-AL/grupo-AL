@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TareasService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const tarea_entity_1 = require("../entitites/tarea.entity");
+const tarea_entity_1 = require("../entities/tarea.entity");
 const typeorm_2 = require("typeorm");
 const estados_tareas_enum_1 = require("../enums/estados-tareas.enum");
 let TareasService = class TareasService {

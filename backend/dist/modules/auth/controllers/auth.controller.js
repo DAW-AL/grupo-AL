@@ -15,10 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const login_dto_1 = require("../dtos/input/login.dto");
+const auth_service_1 = require("../services/auth.service");
 let AuthController = class AuthController {
-    constructor() { }
+    authService;
+    constructor(authService) {
+        this.authService = authService;
+    }
     async login(dto) {
-        throw new common_1.NotImplementedException();
+        return await this.authService.login(dto);
     }
 };
 exports.AuthController = AuthController;
@@ -31,6 +35,6 @@ __decorate([
 ], AuthController.prototype, "login", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

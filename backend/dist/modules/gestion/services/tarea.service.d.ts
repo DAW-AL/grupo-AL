@@ -1,5 +1,5 @@
 import { CreateTareaDto } from '../dtos/input/create-tarea.dto';
-import { Tarea } from '../entitites/tarea.entity';
+import { Tarea } from '../entities/tarea.entity';
 import { Repository } from 'typeorm';
 import { UpdateTareaDto } from '../dtos/input/update-tarea.dto';
 export declare class TareasService {
