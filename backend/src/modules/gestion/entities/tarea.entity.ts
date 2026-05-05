@@ -1,28 +1,21 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { EstadosTareasEnum } from '../enums/estados-tareas.enum';
-import { Proyecto } from './proyecto.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Estados_Tareas } from "../enums/estados-tareas.enum";
+import { Proyecto } from "./proyecto.entity";
 
-@Entity({ name: 'tareas' })
+@Entity({name: "tareas"})
 export class Tarea {
-  @PrimaryGeneratedColumn({ name: 'id' })
-  id!: number;
+    @PrimaryGeneratedColumn()
+    id!: number;
 
-  @Column()
-  descripcion!: string;
+    @Column()
+    descripcion!: string;
 
-  @Column({ name: 'estado', type: 'enum', enum: EstadosTareasEnum })
-  estado!: EstadosTareasEnum;
+    @Column({
+        type: 'enum',
+        enum: Estados_Tareas
+    })
+    estado!: Estados_Tareas;
 
-  @Column({ name: 'id_proyecto' })
-  idProyecto!: number;
-
-  @ManyToOne(() => Proyecto)
-  @JoinColumn({ name: 'id_proyecto' })
-  proyecto!: Proyecto;
+    @ManyToOne(()=>Proyecto, (proyecto) => proyecto.tareas)
+    proyecto!: Proyecto;
 }
