@@ -9,6 +9,7 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { ListProyectoDTO } from '../dtos/output/list-proyecto.dto';
 import { ProyectoDTO } from '../dtos/output/proyecto.dto';
@@ -137,5 +138,25 @@ export class ProyectosService {
       },
     });
     return existe;
+  }
+
+  async darBajaProyecto(id: number): Promise<void> {
+    const proyecto: Proyecto | null = await this.repository.findOne({
+      where: { id },
+    });
+
+    if (!proyecto) {
+      throw new NotFoundException('Proyecto no encontrado');
+    }
+
+    if (proyecto.estado === EstadosProyectosEnum.BAJA)
+      throw new BadRequestException('El proyecto ya esta dado de baja');
+
+    if (proyecto.estado === EstadosProyectosEnum.FINALIZADO)
+      throw new BadRequestException('El proyecto se encuentra finalizado');
+
+    proyecto.estado = EstadosProyectosEnum.BAJA;
+
+    await this.repository.save(proyecto);
   }
 }

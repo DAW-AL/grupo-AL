@@ -3,6 +3,8 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
+  Patch,
   Post,
   Put,
   UseGuards,
@@ -49,5 +51,12 @@ export class ProyectosController {
   @Get(':id')
   async obtenerProyecto(@Param('id') id: number): Promise<ProyectoDTO> {
     return await this.proyectosService.obtenerProyecto(id);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Patch(':id/baja')
+  async darBajaProyecto(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return await this.proyectosService.darBajaProyecto(id);
   }
 }
