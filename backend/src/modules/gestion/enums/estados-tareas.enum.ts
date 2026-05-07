@@ -1,5 +1,5 @@
-export enum EstadosTareasEnum {
-  PENDIENTE = 'PENDIENTE',
-  FINALIZADA = 'FINALIZADA',
-  BAJA = 'BAJA',
+export enum Estados_Tareas {
+    pendiente = "PENDIENTE",
+    finalizada = "FINALIZADA",
+    baja = "BAJA"
 }

@@ -1,31 +1,71 @@
-import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { UpdateTareaDto } from '../dtos/input/update-tarea.dto';
-import { CreateTareaDto } from '../dtos/input/create-tarea.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { TareasService } from '../services/tarea.service';
+import { Controller, UseGuards } from '@nestjs/common';
+import { Body, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { TareaService } from '../services/tarea.service';
+import { CrearTareaDto } from '../dtos/input/create-tarea.dto';
+import { ActualizarTareaDto } from '../dtos/input/update-tarea.dto';
 import { AuthGuard } from '../../auth/guards/auth.guard';
 
-@Controller('proyectos/:idProyecto/tareas')
-export class TareasController {
-  constructor(private readonly tareasService: TareasService) {}
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @Post()
-  async crearTarea(
-    @Body() dto: CreateTareaDto,
-    @Param('idProyecto') idProyecto: number,
-  ): Promise<{ id: number }> {
-    return await this.tareasService.crearTarea(dto, idProyecto);
-  }
+@Controller('proyectos/:proyecto_id/tarea')
+export class TareaController {
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @Put(':id')
-  async actualizarTarea(
-    @Body() dto: UpdateTareaDto,
-    @Param('id') id: number,
-  ): Promise<void> {
-    await this.tareasService.actualizarTarea(dto, id);
-  }
+    constructor(private readonly tareaServicios: TareaService) {}
+    
+        @ApiBearerAuth()
+        @UseGuards(AuthGuard)
+        @Get()
+        @ApiParam({name: 'proyecto_id', type: Number, description: 'ID del proyecto'})
+        findAll (@Param('proyecto_id', ParseIntPipe) proyecto_id: number) {
+            return this.tareaServicios.findAll(proyecto_id);
+        }
+    
+        @ApiBearerAuth()
+        @UseGuards(AuthGuard)
+        @Get(':id')
+        @ApiParam({name: 'proyecto_id', type: Number, description: 'ID del proyecto'})
+        @ApiParam({name: 'id', type: Number, description: 'ID de la tarea'})
+        findOne (
+            @Param('proyecto_id', ParseIntPipe) proyecto_id: number,
+            @Param('id', ParseIntPipe) id: number
+        ) {
+            return this.tareaServicios.findOne(proyecto_id, id);
+        }
+    
+        @ApiBearerAuth()
+        @UseGuards(AuthGuard)
+        @Post()
+        @ApiParam({name: 'proyecto_id', type: Number, description: 'ID del proyecto'})
+        create (
+            @Param('proyecto_id', ParseIntPipe) proyecto_id: number,
+            @Body() crearTarea: CrearTareaDto
+        ) {
+            return this.tareaServicios.create(proyecto_id, crearTarea);
+        }
+    
+        @ApiBearerAuth()
+        @UseGuards(AuthGuard)
+        @Patch(':id')
+        @ApiParam({name: 'proyecto_id', type: Number, description: 'ID del proyecto'})
+        @ApiParam({name: 'id', type: Number, description: 'ID de la tarea'})
+        update (
+            @Param('proyecto_id', ParseIntPipe) proyecto_id: number,
+            @Param('id', ParseIntPipe) id: number, 
+            @Body() actualizarTarea: ActualizarTareaDto
+        ) {
+            return this.tareaServicios.update(proyecto_id, id, actualizarTarea);
+        }
+    
+        @ApiBearerAuth()
+        @UseGuards(AuthGuard)
+        @Delete(':id') 
+        @ApiParam({name: 'proyecto_id', type: Number, description: 'ID del proyecto'})
+        @ApiParam({name: 'id', type: Number, description: 'ID de la tarea'})
+        delete (
+            @Param('proyecto_id', ParseIntPipe) proyecto_id: number,
+            @Param('id', ParseIntPipe) id: number,
+        ) {
+            return this.tareaServicios.delete(proyecto_id, id);
+        }
+
 }

@@ -1,7 +1,5 @@
-import { EstadosTareasEnum } from '../../enums/estados-tareas.enum';
-import { CreateTareaDto } from './create-tarea.dto';
-declare const UpdateTareaDto_base: import("@nestjs/common").Type<Partial<CreateTareaDto>>;
-export declare class UpdateTareaDto extends UpdateTareaDto_base {
-    estado?: EstadosTareasEnum;
+import { CrearTareaDto } from "./create-tarea.dto";
+declare const ActualizarTareaDto_base: import("@nestjs/common").Type<Partial<CrearTareaDto>>;
+export declare class ActualizarTareaDto extends ActualizarTareaDto_base {
 }
 export {};

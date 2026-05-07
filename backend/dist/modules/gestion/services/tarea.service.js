@@ -12,39 +12,81 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TareasService = void 0;
+exports.TareaService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const tarea_entity_1 = require("../entities/tarea.entity");
 const typeorm_2 = require("typeorm");
+const tarea_entity_1 = require("../entities/tarea.entity");
 const estados_tareas_enum_1 = require("../enums/estados-tareas.enum");
-let TareasService = class TareasService {
-    tareasRepository;
-    constructor(tareasRepository) {
-        this.tareasRepository = tareasRepository;
+const proyectos_service_1 = require("./proyectos.service");
+let TareaService = class TareaService {
+    tareaRepositorio;
+    proyectoServices;
+    constructor(tareaRepositorio, proyectoServices) {
+        this.tareaRepositorio = tareaRepositorio;
+        this.proyectoServices = proyectoServices;
     }
-    async crearTarea(dto, idProyecto) {
-        const tarea = this.tareasRepository.create(dto);
-        tarea.estado = estados_tareas_enum_1.EstadosTareasEnum.PENDIENTE;
-        tarea.idProyecto = idProyecto;
-        await this.tareasRepository.save(tarea);
-        return { id: tarea.id };
+    async findAll(proyecto_id) {
+        await this.proyectoServices.obtenerProyecto(proyecto_id);
+        const tareas = await this.tareaRepositorio.find({
+            where: { proyecto: { id: proyecto_id } }
+        });
+        return tareas;
     }
-    async actualizarTarea(dto, idTarea) {
-        const tarea = await this.tareasRepository.findOne({
-            where: { id: idTarea },
+    async findOne(proyecto_id, id) {
+        await this.proyectoServices.obtenerProyecto(proyecto_id);
+        const tarea = await this.tareaRepositorio.findOne({
+            where: {
+                id: id,
+                proyecto: { id: proyecto_id }
+            }
         });
         if (!tarea) {
-            throw new common_1.BadRequestException('La tarea indicada no existe');
+            throw new common_1.NotFoundException(`No se encontro tarea con id: ${id}`);
         }
-        this.tareasRepository.merge(tarea, dto);
-        await this.tareasRepository.save(tarea);
+        ;
+        return tarea;
     }
+    async create(proyecto_id, crearTarea) {
+        await this.proyectoServices.obtenerProyecto(proyecto_id);
+        const nuevaTarea = this.tareaRepositorio.create({
+            ...crearTarea,
+            proyecto: { id: proyecto_id }
+        });
+        return await this.tareaRepositorio.save(nuevaTarea);
+    }
+    async update(proyecto_id, id, actualizarTarea) {
+        await this.proyectoServices.obtenerProyecto(proyecto_id);
+        const tareaActualizada = await this.tareaRepositorio.update(id, actualizarTarea);
+        if (tareaActualizada.affected === 0) {
+            throw new common_1.NotFoundException("No se pudo actualizar la tarea");
+        }
+        return this.findOne(proyecto_id, id);
+    }
+    async delete(proyecto_id, id) {
+        await this.proyectoServices.obtenerProyecto(proyecto_id);
+        const buscarTarea = await this.findOne(proyecto_id, id);
+        if (buscarTarea.estado === estados_tareas_enum_1.Estados_Tareas.baja) {
+            throw new common_1.NotFoundException("La tarea ya esta dada de baja");
+        }
+        const eliminarTarea = await this.tareaRepositorio.update(id, {
+            estado: estados_tareas_enum_1.Estados_Tareas.baja
+        });
+        if (eliminarTarea.affected === 0) {
+            throw new common_1.NotFoundException("No se pudo eliminar la tarea");
+        }
+        ;
+        return {
+            message: `Se elimino la tarea con id: ${id}`
+        };
+    }
+    ;
 };
-exports.TareasService = TareasService;
-exports.TareasService = TareasService = __decorate([
+exports.TareaService = TareaService;
+exports.TareaService = TareaService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(tarea_entity_1.Tarea)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
-], TareasService);
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        proyectos_service_1.ProyectosService])
+], TareaService);
 //# sourceMappingURL=tarea.service.js.map

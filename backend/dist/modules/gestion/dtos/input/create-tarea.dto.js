@@ -9,17 +9,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateTareaDto = void 0;
+exports.CrearTareaDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-class CreateTareaDto {
+const estados_tareas_enum_1 = require("../../enums/estados-tareas.enum");
+class CrearTareaDto {
     descripcion;
+    estado;
 }
-exports.CreateTareaDto = CreateTareaDto;
+exports.CrearTareaDto = CrearTareaDto;
 __decorate([
-    (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
-], CreateTareaDto.prototype, "descripcion", void 0);
+], CrearTareaDto.prototype, "descripcion", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsEnum)(estados_tareas_enum_1.Estados_Tareas),
+    __metadata("design:type", String)
+], CrearTareaDto.prototype, "estado", void 0);
 //# sourceMappingURL=create-tarea.dto.js.map

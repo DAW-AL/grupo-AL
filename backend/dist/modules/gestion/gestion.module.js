@@ -24,8 +24,8 @@ let GestionModule = class GestionModule {
 exports.GestionModule = GestionModule;
 exports.GestionModule = GestionModule = __decorate([
     (0, common_1.Module)({
-        controllers: [clientes_controller_1.ClientesController, proyectos_controller_1.ProyectosController, tareas_controller_1.TareasController],
-        providers: [tarea_service_1.TareasService, clientes_service_1.ClientesService, proyectos_service_1.ProyectosService],
+        controllers: [clientes_controller_1.ClientesController, proyectos_controller_1.ProyectosController, tareas_controller_1.TareaController],
+        providers: [tarea_service_1.TareaService, clientes_service_1.ClientesService, proyectos_service_1.ProyectosService],
         exports: [],
         imports: [typeorm_1.TypeOrmModule.forFeature([tarea_entity_1.Tarea, cliente_entity_1.Cliente, proyecto_entity_1.Proyecto]), auth_module_1.AuthModule],
     })

@@ -1,13 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { EstadosTareasEnum } from '../../enums/estados-tareas.enum';
+import { ApiProperty } from "@nestjs/swagger";
+import { Estados_Tareas } from "../../enums/estados-tareas.enum";
 
 export class ListTareaDTO {
-  @ApiProperty()
-  id!: number;
 
-  @ApiProperty()
-  descripcion!: string;
+    @ApiProperty()
+    id!: number;
 
-  @ApiProperty()
-  estado!: EstadosTareasEnum;
+    @ApiProperty()
+    descripcion!: string;
+
+    @ApiProperty()
+    estado!: Estados_Tareas;
+
 }
