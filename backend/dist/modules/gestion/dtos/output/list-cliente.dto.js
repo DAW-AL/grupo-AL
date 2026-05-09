@@ -15,17 +15,27 @@ const estados_clientes_enum_1 = require("../../enums/estados-clientes.enum");
 class ListClienteDTO {
     id;
     nombre;
+    telefono;
+    emails;
     estado;
 }
 exports.ListClienteDTO = ListClienteDTO;
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 1 }),
     __metadata("design:type", Number)
 ], ListClienteDTO.prototype, "id", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'Ezequiel' }),
     __metadata("design:type", String)
 ], ListClienteDTO.prototype, "nombre", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '+5491140319760' }),
+    __metadata("design:type", String)
+], ListClienteDTO.prototype, "telefono", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'grupoal@email.com' }),
+    __metadata("design:type", String)
+], ListClienteDTO.prototype, "emails", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)

@@ -12,7 +12,17 @@ export declare class ClientesService {
     crearCliente(dto: CreateClienteDto): Promise<{
         id: number;
     }>;
-    actualizarCliente(id: number, dto: UpdateClienteDto): Promise<void>;
+    actualizarCliente(id: number, dto: UpdateClienteDto): Promise<{
+        id: number;
+        nombre: string;
+        emails: string;
+        telefono: string;
+    }>;
     obtenerClientes(estado: EstadosClientesEnum): Promise<ListClienteDTO[]>;
+    darDeBaja(id: number): Promise<{
+        id: number;
+        nombre: string;
+        estado: EstadosClientesEnum;
+    }>;
     existeClienteActivoPorId(id: number): Promise<boolean>;
 }

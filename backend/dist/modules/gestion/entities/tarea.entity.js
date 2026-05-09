@@ -31,7 +31,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({
         type: 'enum',
-        enum: estados_tareas_enum_1.Estados_Tareas
+        enum: estados_tareas_enum_1.Estados_Tareas,
     }),
     __metadata("design:type", String)
 ], Tarea.prototype, "estado", void 0);
@@ -40,6 +40,6 @@ __decorate([
     __metadata("design:type", proyecto_entity_1.Proyecto)
 ], Tarea.prototype, "proyecto", void 0);
 exports.Tarea = Tarea = __decorate([
-    (0, typeorm_1.Entity)({ name: "tareas" })
+    (0, typeorm_1.Entity)({ name: 'tareas' })
 ], Tarea);
 //# sourceMappingURL=tarea.entity.js.map

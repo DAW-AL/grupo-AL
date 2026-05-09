@@ -9,6 +9,16 @@ export declare class ClientesController {
     crearCliente(dto: CreateClienteDto): Promise<{
         id: number;
     }>;
-    actualizarCliente(id: number, dto: UpdateClienteDto): Promise<void>;
+    actualizarDatos(id: number, dto: UpdateClienteDto): Promise<{
+        id: number;
+        nombre: string;
+        emails: string;
+        telefono: string;
+    }>;
+    darDeBaja(id: number): Promise<{
+        id: number;
+        nombre: string;
+        estado: EstadosClientesEnum;
+    }>;
     obtenerClientes(estado: EstadosClientesEnum): Promise<ListClienteDTO[]>;
 }

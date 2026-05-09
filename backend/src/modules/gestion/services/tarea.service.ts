@@ -9,84 +9,89 @@ import { ProyectosService } from './proyectos.service';
 
 @Injectable()
 export class TareaService {
+  constructor(
+    @InjectRepository(Tarea)
+    private readonly tareaRepositorio: Repository<Tarea>,
 
-    constructor(
-        @InjectRepository(Tarea)
-        private readonly tareaRepositorio: Repository<Tarea>,
+    private readonly proyectoServices: ProyectosService,
+  ) {}
 
-        private readonly proyectoServices: ProyectosService
-    ) {}
+  async findAll(proyecto_id: number): Promise<Tarea[]> {
+    await this.proyectoServices.obtenerProyecto(proyecto_id);
 
-    async findAll (proyecto_id: number): Promise<Tarea[]> {
-        await this.proyectoServices.obtenerProyecto(proyecto_id);
+    const tareas = await this.tareaRepositorio.find({
+      where: { proyecto: { id: proyecto_id } },
+    });
 
-        const tareas = await this.tareaRepositorio.find({
-            where: {proyecto: {id: proyecto_id}}
-        });
+    return tareas;
+  }
 
-        return tareas;
+  async findOne(proyecto_id: number, id: number): Promise<Tarea> {
+    await this.proyectoServices.obtenerProyecto(proyecto_id);
+
+    const tarea = await this.tareaRepositorio.findOne({
+      where: {
+        id: id,
+        proyecto: { id: proyecto_id },
+      },
+    });
+
+    if (!tarea) {
+      throw new NotFoundException(`No se encontro tarea con id: ${id}`);
     }
 
-    async findOne (proyecto_id: number, id: number): Promise<Tarea> {
+    return tarea;
+  }
 
-        await this.proyectoServices.obtenerProyecto(proyecto_id);
+  async create(proyecto_id: number, crearTarea: CrearTareaDto): Promise<Tarea> {
+    await this.proyectoServices.obtenerProyecto(proyecto_id);
 
-        const tarea = await this.tareaRepositorio.findOne({
-            where: {
-                id: id,
-                proyecto: {id: proyecto_id}
-            }
-        });
+    const nuevaTarea = this.tareaRepositorio.create({
+      ...crearTarea,
+      proyecto: { id: proyecto_id },
+    });
 
-        if (!tarea) {
-            throw new NotFoundException(`No se encontro tarea con id: ${id}`)
-        };
+    return await this.tareaRepositorio.save(nuevaTarea);
+  }
 
-        return tarea;
+  async update(
+    proyecto_id: number,
+    id: number,
+    actualizarTarea: ActualizarTareaDto,
+  ): Promise<Tarea> {
+    await this.proyectoServices.obtenerProyecto(proyecto_id);
+
+    const tareaActualizada = await this.tareaRepositorio.update(
+      id,
+      actualizarTarea,
+    );
+
+    if (tareaActualizada.affected === 0) {
+      throw new NotFoundException('No se pudo actualizar la tarea');
     }
 
-    async create (proyecto_id: number, crearTarea: CrearTareaDto): Promise<Tarea> {
-        await this.proyectoServices.obtenerProyecto(proyecto_id);
+    return this.findOne(proyecto_id, id);
+  }
 
-        const nuevaTarea = this.tareaRepositorio.create({
-            ...crearTarea,
-            proyecto: {id: proyecto_id}
-        });
-        
-        return await this.tareaRepositorio.save(nuevaTarea);
+  async delete(proyecto_id: number, id: number): Promise<{ message: string }> {
+    await this.proyectoServices.obtenerProyecto(proyecto_id);
+
+    const buscarTarea = await this.findOne(proyecto_id, id);
+
+    if (buscarTarea.estado === Estados_Tareas.baja) {
+      throw new NotFoundException('La tarea ya esta dada de baja');
     }
 
-    async update (proyecto_id: number, id: number, actualizarTarea: ActualizarTareaDto): Promise<Tarea> {
-        await this.proyectoServices.obtenerProyecto(proyecto_id);
+    const eliminarTarea = await this.tareaRepositorio.update(id, {
+      estado: Estados_Tareas.baja,
+    });
 
-        const tareaActualizada = await this.tareaRepositorio.update(id, actualizarTarea);
-
-        if (tareaActualizada.affected === 0) {
-            throw new NotFoundException("No se pudo actualizar la tarea");
-        }
-
-        return this.findOne(proyecto_id, id);
+    if (eliminarTarea.affected === 0) {
+      throw new NotFoundException('No se pudo eliminar la tarea');
     }
 
-    async delete (proyecto_id: number, id: number): Promise<{message: string}> {
-        await this.proyectoServices.obtenerProyecto(proyecto_id);
-
-        const buscarTarea = await this.findOne(proyecto_id, id);
-
-        if (buscarTarea.estado === Estados_Tareas.baja) {
-            throw new NotFoundException("La tarea ya esta dada de baja");
-        }
-
-        const eliminarTarea = await this.tareaRepositorio.update(id, {
-            estado: Estados_Tareas.baja
-        });
-
-        if (eliminarTarea.affected === 0) {
-            throw new NotFoundException("No se pudo eliminar la tarea");
-        };
-
-        return {
-            message: `Se elimino la tarea con id: ${id}`
-        };
+    return {
+      message: `Se elimino la tarea con id: ${id}`,
     };
+  }
 }

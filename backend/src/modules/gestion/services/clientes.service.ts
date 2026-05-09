@@ -24,24 +24,30 @@ export class ClientesService {
     return { id: cliente.id };
   }
 
-  async actualizarCliente(id: number, dto: UpdateClienteDto): Promise<void> {
+  async actualizarCliente(
+    id: number,
+    dto: UpdateClienteDto,
+  ): Promise<{ id: number; nombre: string; emails: string; telefono: string }> {
     const cliente: Cliente | null = await this.repository.findOneBy({ id });
 
     if (!cliente) {
       throw new BadRequestException('Cliente no encontrado');
     }
 
-    const relacionadoConProyectos: boolean =
-      await this.proyectosService.existeProyectoPorIdCliente(id);
-
-    if (relacionadoConProyectos && dto.estado === EstadosClientesEnum.BAJA) {
+    if (cliente.estado === EstadosClientesEnum.BAJA) {
       throw new BadRequestException(
-        'No se puede dar de baja un cliente con proyectos relacionados',
+        'No se pueden actualizar los datos de un cliente que se encuentra en estado BAJA',
       );
     }
 
     this.repository.merge(cliente, dto);
     await this.repository.save(cliente);
+    return {
+      id: cliente.id,
+      nombre: cliente.nombre,
+      emails: cliente.emails,
+      telefono: cliente.telefono,
+    };
   }
 
   async obtenerClientes(
@@ -54,7 +60,13 @@ export class ClientesService {
     }
 
     const clientes: Cliente[] = await this.repository.find({
-      select: { id: true, nombre: true, estado: true },
+      select: {
+        id: true,
+        nombre: true,
+        telefono: true,
+        emails: true,
+        estado: true,
+      },
       order: { id: 'ASC' },
       where: whereCondition,
     });
@@ -65,11 +77,42 @@ export class ClientesService {
       const dto = new ListClienteDTO();
       dto.id = c.id;
       dto.nombre = c.nombre;
+      dto.emails = c.emails;
+      dto.telefono = c.telefono;
       dto.estado = c.estado;
       dtoList.push(dto);
     }
 
     return dtoList;
+  }
+
+  async darDeBaja(
+    id: number,
+  ): Promise<{ id: number; nombre: string; estado: EstadosClientesEnum }> {
+    const cliente = await this.repository.findOneBy({ id });
+    if (!cliente) throw new BadRequestException('Cliente no encontrado');
+
+    if (cliente.estado === EstadosClientesEnum.BAJA) {
+      throw new BadRequestException(
+        'El cliente ya se encuentra en estado BAJA',
+      );
+    }
+    const tieneProyectos =
+      await this.proyectosService.existeProyectoPorIdCliente(id);
+
+    if (tieneProyectos) {
+      throw new BadRequestException(
+        'No se puede dar de baja: el cliente tiene proyectos registrados.',
+      );
+    }
+
+    cliente.estado = EstadosClientesEnum.BAJA;
+    await this.repository.save(cliente);
+    return {
+      id: cliente.id,
+      nombre: cliente.nombre,
+      estado: cliente.estado,
+    };
   }
 
   async existeClienteActivoPorId(id: number): Promise<boolean> {

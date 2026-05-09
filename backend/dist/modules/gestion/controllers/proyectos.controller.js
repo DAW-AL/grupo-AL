@@ -37,6 +37,9 @@ let ProyectosController = class ProyectosController {
     async obtenerProyecto(id) {
         return await this.proyectosService.obtenerProyecto(id);
     }
+    async darBajaProyecto(id) {
+        return await this.proyectosService.darBajaProyecto(id);
+    }
 };
 exports.ProyectosController = ProyectosController;
 __decorate([
@@ -76,6 +79,15 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ProyectosController.prototype, "obtenerProyecto", null);
+__decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Patch)(':id/baja'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ProyectosController.prototype, "darBajaProyecto", null);
 exports.ProyectosController = ProyectosController = __decorate([
     (0, common_1.Controller)('proyectos'),
     __metadata("design:paramtypes", [proyectos_service_1.ProyectosService])

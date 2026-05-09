@@ -16,4 +16,5 @@ export declare class ProyectosService {
     obtenerProyectos(): Promise<ListProyectoDTO[]>;
     obtenerProyecto(id: number): Promise<ProyectoDTO>;
     existeProyectoPorIdCliente(idCliente: number): Promise<boolean>;
+    darBajaProyecto(id: number): Promise<void>;
 }

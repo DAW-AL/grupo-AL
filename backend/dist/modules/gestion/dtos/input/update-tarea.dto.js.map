@@ -1,1 +1,1 @@
-{"version":3,"file":"update-tarea.dto.js","sourceRoot":"","sources":["../../../../../src/modules/gestion/dtos/input/update-tarea.dto.ts"],"names":[],"mappings":";;;AAAA,6CAA8C;AAC9C,yDAAmD;AAEnD,MAAa,kBAAmB,SAAQ,IAAA,qBAAW,EAAC,gCAAa,CAAC;CAAG;AAArE,gDAAqE;AAAA,CAAC"}
+{"version":3,"file":"update-tarea.dto.js","sourceRoot":"","sources":["../../../../../src/modules/gestion/dtos/input/update-tarea.dto.ts"],"names":[],"mappings":";;;AAAA,6CAA8C;AAC9C,yDAAmD;AAEnD,MAAa,kBAAmB,SAAQ,IAAA,qBAAW,EAAC,gCAAa,CAAC;CAAG;AAArE,gDAAqE"}

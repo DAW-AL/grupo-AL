@@ -16,6 +16,8 @@ const proyecto_entity_1 = require("./proyecto.entity");
 let Cliente = class Cliente {
     id;
     nombre;
+    telefono;
+    emails;
     estado;
     proyectos;
 };
@@ -28,6 +30,14 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Cliente.prototype, "nombre", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Cliente.prototype, "telefono", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Cliente.prototype, "emails", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: estados_clientes_enum_1.EstadosClientesEnum }),
     __metadata("design:type", String)
