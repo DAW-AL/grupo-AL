@@ -118,6 +118,20 @@ let ProyectosService = class ProyectosService {
         });
         return existe;
     }
+    async darBajaProyecto(id) {
+        const proyecto = await this.repository.findOne({
+            where: { id },
+        });
+        if (!proyecto) {
+            throw new common_1.NotFoundException('Proyecto no encontrado');
+        }
+        if (proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA)
+            throw new common_1.BadRequestException('El proyecto ya esta dado de baja');
+        if (proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO)
+            throw new common_1.BadRequestException('El proyecto se encuentra finalizado');
+        proyecto.estado = estados_proyectos_enum_1.EstadosProyectosEnum.BAJA;
+        await this.repository.save(proyecto);
+    }
 };
 exports.ProyectosService = ProyectosService;
 exports.ProyectosService = ProyectosService = __decorate([

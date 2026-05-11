@@ -14,12 +14,28 @@ const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class CreateClienteDto {
     nombre;
+    telefono;
+    emails;
 }
 exports.CreateClienteDto = CreateClienteDto;
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'Ezequiel' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'El nombre es obligatorio' }),
     __metadata("design:type", String)
 ], CreateClienteDto.prototype, "nombre", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '+541112345678' }),
+    (0, class_validator_1.IsPhoneNumber)('AR', {
+        message: 'El teléfono ingresado no es un número válido para Argentina',
+    }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'El teléfono es obligatorio' }),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "telefono", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'grupoal@example.com' }),
+    (0, class_validator_1.IsEmail)({}, { message: 'Debe ser un correo electrónico válido' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'El email es obligatorio' }),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "emails", void 0);
 //# sourceMappingURL=create-cliente.dto.js.map

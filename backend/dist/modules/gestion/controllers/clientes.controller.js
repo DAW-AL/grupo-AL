@@ -29,8 +29,11 @@ let ClientesController = class ClientesController {
     async crearCliente(dto) {
         return await this.clientesService.crearCliente(dto);
     }
-    async actualizarCliente(id, dto) {
-        await this.clientesService.actualizarCliente(id, dto);
+    async actualizarDatos(id, dto) {
+        return await this.clientesService.actualizarCliente(id, dto);
+    }
+    async darDeBaja(id) {
+        return await this.clientesService.darDeBaja(id);
     }
     async obtenerClientes(estado) {
         return await this.clientesService.obtenerClientes(estado);
@@ -40,6 +43,7 @@ exports.ClientesController = ClientesController;
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Crear un Cliente' }),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -49,16 +53,33 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    (0, common_1.Put)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Actualizar datos de un Cliente' }),
+    (0, swagger_1.ApiParam)({
+        name: 'id',
+        description: 'ID del cliente a actualizar',
+        example: 1,
+    }),
+    (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, update_cliente_dto_1.UpdateClienteDto]),
     __metadata("design:returntype", Promise)
-], ClientesController.prototype, "actualizarCliente", null);
+], ClientesController.prototype, "actualizarDatos", null);
+__decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Dar de baja un Cliente' }),
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ClientesController.prototype, "darDeBaja", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOkResponse)({ type: list_cliente_dto_1.ListClienteDTO, isArray: true }),
+    (0, swagger_1.ApiOperation)({ summary: 'Obtener lista de Clientes' }),
     (0, swagger_1.ApiQuery)({
         name: 'estado',
         required: false,

@@ -12,4 +12,5 @@ export declare class ProyectosController {
     actualizarProyecto(dto: UpdateProyectoDto, id: number): Promise<void>;
     obtenerProyectos(): Promise<ListProyectoDTO[]>;
     obtenerProyecto(id: number): Promise<ProyectoDTO>;
+    darBajaProyecto(id: number): Promise<void>;
 }

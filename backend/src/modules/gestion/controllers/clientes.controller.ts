@@ -1,15 +1,22 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import { CreateClienteDto } from '../dtos/input/create-cliente.dto';
-import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
 import { UpdateClienteDto } from '../dtos/input/update-cliente.dto';
 import { EstadosClientesEnum } from '../enums/estados-clientes.enum';
@@ -22,6 +29,7 @@ export class ClientesController {
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Crear un Cliente' })
   @Post()
   async crearCliente(@Body() dto: CreateClienteDto): Promise<{ id: number }> {
     return await this.clientesService.crearCliente(dto);
@@ -29,16 +37,33 @@ export class ClientesController {
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  @Put(':id')
-  async actualizarCliente(
+  @ApiOperation({ summary: 'Actualizar datos de un Cliente' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID del cliente a actualizar',
+    example: 1,
+  })
+  @Patch(':id')
+  async actualizarDatos(
     @Param('id') id: number,
     @Body() dto: UpdateClienteDto,
-  ): Promise<void> {
-    await this.clientesService.actualizarCliente(id, dto);
+  ): Promise<{ id: number; nombre: string; emails: string; telefono: string }> {
+    return await this.clientesService.actualizarCliente(id, dto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Dar de baja un Cliente' })
+  @Delete(':id')
+  async darDeBaja(
+    @Param('id') id: number,
+  ): Promise<{ id: number; nombre: string; estado: EstadosClientesEnum }> {
+    return await this.clientesService.darDeBaja(id);
   }
 
   @ApiBearerAuth()
   @ApiOkResponse({ type: ListClienteDTO, isArray: true })
+  @ApiOperation({ summary: 'Obtener lista de Clientes' })
   @ApiQuery({
     name: 'estado',
     required: false,

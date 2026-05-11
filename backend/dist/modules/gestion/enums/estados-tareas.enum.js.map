@@ -1,1 +1,1 @@
-{"version":3,"file":"estados-tareas.enum.js","sourceRoot":"","sources":["../../../../src/modules/gestion/enums/estados-tareas.enum.ts"],"names":[],"mappings":";;;AAAA,IAAY,cAIX;AAJD,WAAY,cAAc;IACtB,yCAAuB,CAAA;IACvB,2CAAyB,CAAA;IACzB,+BAAa,CAAA;AACjB,CAAC,EAJW,cAAc,8BAAd,cAAc,QAIzB"}
+{"version":3,"file":"estados-tareas.enum.js","sourceRoot":"","sources":["../../../../src/modules/gestion/enums/estados-tareas.enum.ts"],"names":[],"mappings":";;;AAAA,IAAY,cAIX;AAJD,WAAY,cAAc;IACxB,yCAAuB,CAAA;IACvB,2CAAyB,CAAA;IACzB,+BAAa,CAAA;AACf,CAAC,EAJW,cAAc,8BAAd,cAAc,QAIzB"}
