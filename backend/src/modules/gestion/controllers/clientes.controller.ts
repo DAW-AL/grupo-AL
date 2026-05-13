@@ -22,6 +22,9 @@ import { UpdateClienteDto } from '../dtos/input/update-cliente.dto';
 import { EstadosClientesEnum } from '../enums/estados-clientes.enum';
 import { ClientesService } from '../services/clientes.service';
 import { AuthGuard } from '../../auth/guards/auth.guard';
+import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
+import { RolesGuard } from '../guards/roles.guard';
+import { Roles } from '../decorators/roles.decorator';
 
 @Controller('clientes')
 export class ClientesController {
@@ -52,7 +55,8 @@ export class ClientesController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
+  @Roles(RolUsuarioEnum.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Dar de baja un Cliente' })
   @Delete(':id')
   async darDeBaja(

@@ -21,6 +21,9 @@ const update_cliente_dto_1 = require("../dtos/input/update-cliente.dto");
 const estados_clientes_enum_1 = require("../enums/estados-clientes.enum");
 const clientes_service_1 = require("../services/clientes.service");
 const auth_guard_1 = require("../../auth/guards/auth.guard");
+const rol_usuario_enum_1 = require("../../auth/enums/rol-usuario.enum");
+const roles_guard_1 = require("../guards/roles.guard");
+const roles_decorator_1 = require("../decorators/roles.decorator");
 let ClientesController = class ClientesController {
     clientesService;
     constructor(clientesService) {
@@ -68,7 +71,8 @@ __decorate([
 ], ClientesController.prototype, "actualizarDatos", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, swagger_1.ApiOperation)({ summary: 'Dar de baja un Cliente' }),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),

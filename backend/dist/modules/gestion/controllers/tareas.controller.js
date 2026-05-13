@@ -20,6 +20,9 @@ const tarea_service_1 = require("../services/tarea.service");
 const create_tarea_dto_1 = require("../dtos/input/create-tarea.dto");
 const update_tarea_dto_1 = require("../dtos/input/update-tarea.dto");
 const auth_guard_1 = require("../../auth/guards/auth.guard");
+const roles_decorator_1 = require("../decorators/roles.decorator");
+const rol_usuario_enum_1 = require("../../auth/enums/rol-usuario.enum");
+const roles_guard_1 = require("../guards/roles.guard");
 let TareaController = class TareaController {
     tareaServicios;
     constructor(tareaServicios) {
@@ -106,7 +109,8 @@ __decorate([
 ], TareaController.prototype, "update", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, common_2.Delete)(':id'),
     (0, swagger_1.ApiParam)({
         name: 'proyecto_id',

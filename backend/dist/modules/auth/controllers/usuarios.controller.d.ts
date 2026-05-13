@@ -1,12 +1,10 @@
-import { Repository } from 'typeorm';
-import { Usuario } from '../entities/usuario.entity';
+import { UsuariosService } from '../services/usuarios.service';
 import { CrearUsuarioDto } from '../dtos/input/crear-usuario.dto';
 import { ModificarUsuarioDto } from '../dtos/input/modificar-usuario.dto';
 import { ListUsuarioDto } from '../dtos/output/list-usuario.dto';
-export declare class UsuariosService {
-    private readonly usuariosRepository;
-    constructor(usuariosRepository: Repository<Usuario>);
-    buscarUsuarioActivoPorNombre(nombre: string): Promise<Usuario | null>;
+export declare class UsuariosController {
+    private readonly usuariosService;
+    constructor(usuariosService: UsuariosService);
     listarUsuarios(): Promise<ListUsuarioDto[]>;
     consultarUsuario(id: number): Promise<ListUsuarioDto>;
     registrarUsuario(dto: CrearUsuarioDto): Promise<{
