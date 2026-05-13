@@ -7,9 +7,10 @@ import { ConfigService } from '@nestjs/config';
 import { UsuariosService } from './services/usuarios.service';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { UsuariosController } from './controllers/usuarios.controller';
 
 @Module({
-  controllers: [AuthController],
+  controllers: [AuthController, UsuariosController],
   providers: [UsuariosService, AuthService, AuthGuard],
   imports: [
     TypeOrmModule.forFeature([Usuario]),
