@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Usuario } from '../entitites/usuario.entity';
+import { Usuario } from '../entities/usuario.entity';
 import { Repository } from 'typeorm';
 import { EstadosUsuariosEnum } from '../enums/estados-usuarios.enum';
 
