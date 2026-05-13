@@ -1,10 +1,43 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
@@ -15,19 +48,88 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsuariosService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const usuario_entity_1 = require("../entitites/usuario.entity");
 const typeorm_2 = require("typeorm");
+const bcrypt = __importStar(require("bcrypt"));
+const usuario_entity_1 = require("../entities/usuario.entity");
 const estados_usuarios_enum_1 = require("../enums/estados-usuarios.enum");
+const list_usuario_dto_1 = require("../dtos/output/list-usuario.dto");
+const rol_usuario_enum_1 = require("../enums/rol-usuario.enum");
 let UsuariosService = class UsuariosService {
-    usuariosRespository;
-    constructor(usuariosRespository) {
-        this.usuariosRespository = usuariosRespository;
+    usuariosRepository;
+    constructor(usuariosRepository) {
+        this.usuariosRepository = usuariosRepository;
     }
     async buscarUsuarioActivoPorNombre(nombre) {
-        return await this.usuariosRespository.findOneBy({
+        return await this.usuariosRepository.findOneBy({
             estado: estados_usuarios_enum_1.EstadosUsuariosEnum.ACTIVO,
             nombre,
         });
+    }
+    async listarUsuarios() {
+        const usuarios = await this.usuariosRepository.find({
+            order: { id: 'ASC' },
+        });
+        return usuarios.map((u) => {
+            const dto = new list_usuario_dto_1.ListUsuarioDto();
+            dto.id = u.id;
+            dto.nombre = u.nombre;
+            dto.estado = u.estado;
+            dto.rol = u.rol;
+            return dto;
+        });
+    }
+    async consultarUsuario(id) {
+        const usuario = await this.usuariosRepository.findOneBy({ id });
+        if (!usuario) {
+            throw new common_1.BadRequestException('Usuario no encontrado');
+        }
+        const dto = new list_usuario_dto_1.ListUsuarioDto();
+        dto.id = usuario.id;
+        dto.nombre = usuario.nombre;
+        dto.estado = usuario.estado;
+        dto.rol = usuario.rol;
+        return dto;
+    }
+    async registrarUsuario(dto) {
+        const nombreExistente = await this.usuariosRepository.findOneBy({
+            nombre: dto.nombre,
+        });
+        if (nombreExistente) {
+            throw new common_1.BadRequestException('Ya existe un usuario con ese nombre');
+        }
+        const usuario = this.usuariosRepository.create({
+            nombre: dto.nombre,
+            clave: await bcrypt.hash(dto.clave, 10),
+            estado: estados_usuarios_enum_1.EstadosUsuariosEnum.ACTIVO,
+            rol: dto.rol ?? rol_usuario_enum_1.RolUsuarioEnum.USER,
+        });
+        await this.usuariosRepository.save(usuario);
+        return { id: usuario.id };
+    }
+    async modificarUsuario(id, dto) {
+        const usuario = await this.usuariosRepository.findOneBy({ id });
+        if (!usuario) {
+            throw new common_1.BadRequestException('Usuario no encontrado');
+        }
+        if (dto.nombre && dto.nombre !== usuario.nombre) {
+            const nombreExistente = await this.usuariosRepository.findOneBy({
+                nombre: dto.nombre,
+            });
+            if (nombreExistente) {
+                throw new common_1.BadRequestException('Ya existe un usuario con ese nombre');
+            }
+            usuario.nombre = dto.nombre;
+        }
+        if (dto.clave) {
+            usuario.clave = await bcrypt.hash(dto.clave, 10);
+        }
+        if (dto.rol) {
+            usuario.rol = dto.rol;
+        }
+        if (dto.estado) {
+            usuario.estado = dto.estado;
+        }
+        await this.usuariosRepository.save(usuario);
     }
 };
 exports.UsuariosService = UsuariosService;

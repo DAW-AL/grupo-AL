@@ -16,6 +16,9 @@ import { ListProyectoDTO } from '../dtos/output/list-proyecto.dto';
 import { ProyectoDTO } from '../dtos/output/proyecto.dto';
 import { ProyectosService } from '../services/proyectos.service';
 import { AuthGuard } from '../../auth/guards/auth.guard';
+import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
+import { RolesGuard } from '../guards/roles.guard';
+import { Roles } from '../decorators/roles.decorator';
 
 @Controller('proyectos')
 export class ProyectosController {
@@ -54,7 +57,8 @@ export class ProyectosController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
+  @Roles(RolUsuarioEnum.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
   @Patch(':id/baja')
   async darBajaProyecto(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return await this.proyectosService.darBajaProyecto(id);

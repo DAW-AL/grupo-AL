@@ -12,11 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Usuario = void 0;
 const typeorm_1 = require("typeorm");
 const estados_usuarios_enum_1 = require("../enums/estados-usuarios.enum");
+const rol_usuario_enum_1 = require("../enums/rol-usuario.enum");
 let Usuario = class Usuario {
     id;
     nombre;
     clave;
     estado;
+    rol;
 };
 exports.Usuario = Usuario;
 __decorate([
@@ -35,6 +37,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: estados_usuarios_enum_1.EstadosUsuariosEnum }),
     __metadata("design:type", String)
 ], Usuario.prototype, "estado", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'enum', enum: rol_usuario_enum_1.RolUsuarioEnum, default: rol_usuario_enum_1.RolUsuarioEnum.USER }),
+    __metadata("design:type", String)
+], Usuario.prototype, "rol", void 0);
 exports.Usuario = Usuario = __decorate([
     (0, typeorm_1.Entity)({ name: 'usuarios' })
 ], Usuario);

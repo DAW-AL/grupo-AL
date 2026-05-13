@@ -13,6 +13,10 @@ import { TareaService } from '../services/tarea.service';
 import { CrearTareaDto } from '../dtos/input/create-tarea.dto';
 import { ActualizarTareaDto } from '../dtos/input/update-tarea.dto';
 import { AuthGuard } from '../../auth/guards/auth.guard';
+import { Roles } from '../decorators/roles.decorator';
+import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
+import { RolesGuard } from '../guards/roles.guard';
+
 
 @Controller('proyectos/:proyecto_id/tarea')
 export class TareaController {
@@ -79,7 +83,8 @@ export class TareaController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
+  @Roles(RolUsuarioEnum.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   @ApiParam({
     name: 'proyecto_id',
