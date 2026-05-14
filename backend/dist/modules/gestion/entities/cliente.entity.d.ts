@@ -4,7 +4,7 @@ export declare class Cliente {
     id: number;
     nombre: string;
     telefono: string;
-    emails: string;
+    email: string;
     estado: EstadosClientesEnum;
     proyectos: Proyecto[];
 }

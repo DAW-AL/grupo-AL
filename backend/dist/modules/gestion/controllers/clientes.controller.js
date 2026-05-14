@@ -41,6 +41,9 @@ let ClientesController = class ClientesController {
     async obtenerClientes(estado) {
         return await this.clientesService.obtenerClientes(estado);
     }
+    async obtenerCliente(id) {
+        return await this.clientesService.obtenerCliente(id);
+    }
 };
 exports.ClientesController = ClientesController;
 __decorate([
@@ -96,6 +99,15 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "obtenerClientes", null);
+__decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ClientesController.prototype, "obtenerCliente", null);
 exports.ClientesController = ClientesController = __decorate([
     (0, common_1.Controller)('clientes'),
     __metadata("design:paramtypes", [clientes_service_1.ClientesService])

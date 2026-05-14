@@ -47,7 +47,7 @@ let ClientesService = class ClientesService {
         return {
             id: cliente.id,
             nombre: cliente.nombre,
-            emails: cliente.emails,
+            email: cliente.email,
             telefono: cliente.telefono,
         };
     }
@@ -61,7 +61,7 @@ let ClientesService = class ClientesService {
                 id: true,
                 nombre: true,
                 telefono: true,
-                emails: true,
+                email: true,
                 estado: true,
             },
             order: { id: 'ASC' },
@@ -72,7 +72,7 @@ let ClientesService = class ClientesService {
             const dto = new list_cliente_dto_1.ListClienteDTO();
             dto.id = c.id;
             dto.nombre = c.nombre;
-            dto.emails = c.emails;
+            dto.email = c.email;
             dto.telefono = c.telefono;
             dto.estado = c.estado;
             dtoList.push(dto);
@@ -103,6 +103,15 @@ let ClientesService = class ClientesService {
             where: { id, estado: estados_clientes_enum_1.EstadosClientesEnum.ACTIVO },
         });
         return existe;
+    }
+    async obtenerCliente(id) {
+        const cliente = await this.repository.findOne({
+            where: { id }
+        });
+        if (!cliente) {
+            throw new common_1.NotFoundException("El cliente no existe");
+        }
+        return cliente;
     }
 };
 exports.ClientesService = ClientesService;

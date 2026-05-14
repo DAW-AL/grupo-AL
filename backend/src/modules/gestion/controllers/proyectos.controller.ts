@@ -1,10 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
   Put,
   UseGuards,
@@ -59,7 +59,7 @@ export class ProyectosController {
   @ApiBearerAuth()
   @Roles(RolUsuarioEnum.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
-  @Patch(':id/baja')
+  @Delete(':id')
   async darBajaProyecto(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return await this.proyectosService.darBajaProyecto(id);
   }

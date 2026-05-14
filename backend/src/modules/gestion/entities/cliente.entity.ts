@@ -15,7 +15,7 @@ export class Cliente {
   telefono!: string;
   //Funcionalidad nueva
   @Column()
-  emails!: string;
+  email!: string;
 
   @Column({ type: 'enum', enum: EstadosClientesEnum })
   estado!: EstadosClientesEnum;

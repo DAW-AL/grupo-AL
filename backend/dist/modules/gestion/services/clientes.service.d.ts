@@ -15,7 +15,7 @@ export declare class ClientesService {
     actualizarCliente(id: number, dto: UpdateClienteDto): Promise<{
         id: number;
         nombre: string;
-        emails: string;
+        email: string;
         telefono: string;
     }>;
     obtenerClientes(estado: EstadosClientesEnum): Promise<ListClienteDTO[]>;
@@ -25,4 +25,5 @@ export declare class ClientesService {
         estado: EstadosClientesEnum;
     }>;
     existeClienteActivoPorId(id: number): Promise<boolean>;
+    obtenerCliente(id: number): Promise<Cliente>;
 }

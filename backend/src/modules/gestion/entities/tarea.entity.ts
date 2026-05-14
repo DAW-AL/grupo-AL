@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Estados_Tareas } from '../enums/estados-tareas.enum';
 import { Proyecto } from './proyecto.entity';
 
@@ -17,5 +17,6 @@ export class Tarea {
   estado!: Estados_Tareas;
 
   @ManyToOne(() => Proyecto, (proyecto) => proyecto.tareas)
+  @JoinColumn({ name: 'id_proyecto' })
   proyecto!: Proyecto;
 }

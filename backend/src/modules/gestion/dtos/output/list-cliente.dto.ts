@@ -12,7 +12,7 @@ export class ListClienteDTO {
   telefono!: string;
 
   @ApiProperty({ example: 'grupoal@email.com' })
-  emails!: string;
+  email!: string;
 
   @ApiProperty()
   estado!: EstadosClientesEnum;
