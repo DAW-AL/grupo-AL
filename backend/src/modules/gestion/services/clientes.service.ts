@@ -6,7 +6,7 @@ import { UpdateClienteDto } from '../dtos/input/update-cliente.dto';
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
-import { BadRequestException, forwardRef, Inject } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, NotFoundException } from '@nestjs/common';
 import { ProyectosService } from './proyectos.service';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class ClientesService {
   async actualizarCliente(
     id: number,
     dto: UpdateClienteDto,
-  ): Promise<{ id: number; nombre: string; emails: string; telefono: string }> {
+  ): Promise<{ id: number; nombre: string; email: string; telefono: string }> {
     const cliente: Cliente | null = await this.repository.findOneBy({ id });
 
     if (!cliente) {
@@ -45,7 +45,7 @@ export class ClientesService {
     return {
       id: cliente.id,
       nombre: cliente.nombre,
-      emails: cliente.emails,
+      email: cliente.email,
       telefono: cliente.telefono,
     };
   }
@@ -64,7 +64,7 @@ export class ClientesService {
         id: true,
         nombre: true,
         telefono: true,
-        emails: true,
+        email: true,
         estado: true,
       },
       order: { id: 'ASC' },
@@ -77,7 +77,7 @@ export class ClientesService {
       const dto = new ListClienteDTO();
       dto.id = c.id;
       dto.nombre = c.nombre;
-      dto.emails = c.emails;
+      dto.email = c.email;
       dto.telefono = c.telefono;
       dto.estado = c.estado;
       dtoList.push(dto);
@@ -120,5 +120,17 @@ export class ClientesService {
       where: { id, estado: EstadosClientesEnum.ACTIVO },
     });
     return existe;
+  }
+
+  async obtenerCliente (id: number) {
+      const cliente = await this.repository.findOne({
+        where: {id}
+      });
+
+      if (!cliente) {
+        throw new NotFoundException("El cliente no existe")
+      }
+
+      return cliente;
   }
 }

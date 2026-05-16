@@ -17,7 +17,7 @@ let Cliente = class Cliente {
     id;
     nombre;
     telefono;
-    emails;
+    email;
     estado;
     proyectos;
 };
@@ -37,7 +37,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Cliente.prototype, "emails", void 0);
+], Cliente.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: estados_clientes_enum_1.EstadosClientesEnum }),
     __metadata("design:type", String)

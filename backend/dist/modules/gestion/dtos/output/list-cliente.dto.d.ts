@@ -3,6 +3,6 @@ export declare class ListClienteDTO {
     id: number;
     nombre: string;
     telefono: string;
-    emails: string;
+    email: string;
     estado: EstadosClientesEnum;
 }

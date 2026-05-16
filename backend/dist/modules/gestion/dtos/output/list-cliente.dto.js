@@ -16,7 +16,7 @@ class ListClienteDTO {
     id;
     nombre;
     telefono;
-    emails;
+    email;
     estado;
 }
 exports.ListClienteDTO = ListClienteDTO;
@@ -35,7 +35,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'grupoal@email.com' }),
     __metadata("design:type", String)
-], ListClienteDTO.prototype, "emails", void 0);
+], ListClienteDTO.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)

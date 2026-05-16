@@ -12,7 +12,7 @@ export declare class ClientesController {
     actualizarDatos(id: number, dto: UpdateClienteDto): Promise<{
         id: number;
         nombre: string;
-        emails: string;
+        email: string;
         telefono: string;
     }>;
     darDeBaja(id: number): Promise<{
@@ -21,4 +21,5 @@ export declare class ClientesController {
         estado: EstadosClientesEnum;
     }>;
     obtenerClientes(estado: EstadosClientesEnum): Promise<ListClienteDTO[]>;
+    obtenerCliente(id: number): Promise<import("../entities/cliente.entity").Cliente>;
 }

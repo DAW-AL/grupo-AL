@@ -50,7 +50,7 @@ export class ClientesController {
   async actualizarDatos(
     @Param('id') id: number,
     @Body() dto: UpdateClienteDto,
-  ): Promise<{ id: number; nombre: string; emails: string; telefono: string }> {
+  ): Promise<{ id: number; nombre: string; email: string; telefono: string }> {
     return await this.clientesService.actualizarCliente(id, dto);
   }
 
@@ -79,5 +79,14 @@ export class ClientesController {
     @Query('estado') estado: EstadosClientesEnum,
   ): Promise<ListClienteDTO[]> {
     return await this.clientesService.obtenerClientes(estado);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Get(':id')
+  async obtenerCliente(
+    @Param('id') id: number,
+  ) {
+    return await this.clientesService.obtenerCliente(id);
   }
 }
