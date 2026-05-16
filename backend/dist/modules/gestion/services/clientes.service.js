@@ -106,10 +106,10 @@ let ClientesService = class ClientesService {
     }
     async obtenerCliente(id) {
         const cliente = await this.repository.findOne({
-            where: { id }
+            where: { id },
         });
         if (!cliente) {
-            throw new common_1.NotFoundException("El cliente no existe");
+            throw new common_1.NotFoundException('El cliente no existe');
         }
         return cliente;
     }
