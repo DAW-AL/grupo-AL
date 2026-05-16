@@ -66,6 +66,22 @@ export class ClientesController {
   }
 
   @ApiBearerAuth()
+  @Roles(RolUsuarioEnum.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Reactivar un Cliente dado de baja' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID del cliente a reactivar',
+    example: 1,
+  })
+  @Patch(':id/reactivar')
+  async reactivarCliente(
+    @Param('id') id: number,
+  ): Promise<{ id: number; nombre: string; estado: EstadosClientesEnum }> {
+    return await this.clientesService.reactivarCliente(id);
+  }
+
+  @ApiBearerAuth()
   @ApiOkResponse({ type: ListClienteDTO, isArray: true })
   @ApiOperation({ summary: 'Obtener lista de Clientes' })
   @ApiQuery({
@@ -83,10 +99,9 @@ export class ClientesController {
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Obtener un Cliente' })
   @Get(':id')
-  async obtenerCliente(
-    @Param('id') id: number,
-  ) {
+  async obtenerCliente(@Param('id') id: number) {
     return await this.clientesService.obtenerCliente(id);
   }
 }

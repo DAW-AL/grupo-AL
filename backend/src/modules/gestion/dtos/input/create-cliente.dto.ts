@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
-import { EstadosClientesEnum } from '../../enums/estados-clientes.enum';
+import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
 
 export class CreateClienteDto {
   @ApiProperty({ example: 'Ezequiel' })
@@ -19,9 +18,4 @@ export class CreateClienteDto {
   @IsEmail({}, { message: 'Debe ser un correo electrónico válido' })
   @IsNotEmpty({ message: 'El email es obligatorio' })
   email!: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsEnum(EstadosClientesEnum)
-  estado!: EstadosClientesEnum;
 }

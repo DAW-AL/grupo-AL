@@ -8,7 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../../gestion/guards/roles.guard';
 import { Roles } from '../../gestion/decorators/roles.decorator';
@@ -25,11 +25,13 @@ import { ListUsuarioDto } from '../dtos/output/list-usuario.dto';
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
+  @ApiOperation({ summary: 'Obtener Usuarios' })
   @Get()
   async listarUsuarios(): Promise<ListUsuarioDto[]> {
     return await this.usuariosService.listarUsuarios();
   }
 
+  @ApiOperation({ summary: 'Obtener un Usuario' })
   @Get(':id')
   async consultarUsuario(
     @Param('id', ParseIntPipe) id: number,
@@ -37,6 +39,7 @@ export class UsuariosController {
     return await this.usuariosService.consultarUsuario(id);
   }
 
+  @ApiOperation({ summary: 'Registrar Usuarios' })
   @Post()
   async registrarUsuario(
     @Body() dto: CrearUsuarioDto,
@@ -44,6 +47,7 @@ export class UsuariosController {
     return await this.usuariosService.registrarUsuario(dto);
   }
 
+  @ApiOperation({ summary: 'Modificar Usuarios' })
   @Put(':id')
   async modificarUsuario(
     @Param('id', ParseIntPipe) id: number,

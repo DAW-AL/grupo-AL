@@ -38,6 +38,9 @@ let ClientesController = class ClientesController {
     async darDeBaja(id) {
         return await this.clientesService.darDeBaja(id);
     }
+    async reactivarCliente(id) {
+        return await this.clientesService.reactivarCliente(id);
+    }
     async obtenerClientes(estado) {
         return await this.clientesService.obtenerClientes(estado);
     }
@@ -85,6 +88,22 @@ __decorate([
 ], ClientesController.prototype, "darDeBaja", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
+    (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Reactivar un Cliente dado de baja' }),
+    (0, swagger_1.ApiParam)({
+        name: 'id',
+        description: 'ID del cliente a reactivar',
+        example: 1,
+    }),
+    (0, common_1.Patch)(':id/reactivar'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ClientesController.prototype, "reactivarCliente", null);
+__decorate([
+    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOkResponse)({ type: list_cliente_dto_1.ListClienteDTO, isArray: true }),
     (0, swagger_1.ApiOperation)({ summary: 'Obtener lista de Clientes' }),
     (0, swagger_1.ApiQuery)({
@@ -102,6 +121,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Obtener un Cliente' }),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),

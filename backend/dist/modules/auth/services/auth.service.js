@@ -62,7 +62,11 @@ let AuthService = class AuthService {
         if (!bcrypt.compareSync(dto.clave, usuario.clave)) {
             throw new common_1.UnauthorizedException();
         }
-        const payload = { nombre: usuario.nombre, sub: usuario.id, rol: usuario.rol };
+        const payload = {
+            nombre: usuario.nombre,
+            sub: usuario.id,
+            rol: usuario.rol,
+        };
         return {
             accessToken: this.jwtService.sign(payload),
         };

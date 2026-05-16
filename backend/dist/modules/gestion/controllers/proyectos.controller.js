@@ -47,6 +47,7 @@ let ProyectosController = class ProyectosController {
 exports.ProyectosController = ProyectosController;
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Crear un Proyecto' }),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
@@ -57,6 +58,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Modificar un proyecto' }),
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Param)('id')),
@@ -66,6 +68,7 @@ __decorate([
 ], ProyectosController.prototype, "actualizarProyecto", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Obtener Proyectos' }),
     (0, swagger_1.ApiOkResponse)({ type: list_proyecto_dto_1.ListProyectoDTO, isArray: true }),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
@@ -76,6 +79,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Obtener un proyecto' }),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -85,6 +89,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
+    (0, swagger_1.ApiOperation)({ summary: 'Eliminar un Proyecto' }),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),

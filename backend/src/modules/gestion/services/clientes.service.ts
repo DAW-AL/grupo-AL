@@ -6,7 +6,12 @@ import { UpdateClienteDto } from '../dtos/input/update-cliente.dto';
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
-import { BadRequestException, forwardRef, Inject, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  NotFoundException,
+} from '@nestjs/common';
 import { ProyectosService } from './proyectos.service';
 
 @Injectable()
@@ -115,6 +120,27 @@ export class ClientesService {
     };
   }
 
+  async reactivarCliente(
+    id: number,
+  ): Promise<{ id: number; nombre: string; estado: EstadosClientesEnum }> {
+    const cliente = await this.repository.findOneBy({ id });
+    if (!cliente) throw new BadRequestException('Cliente no encontrado');
+
+    if (cliente.estado === EstadosClientesEnum.ACTIVO) {
+      throw new BadRequestException(
+        'El cliente ya se encuentra en estado ACTIVO',
+      );
+    }
+
+    cliente.estado = EstadosClientesEnum.ACTIVO;
+    await this.repository.save(cliente);
+    return {
+      id: cliente.id,
+      nombre: cliente.nombre,
+      estado: cliente.estado,
+    };
+  }
+
   async existeClienteActivoPorId(id: number): Promise<boolean> {
     const existe: boolean = await this.repository.exists({
       where: { id, estado: EstadosClientesEnum.ACTIVO },
@@ -122,15 +148,15 @@ export class ClientesService {
     return existe;
   }
 
-  async obtenerCliente (id: number) {
-      const cliente = await this.repository.findOne({
-        where: {id}
-      });
+  async obtenerCliente(id: number) {
+    const cliente = await this.repository.findOne({
+      where: { id },
+    });
 
-      if (!cliente) {
-        throw new NotFoundException("El cliente no existe")
-      }
+    if (!cliente) {
+      throw new NotFoundException('El cliente no existe');
+    }
 
-      return cliente;
+    return cliente;
   }
 }

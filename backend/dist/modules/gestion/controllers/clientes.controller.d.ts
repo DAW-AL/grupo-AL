@@ -20,6 +20,11 @@ export declare class ClientesController {
         nombre: string;
         estado: EstadosClientesEnum;
     }>;
+    reactivarCliente(id: number): Promise<{
+        id: number;
+        nombre: string;
+        estado: EstadosClientesEnum;
+    }>;
     obtenerClientes(estado: EstadosClientesEnum): Promise<ListClienteDTO[]>;
     obtenerCliente(id: number): Promise<import("../entities/cliente.entity").Cliente>;
 }
