@@ -12,12 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateClienteDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const estados_clientes_enum_1 = require("../../enums/estados-clientes.enum");
 class CreateClienteDto {
     nombre;
     telefono;
     email;
-    estado;
 }
 exports.CreateClienteDto = CreateClienteDto;
 __decorate([
@@ -40,10 +38,4 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'El email es obligatorio' }),
     __metadata("design:type", String)
 ], CreateClienteDto.prototype, "email", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(estados_clientes_enum_1.EstadosClientesEnum),
-    __metadata("design:type", String)
-], CreateClienteDto.prototype, "estado", void 0);
 //# sourceMappingURL=create-cliente.dto.js.map

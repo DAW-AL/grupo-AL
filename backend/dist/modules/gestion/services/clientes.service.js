@@ -98,6 +98,21 @@ let ClientesService = class ClientesService {
             estado: cliente.estado,
         };
     }
+    async reactivarCliente(id) {
+        const cliente = await this.repository.findOneBy({ id });
+        if (!cliente)
+            throw new common_1.BadRequestException('Cliente no encontrado');
+        if (cliente.estado === estados_clientes_enum_1.EstadosClientesEnum.ACTIVO) {
+            throw new common_1.BadRequestException('El cliente ya se encuentra en estado ACTIVO');
+        }
+        cliente.estado = estados_clientes_enum_1.EstadosClientesEnum.ACTIVO;
+        await this.repository.save(cliente);
+        return {
+            id: cliente.id,
+            nombre: cliente.nombre,
+            estado: cliente.estado,
+        };
+    }
     async existeClienteActivoPorId(id) {
         const existe = await this.repository.exists({
             where: { id, estado: estados_clientes_enum_1.EstadosClientesEnum.ACTIVO },

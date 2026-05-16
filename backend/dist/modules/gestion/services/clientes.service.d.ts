@@ -24,6 +24,11 @@ export declare class ClientesService {
         nombre: string;
         estado: EstadosClientesEnum;
     }>;
+    reactivarCliente(id: number): Promise<{
+        id: number;
+        nombre: string;
+        estado: EstadosClientesEnum;
+    }>;
     existeClienteActivoPorId(id: number): Promise<boolean>;
     obtenerCliente(id: number): Promise<Cliente>;
 }

@@ -37,7 +37,7 @@ __decorate([
     __metadata("design:type", String)
 ], ListClienteDTO.prototype, "email", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'ACTIVO' }),
     __metadata("design:type", String)
 ], ListClienteDTO.prototype, "estado", void 0);
 //# sourceMappingURL=list-cliente.dto.js.map

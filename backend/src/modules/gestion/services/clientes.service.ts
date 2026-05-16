@@ -120,6 +120,27 @@ export class ClientesService {
     };
   }
 
+  async reactivarCliente(
+    id: number,
+  ): Promise<{ id: number; nombre: string; estado: EstadosClientesEnum }> {
+    const cliente = await this.repository.findOneBy({ id });
+    if (!cliente) throw new BadRequestException('Cliente no encontrado');
+
+    if (cliente.estado === EstadosClientesEnum.ACTIVO) {
+      throw new BadRequestException(
+        'El cliente ya se encuentra en estado ACTIVO',
+      );
+    }
+
+    cliente.estado = EstadosClientesEnum.ACTIVO;
+    await this.repository.save(cliente);
+    return {
+      id: cliente.id,
+      nombre: cliente.nombre,
+      estado: cliente.estado,
+    };
+  }
+
   async existeClienteActivoPorId(id: number): Promise<boolean> {
     const existe: boolean = await this.repository.exists({
       where: { id, estado: EstadosClientesEnum.ACTIVO },

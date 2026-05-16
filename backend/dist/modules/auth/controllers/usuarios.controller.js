@@ -42,12 +42,14 @@ let UsuariosController = class UsuariosController {
 };
 exports.UsuariosController = UsuariosController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Obtener Usuarios' }),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UsuariosController.prototype, "listarUsuarios", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Obtener un Usuario' }),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
@@ -55,6 +57,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsuariosController.prototype, "consultarUsuario", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Registrar Usuarios' }),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -62,6 +65,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsuariosController.prototype, "registrarUsuario", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Modificar Usuarios' }),
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),

@@ -8,7 +8,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { TareaService } from '../services/tarea.service';
 import { CrearTareaDto } from '../dtos/input/create-tarea.dto';
 import { ActualizarTareaDto } from '../dtos/input/update-tarea.dto';
@@ -23,6 +23,7 @@ export class TareaController {
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Obtener tareas' })
   @Get()
   @ApiParam({
     name: 'proyecto_id',
@@ -35,6 +36,7 @@ export class TareaController {
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Obtener una tarea' })
   @Get(':id')
   @ApiParam({
     name: 'proyecto_id',
@@ -51,6 +53,7 @@ export class TareaController {
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Crear una tarea' })
   @Post()
   @ApiParam({
     name: 'proyecto_id',
@@ -66,6 +69,7 @@ export class TareaController {
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Modificar una tarea' })
   @Patch(':id')
   @ApiParam({
     name: 'proyecto_id',
@@ -84,6 +88,7 @@ export class TareaController {
   @ApiBearerAuth()
   @Roles(RolUsuarioEnum.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Eliminar una tarea' })
   @Delete(':id')
   @ApiParam({
     name: 'proyecto_id',

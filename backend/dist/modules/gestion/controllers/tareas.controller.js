@@ -48,6 +48,7 @@ exports.TareaController = TareaController;
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Obtener tareas' }),
     (0, common_2.Get)(),
     (0, swagger_1.ApiParam)({
         name: 'proyecto_id',
@@ -62,6 +63,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Obtener una tarea' }),
     (0, common_2.Get)(':id'),
     (0, swagger_1.ApiParam)({
         name: 'proyecto_id',
@@ -78,6 +80,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Crear una tarea' }),
     (0, common_2.Post)(),
     (0, swagger_1.ApiParam)({
         name: 'proyecto_id',
@@ -93,6 +96,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Modificar una tarea' }),
     (0, common_2.Patch)(':id'),
     (0, swagger_1.ApiParam)({
         name: 'proyecto_id',
@@ -111,6 +115,7 @@ __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Eliminar una tarea' }),
     (0, common_2.Delete)(':id'),
     (0, swagger_1.ApiParam)({
         name: 'proyecto_id',

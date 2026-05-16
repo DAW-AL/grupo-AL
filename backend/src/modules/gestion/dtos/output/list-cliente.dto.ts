@@ -14,6 +14,6 @@ export class ListClienteDTO {
   @ApiProperty({ example: 'grupoal@email.com' })
   email!: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'ACTIVO' })
   estado!: EstadosClientesEnum;
 }
