@@ -84,9 +84,7 @@ export class ClientesController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get(':id')
-  async obtenerCliente(
-    @Param('id') id: number,
-  ) {
+  async obtenerCliente(@Param('id') id: number) {
     return await this.clientesService.obtenerCliente(id);
   }
 }

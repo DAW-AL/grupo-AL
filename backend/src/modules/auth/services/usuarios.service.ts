@@ -9,7 +9,6 @@ import { ModificarUsuarioDto } from '../dtos/input/modificar-usuario.dto';
 import { ListUsuarioDto } from '../dtos/output/list-usuario.dto';
 import { RolUsuarioEnum } from '../enums/rol-usuario.enum';
 
-
 @Injectable()
 export class UsuariosService {
   constructor(

@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from '../dtos/input/login.dto';
 import { UsuariosService } from './usuarios.service';
 
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -25,7 +24,11 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload = { nombre: usuario.nombre, sub: usuario.id, rol: usuario.rol};
+    const payload = {
+      nombre: usuario.nombre,
+      sub: usuario.id,
+      rol: usuario.rol,
+    };
 
     return {
       accessToken: this.jwtService.sign(payload),

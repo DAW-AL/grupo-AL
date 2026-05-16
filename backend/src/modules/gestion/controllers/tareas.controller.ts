@@ -17,7 +17,6 @@ import { Roles } from '../decorators/roles.decorator';
 import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
 import { RolesGuard } from '../guards/roles.guard';
 
-
 @Controller('proyectos/:proyecto_id/tarea')
 export class TareaController {
   constructor(private readonly tareaServicios: TareaService) {}
