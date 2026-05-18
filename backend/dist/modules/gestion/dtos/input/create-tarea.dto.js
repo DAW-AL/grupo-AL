@@ -12,10 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CrearTareaDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const estados_tareas_enum_1 = require("../../enums/estados-tareas.enum");
 class CrearTareaDto {
     descripcion;
-    estado;
 }
 exports.CrearTareaDto = CrearTareaDto;
 __decorate([
@@ -24,10 +22,4 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CrearTareaDto.prototype, "descripcion", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEnum)(estados_tareas_enum_1.Estados_Tareas),
-    __metadata("design:type", String)
-], CrearTareaDto.prototype, "estado", void 0);
 //# sourceMappingURL=create-tarea.dto.js.map

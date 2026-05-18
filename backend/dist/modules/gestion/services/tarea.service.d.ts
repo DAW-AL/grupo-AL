@@ -8,10 +8,10 @@ export declare class TareaService {
     private readonly proyectoServices;
     constructor(tareaRepositorio: Repository<Tarea>, proyectoServices: ProyectosService);
     findAll(proyecto_id: number): Promise<Tarea[]>;
-    findOne(proyecto_id: number, id: number): Promise<Tarea>;
+    findOne(id: number): Promise<Tarea>;
     create(proyecto_id: number, crearTarea: CrearTareaDto): Promise<Tarea>;
-    update(proyecto_id: number, id: number, actualizarTarea: ActualizarTareaDto): Promise<Tarea>;
-    delete(proyecto_id: number, id: number): Promise<{
+    update(id: number, actualizarTarea: ActualizarTareaDto): Promise<Tarea>;
+    delete(id: number): Promise<{
         message: string;
     }>;
 }

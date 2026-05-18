@@ -17,14 +17,14 @@ import { Roles } from '../decorators/roles.decorator';
 import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
 import { RolesGuard } from '../guards/roles.guard';
 
-@Controller('proyectos/:proyecto_id/tarea')
+@Controller('proyectos')
 export class TareaController {
   constructor(private readonly tareaServicios: TareaService) {}
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Obtener tareas' })
-  @Get()
+  @Get('/:proyecto_id/tarea')
   @ApiParam({
     name: 'proyecto_id',
     type: Number,
@@ -37,24 +37,18 @@ export class TareaController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Obtener una tarea' })
-  @Get(':id')
-  @ApiParam({
-    name: 'proyecto_id',
-    type: Number,
-    description: 'ID del proyecto',
-  })
+  @Get('/tarea/:id')
   @ApiParam({ name: 'id', type: Number, description: 'ID de la tarea' })
   findOne(
-    @Param('proyecto_id', ParseIntPipe) proyecto_id: number,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.tareaServicios.findOne(proyecto_id, id);
+    return this.tareaServicios.findOne(id);
   }
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Crear una tarea' })
-  @Post()
+  @Post(':proyecto_id/tarea/')
   @ApiParam({
     name: 'proyecto_id',
     type: Number,
@@ -70,36 +64,24 @@ export class TareaController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Modificar una tarea' })
-  @Patch(':id')
-  @ApiParam({
-    name: 'proyecto_id',
-    type: Number,
-    description: 'ID del proyecto',
-  })
+  @Patch('/tareas/:id')
   @ApiParam({ name: 'id', type: Number, description: 'ID de la tarea' })
   update(
-    @Param('proyecto_id', ParseIntPipe) proyecto_id: number,
     @Param('id', ParseIntPipe) id: number,
     @Body() actualizarTarea: ActualizarTareaDto,
   ) {
-    return this.tareaServicios.update(proyecto_id, id, actualizarTarea);
+    return this.tareaServicios.update(id, actualizarTarea);
   }
 
   @ApiBearerAuth()
   @Roles(RolUsuarioEnum.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Eliminar una tarea' })
-  @Delete(':id')
-  @ApiParam({
-    name: 'proyecto_id',
-    type: Number,
-    description: 'ID del proyecto',
-  })
+  @Delete('/tareas/:id')
   @ApiParam({ name: 'id', type: Number, description: 'ID de la tarea' })
   delete(
-    @Param('proyecto_id', ParseIntPipe) proyecto_id: number,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.tareaServicios.delete(proyecto_id, id);
+    return this.tareaServicios.delete(id);
   }
 }

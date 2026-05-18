@@ -31,17 +31,17 @@ let TareaController = class TareaController {
     findAll(proyecto_id) {
         return this.tareaServicios.findAll(proyecto_id);
     }
-    findOne(proyecto_id, id) {
-        return this.tareaServicios.findOne(proyecto_id, id);
+    findOne(id) {
+        return this.tareaServicios.findOne(id);
     }
     create(proyecto_id, crearTarea) {
         return this.tareaServicios.create(proyecto_id, crearTarea);
     }
-    update(proyecto_id, id, actualizarTarea) {
-        return this.tareaServicios.update(proyecto_id, id, actualizarTarea);
+    update(id, actualizarTarea) {
+        return this.tareaServicios.update(id, actualizarTarea);
     }
-    delete(proyecto_id, id) {
-        return this.tareaServicios.delete(proyecto_id, id);
+    delete(id) {
+        return this.tareaServicios.delete(id);
     }
 };
 exports.TareaController = TareaController;
@@ -49,7 +49,7 @@ __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, swagger_1.ApiOperation)({ summary: 'Obtener tareas' }),
-    (0, common_2.Get)(),
+    (0, common_2.Get)('/:proyecto_id/tarea'),
     (0, swagger_1.ApiParam)({
         name: 'proyecto_id',
         type: Number,
@@ -64,24 +64,18 @@ __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, swagger_1.ApiOperation)({ summary: 'Obtener una tarea' }),
-    (0, common_2.Get)(':id'),
-    (0, swagger_1.ApiParam)({
-        name: 'proyecto_id',
-        type: Number,
-        description: 'ID del proyecto',
-    }),
+    (0, common_2.Get)('/tarea/:id'),
     (0, swagger_1.ApiParam)({ name: 'id', type: Number, description: 'ID de la tarea' }),
-    __param(0, (0, common_2.Param)('proyecto_id', common_2.ParseIntPipe)),
-    __param(1, (0, common_2.Param)('id', common_2.ParseIntPipe)),
+    __param(0, (0, common_2.Param)('id', common_2.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], TareaController.prototype, "findOne", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, swagger_1.ApiOperation)({ summary: 'Crear una tarea' }),
-    (0, common_2.Post)(),
+    (0, common_2.Post)(':proyecto_id/tarea/'),
     (0, swagger_1.ApiParam)({
         name: 'proyecto_id',
         type: Number,
@@ -97,18 +91,12 @@ __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, swagger_1.ApiOperation)({ summary: 'Modificar una tarea' }),
-    (0, common_2.Patch)(':id'),
-    (0, swagger_1.ApiParam)({
-        name: 'proyecto_id',
-        type: Number,
-        description: 'ID del proyecto',
-    }),
+    (0, common_2.Patch)('/tareas/:id'),
     (0, swagger_1.ApiParam)({ name: 'id', type: Number, description: 'ID de la tarea' }),
-    __param(0, (0, common_2.Param)('proyecto_id', common_2.ParseIntPipe)),
-    __param(1, (0, common_2.Param)('id', common_2.ParseIntPipe)),
-    __param(2, (0, common_2.Body)()),
+    __param(0, (0, common_2.Param)('id', common_2.ParseIntPipe)),
+    __param(1, (0, common_2.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, update_tarea_dto_1.ActualizarTareaDto]),
+    __metadata("design:paramtypes", [Number, update_tarea_dto_1.ActualizarTareaDto]),
     __metadata("design:returntype", void 0)
 ], TareaController.prototype, "update", null);
 __decorate([
@@ -116,21 +104,15 @@ __decorate([
     (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, swagger_1.ApiOperation)({ summary: 'Eliminar una tarea' }),
-    (0, common_2.Delete)(':id'),
-    (0, swagger_1.ApiParam)({
-        name: 'proyecto_id',
-        type: Number,
-        description: 'ID del proyecto',
-    }),
+    (0, common_2.Delete)('/tareas/:id'),
     (0, swagger_1.ApiParam)({ name: 'id', type: Number, description: 'ID de la tarea' }),
-    __param(0, (0, common_2.Param)('proyecto_id', common_2.ParseIntPipe)),
-    __param(1, (0, common_2.Param)('id', common_2.ParseIntPipe)),
+    __param(0, (0, common_2.Param)('id', common_2.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], TareaController.prototype, "delete", null);
 exports.TareaController = TareaController = __decorate([
-    (0, common_1.Controller)('proyectos/:proyecto_id/tarea'),
+    (0, common_1.Controller)('proyectos'),
     __metadata("design:paramtypes", [tarea_service_1.TareaService])
 ], TareaController);
 //# sourceMappingURL=tareas.controller.js.map

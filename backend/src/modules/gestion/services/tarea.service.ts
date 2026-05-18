@@ -21,19 +21,23 @@ export class TareaService {
 
     const tareas = await this.tareaRepositorio.find({
       where: { proyecto: { id: proyecto_id } },
+      relations: {
+        proyecto: true
+      }
     });
 
     return tareas;
   }
 
-  async findOne(proyecto_id: number, id: number): Promise<Tarea> {
-    await this.proyectoServices.obtenerProyecto(proyecto_id);
+  async findOne(id: number): Promise<Tarea> {
 
     const tarea = await this.tareaRepositorio.findOne({
       where: {
         id: id,
-        proyecto: { id: proyecto_id },
       },
+      relations: {
+        proyecto: true
+      }
     });
 
     if (!tarea) {
@@ -44,10 +48,10 @@ export class TareaService {
   }
 
   async create(proyecto_id: number, crearTarea: CrearTareaDto): Promise<Tarea> {
-    await this.proyectoServices.obtenerProyecto(proyecto_id);
 
     const nuevaTarea = this.tareaRepositorio.create({
       ...crearTarea,
+      estado: Estados_Tareas.pendiente,
       proyecto: { id: proyecto_id },
     });
 
@@ -55,11 +59,9 @@ export class TareaService {
   }
 
   async update(
-    proyecto_id: number,
     id: number,
     actualizarTarea: ActualizarTareaDto,
   ): Promise<Tarea> {
-    await this.proyectoServices.obtenerProyecto(proyecto_id);
 
     const tareaActualizada = await this.tareaRepositorio.update(
       id,
@@ -70,13 +72,12 @@ export class TareaService {
       throw new NotFoundException('No se pudo actualizar la tarea');
     }
 
-    return this.findOne(proyecto_id, id);
+    return this.findOne(id);
   }
 
-  async delete(proyecto_id: number, id: number): Promise<{ message: string }> {
-    await this.proyectoServices.obtenerProyecto(proyecto_id);
+  async delete(id: number): Promise<{ message: string }> {
 
-    const buscarTarea = await this.findOne(proyecto_id, id);
+    const buscarTarea = await this.findOne(id);
 
     if (buscarTarea.estado === Estados_Tareas.baja) {
       throw new NotFoundException('La tarea ya esta dada de baja');

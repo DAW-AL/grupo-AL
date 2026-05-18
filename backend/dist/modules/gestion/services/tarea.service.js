@@ -30,16 +30,20 @@ let TareaService = class TareaService {
         await this.proyectoServices.obtenerProyecto(proyecto_id);
         const tareas = await this.tareaRepositorio.find({
             where: { proyecto: { id: proyecto_id } },
+            relations: {
+                proyecto: true
+            }
         });
         return tareas;
     }
-    async findOne(proyecto_id, id) {
-        await this.proyectoServices.obtenerProyecto(proyecto_id);
+    async findOne(id) {
         const tarea = await this.tareaRepositorio.findOne({
             where: {
                 id: id,
-                proyecto: { id: proyecto_id },
             },
+            relations: {
+                proyecto: true
+            }
         });
         if (!tarea) {
             throw new common_1.NotFoundException(`No se encontro tarea con id: ${id}`);
@@ -47,24 +51,22 @@ let TareaService = class TareaService {
         return tarea;
     }
     async create(proyecto_id, crearTarea) {
-        await this.proyectoServices.obtenerProyecto(proyecto_id);
         const nuevaTarea = this.tareaRepositorio.create({
             ...crearTarea,
+            estado: estados_tareas_enum_1.Estados_Tareas.pendiente,
             proyecto: { id: proyecto_id },
         });
         return await this.tareaRepositorio.save(nuevaTarea);
     }
-    async update(proyecto_id, id, actualizarTarea) {
-        await this.proyectoServices.obtenerProyecto(proyecto_id);
+    async update(id, actualizarTarea) {
         const tareaActualizada = await this.tareaRepositorio.update(id, actualizarTarea);
         if (tareaActualizada.affected === 0) {
             throw new common_1.NotFoundException('No se pudo actualizar la tarea');
         }
-        return this.findOne(proyecto_id, id);
+        return this.findOne(id);
     }
-    async delete(proyecto_id, id) {
-        await this.proyectoServices.obtenerProyecto(proyecto_id);
-        const buscarTarea = await this.findOne(proyecto_id, id);
+    async delete(id) {
+        const buscarTarea = await this.findOne(id);
         if (buscarTarea.estado === estados_tareas_enum_1.Estados_Tareas.baja) {
             throw new common_1.NotFoundException('La tarea ya esta dada de baja');
         }
