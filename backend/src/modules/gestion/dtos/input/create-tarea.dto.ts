@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Estados_Tareas } from '../../enums/estados-tareas.enum';
 
 export class CrearTareaDto {
@@ -7,9 +7,4 @@ export class CrearTareaDto {
   @IsNotEmpty()
   @ApiProperty()
   descripcion!: string;
-
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsEnum(Estados_Tareas)
-  estado!: Estados_Tareas;
 }
