@@ -2,7 +2,7 @@
 node_modules/
 
 # Build compilado
-dist/
+# dist/
 
 # Variables de entorno
 .env
