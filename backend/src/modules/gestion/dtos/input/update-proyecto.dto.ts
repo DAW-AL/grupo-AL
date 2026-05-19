@@ -4,11 +4,15 @@ import { IsEnum, IsOptional } from 'class-validator';
 import { EstadosProyectosEnum } from '../../enums/estados-proyectos.enum';
 
 export class UpdateProyectoDto extends PartialType(CreateProyectoDto) {
+
   @ApiProperty({
-    enum: EstadosProyectosEnum,
-    example: EstadosProyectosEnum.ACTIVO,
+  enum: EstadosProyectosEnum,
+  required: false,
+  example: EstadosProyectosEnum.FINALIZADO,
   })
-  @IsEnum(EstadosProyectosEnum)
+  
   @IsOptional()
+  @IsEnum(EstadosProyectosEnum)
   estado?: EstadosProyectosEnum;
+
 }
