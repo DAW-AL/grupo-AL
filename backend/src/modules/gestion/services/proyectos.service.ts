@@ -16,6 +16,8 @@ import { ProyectoDTO } from '../dtos/output/proyecto.dto';
 import { ListTareaDTO } from '../dtos/output/list-tarea.dto';
 import { ClientesService } from './clientes.service';
 import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
+import { Tarea } from '../entities/tarea.entity';
+import { Estados_Tareas } from '../enums/estados-tareas.enum';
 
 @Injectable()
 export class ProyectosService {
@@ -24,6 +26,8 @@ export class ProyectosService {
     private readonly repository: Repository<Proyecto>,
     @Inject(forwardRef(() => ClientesService))
     private readonly clientesService: ClientesService,
+    @InjectRepository(Tarea)
+    private readonly tareaRepository: Repository<Tarea>,
   ) {}
 
   async crearProyecto(dto: CreateProyectoDto): Promise<{ id: number }> {
@@ -66,6 +70,8 @@ export class ProyectosService {
       }
     }
 
+    await this.validarCambioDeEstado(proyecto, dto);
+
     this.repository.merge(proyecto, dto);
 
     await this.repository.save(proyecto);
@@ -104,7 +110,7 @@ export class ProyectosService {
     });
 
     if (!proyecto) {
-      throw new BadRequestException('Proyecto no encontrado');
+      throw new NotFoundException('Proyecto no encontrado');
     }
 
     const dto = new ProyectoDTO();
@@ -146,17 +152,57 @@ export class ProyectosService {
     });
 
     if (!proyecto) {
-      throw new NotFoundException('Proyecto no encontrado');
+      throw new NotFoundException(
+        'Proyecto no encontrado');
     }
 
     if (proyecto.estado === EstadosProyectosEnum.BAJA)
-      throw new BadRequestException('El proyecto ya esta dado de baja');
+      throw new BadRequestException(
+        'El proyecto ya esta dado de baja');
 
     if (proyecto.estado === EstadosProyectosEnum.FINALIZADO)
-      throw new BadRequestException('El proyecto se encuentra finalizado');
+      throw new BadRequestException(
+        'El proyecto se encuentra finalizado');
 
     proyecto.estado = EstadosProyectosEnum.BAJA;
 
     await this.repository.save(proyecto);
+  }
+
+  /* Funcion para validar cambios de estado en actualizarProyecto */
+  /* Baja desde endpoint DELETE, Finalizar desde endpoint PUT */
+  private async validarCambioDeEstado(proyecto: Proyecto, dto: UpdateProyectoDto): Promise<void> {
+
+    if (!dto.estado) {
+      return;
+    }
+
+    if (proyecto.estado === EstadosProyectosEnum.BAJA) {
+      throw new BadRequestException(
+        'No se puede modificar un proyecto dado de BAJA',
+      );
+    }
+
+    if ( proyecto.estado === EstadosProyectosEnum.FINALIZADO &&
+      dto.estado === EstadosProyectosEnum.ACTIVO) {
+      throw new BadRequestException (
+        'No se puede reactivar un proyecto')
+    }
+
+    if (dto.estado === EstadosProyectosEnum.FINALIZADO) {
+
+      const existenTareasPendientes = await this.tareaRepository.exists({
+        where: {
+          proyecto: { id: proyecto.id },
+          estado: Estados_Tareas.pendiente,
+        },
+      });
+
+      if (existenTareasPendientes) {
+        throw new BadRequestException(
+          'No se puede finalizar un proyecto con tareas pendientes',
+        );
+      }
+    }
   }
 }
