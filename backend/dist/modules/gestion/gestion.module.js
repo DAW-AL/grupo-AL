@@ -19,13 +19,15 @@ const tarea_service_1 = require("./services/tarea.service");
 const auth_module_1 = require("../auth/auth.module");
 const clientes_service_1 = require("./services/clientes.service");
 const proyectos_service_1 = require("./services/proyectos.service");
+const estadisticas_controller_1 = require("./controllers/estadisticas.controller");
+const estadisticas_service_1 = require("./services/estadisticas.service");
 let GestionModule = class GestionModule {
 };
 exports.GestionModule = GestionModule;
 exports.GestionModule = GestionModule = __decorate([
     (0, common_1.Module)({
-        controllers: [clientes_controller_1.ClientesController, proyectos_controller_1.ProyectosController, tareas_controller_1.TareaController],
-        providers: [tarea_service_1.TareaService, clientes_service_1.ClientesService, proyectos_service_1.ProyectosService],
+        controllers: [clientes_controller_1.ClientesController, proyectos_controller_1.ProyectosController, tareas_controller_1.TareaController, estadisticas_controller_1.EstadisticasController],
+        providers: [tarea_service_1.TareaService, clientes_service_1.ClientesService, proyectos_service_1.ProyectosService, estadisticas_service_1.EstadisticasService],
         exports: [],
         imports: [typeorm_1.TypeOrmModule.forFeature([tarea_entity_1.Tarea, cliente_entity_1.Cliente, proyecto_entity_1.Proyecto]), auth_module_1.AuthModule],
     })

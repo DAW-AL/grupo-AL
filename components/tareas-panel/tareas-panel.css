@@ -1,0 +1,77 @@
+section > * {
+    font-size: var(--font-small);
+}
+
+.btn {
+    color: rgb(255, 255, 255) !important;
+    background-color: var(--accent-color);
+}
+
+.btn > i {
+    color: rgb(255, 255, 255) !important;
+}
+
+.botones > i {
+    cursor: pointer;
+}
+
+.btn-editar {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    color: var(--primary-color) !important;
+    font-weight: var(--font-semibold);
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul > li {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+.custom-checkbox {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #7B74D8;
+    cursor: pointer;
+    position: relative;
+}
+
+.custom-checkbox:checked {
+    background-color: #7B74D8;
+}
+
+.custom-checkbox:checked::after {
+    content: "✓";
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pendiente {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.finalizado {
+    background-color: #dbeafe;
+    color: #1e40af;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.tachado {
+    text-decoration: line-through;
+}

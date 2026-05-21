@@ -10,10 +10,12 @@ import { TareaService } from './services/tarea.service';
 import { AuthModule } from '../auth/auth.module';
 import { ClientesService } from './services/clientes.service';
 import { ProyectosService } from './services/proyectos.service';
+import { EstadisticasController } from './controllers/estadisticas.controller';
+import { EstadisticasService } from './services/estadisticas.service';
 
 @Module({
-  controllers: [ClientesController, ProyectosController, TareaController],
-  providers: [TareaService, ClientesService, ProyectosService],
+  controllers: [ClientesController, ProyectosController, TareaController, EstadisticasController],
+  providers: [TareaService, ClientesService, ProyectosService, EstadisticasService],
   exports: [],
   imports: [TypeOrmModule.forFeature([Tarea, Cliente, Proyecto]), AuthModule],
 })
