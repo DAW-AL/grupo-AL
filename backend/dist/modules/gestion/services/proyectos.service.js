@@ -23,12 +23,16 @@ const proyecto_dto_1 = require("../dtos/output/proyecto.dto");
 const list_tarea_dto_1 = require("../dtos/output/list-tarea.dto");
 const clientes_service_1 = require("./clientes.service");
 const list_cliente_dto_1 = require("../dtos/output/list-cliente.dto");
+const tarea_entity_1 = require("../entities/tarea.entity");
+const estados_tareas_enum_1 = require("../enums/estados-tareas.enum");
 let ProyectosService = class ProyectosService {
     repository;
     clientesService;
-    constructor(repository, clientesService) {
+    tareaRepository;
+    constructor(repository, clientesService, tareaRepository) {
         this.repository = repository;
         this.clientesService = clientesService;
+        this.tareaRepository = tareaRepository;
     }
     async crearProyecto(dto) {
         const proyecto = this.repository.create(dto);
@@ -56,6 +60,7 @@ let ProyectosService = class ProyectosService {
                 throw new common_1.BadRequestException('Se debe especificar un cliente activo para el proyecto');
             }
         }
+        await this.validarCambioDeEstado(proyecto, dto);
         this.repository.merge(proyecto, dto);
         await this.repository.save(proyecto);
     }
@@ -87,7 +92,7 @@ let ProyectosService = class ProyectosService {
             order: { tareas: { id: 'ASC' } },
         });
         if (!proyecto) {
-            throw new common_1.BadRequestException('Proyecto no encontrado');
+            throw new common_1.NotFoundException('Proyecto no encontrado');
         }
         const dto = new proyecto_dto_1.ProyectoDTO();
         dto.nombre = proyecto.nombre;
@@ -132,13 +137,38 @@ let ProyectosService = class ProyectosService {
         proyecto.estado = estados_proyectos_enum_1.EstadosProyectosEnum.BAJA;
         await this.repository.save(proyecto);
     }
+    async validarCambioDeEstado(proyecto, dto) {
+        if (!dto.estado) {
+            return;
+        }
+        if (proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA) {
+            throw new common_1.BadRequestException('No se puede modificar un proyecto dado de BAJA');
+        }
+        if (proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO &&
+            dto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.ACTIVO) {
+            throw new common_1.BadRequestException('No se puede reactivar un proyecto');
+        }
+        if (dto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO) {
+            const existenTareasPendientes = await this.tareaRepository.exists({
+                where: {
+                    proyecto: { id: proyecto.id },
+                    estado: estados_tareas_enum_1.Estados_Tareas.pendiente,
+                },
+            });
+            if (existenTareasPendientes) {
+                throw new common_1.BadRequestException('No se puede finalizar un proyecto con tareas pendientes');
+            }
+        }
+    }
 };
 exports.ProyectosService = ProyectosService;
 exports.ProyectosService = ProyectosService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(proyecto_entity_1.Proyecto)),
     __param(1, (0, common_1.Inject)((0, common_1.forwardRef)(() => clientes_service_1.ClientesService))),
+    __param(2, (0, typeorm_1.InjectRepository)(tarea_entity_1.Tarea)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        clientes_service_1.ClientesService])
+        clientes_service_1.ClientesService,
+        typeorm_2.Repository])
 ], ProyectosService);
 //# sourceMappingURL=proyectos.service.js.map

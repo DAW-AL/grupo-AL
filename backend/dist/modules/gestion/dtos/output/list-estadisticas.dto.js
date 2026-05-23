@@ -9,23 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateProyectoDto = void 0;
+exports.ListarEstadisticasDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-const create_proyecto_dto_1 = require("./create-proyecto.dto");
-const class_validator_1 = require("class-validator");
-const estados_proyectos_enum_1 = require("../../enums/estados-proyectos.enum");
-class UpdateProyectoDto extends (0, swagger_1.PartialType)(create_proyecto_dto_1.CreateProyectoDto) {
-    estado;
+class ListarEstadisticasDto {
+    proyecto;
+    cliente;
+    tarea;
 }
-exports.UpdateProyectoDto = UpdateProyectoDto;
+exports.ListarEstadisticasDto = ListarEstadisticasDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({
-        enum: estados_proyectos_enum_1.EstadosProyectosEnum,
-        required: false,
-        example: estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO,
-    }),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(estados_proyectos_enum_1.EstadosProyectosEnum),
-    __metadata("design:type", String)
-], UpdateProyectoDto.prototype, "estado", void 0);
-//# sourceMappingURL=update-proyecto.dto.js.map
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Object)
+], ListarEstadisticasDto.prototype, "proyecto", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Object)
+], ListarEstadisticasDto.prototype, "cliente", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Object)
+], ListarEstadisticasDto.prototype, "tarea", void 0);
+//# sourceMappingURL=list-estadisticas.dto.js.map

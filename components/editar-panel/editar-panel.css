@@ -1,0 +1,50 @@
+section {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    background-color: var(--secondary-color);
+    width: fit-content;
+    height: 100vh;
+    right: 0;
+    top: 0;
+    padding: 15px 20px;
+    box-shadow: -0.5px 2px 2px rgb(148, 148, 148);
+}
+
+section.cerrado {
+    right: -100%;
+}
+
+.header > h4 {
+    flex: 1;
+}
+
+.input {
+    border-radius: 5px;
+    border: 1px solid rgb(156, 154, 154);
+    padding-left: 10px;
+}
+
+.input::placeholder, select {
+    color: gray;
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.btn {
+    border: 1px solid rgb(156, 154, 154);
+}
+
+label {
+    font-size: var(--font-extrasmall);
+    font-weight: var(--font-semibold);
+}
+
+.buttons {
+    margin-top: auto;
+}
+
+select {
+    padding: 3px 0;
+}

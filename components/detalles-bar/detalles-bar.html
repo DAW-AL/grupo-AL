@@ -1,0 +1,12 @@
+<div class="d-flex justify-content-between align-items-center w-100">
+    <h4 class="mb-0">{{titulo()}}</h4>
+    <div class="botones">
+        <app-button-action 
+            boton = "Nueva tarea",
+            icono="bi bi-plus",
+            (clicked)="showcase()"
+        />
+        <i class="bi bi-three-dots-vertical px-3" (click)="showcase()"></i>
+    </div>
+</div>
+<hr>
