@@ -26,11 +26,6 @@ import { HistorialModule } from '../historial/historial.module';
         };
       },
     }),
-    // HistorialModule se importa para que HistorialService pueda
-    // inyectarse en UsuariosService. Sin este import, NestJS no
-    // puede resolver la dependencia y la aplicación no levanta.
-    // HistorialModule exporta HistorialService, por eso alcanza
-    // con importar el módulo sin declarar nada extra.
     HistorialModule,
   ],
   exports: [AuthGuard],

@@ -11,14 +11,7 @@ import { RolUsuarioEnum } from '../enums/rol-usuario.enum';
 import { HistorialService } from '../../historial/services/historial.service';
 import { AccionTipoEnum, EntidadTipoEnum } from '../../historial/entities/historial-cambio.entity';
 
-// ------------------------------------------------------------
-// INTERFAZ UsuarioActivo
-// Define la forma del objeto que viene del JWT decodificado.
-// El AuthGuard guarda el payload en req.usuario, y ese payload
-// tiene exactamente estos tres campos.
-// usuarioActivo es el admin que está ejecutando la acción,
-// no el usuario que se está creando o modificando.
-// ------------------------------------------------------------
+
 interface UsuarioActivo {
   sub: number;
   nombre: string;
@@ -30,15 +23,9 @@ export class UsuariosService {
   constructor(
     @InjectRepository(Usuario)
     private readonly usuariosRepository: Repository<Usuario>,
-    // HistorialService se inyecta sin @Inject especial porque
-    // no hay dependencia circular entre AuthModule e HistorialModule.
-    // Para que funcione, AuthModule debe importar HistorialModule.
     private readonly historialService: HistorialService,
   ) {}
 
-  // Método interno usado por AuthService para el login.
-  // No recibe usuarioActivo ni registra historial porque
-  // no modifica datos — solo consulta.
   async buscarUsuarioActivoPorNombre(nombre: string): Promise<Usuario | null> {
     return await this.usuariosRepository.findOneBy({
       estado: EstadosUsuariosEnum.ACTIVO,
@@ -46,7 +33,6 @@ export class UsuariosService {
     });
   }
 
-  // Solo lectura, no registra historial.
   async listarUsuarios(): Promise<ListUsuarioDto[]> {
     const usuarios = await this.usuariosRepository.find({
       order: { id: 'ASC' },
@@ -62,7 +48,6 @@ export class UsuariosService {
     });
   }
 
-  // Solo lectura, no registra historial.
   async consultarUsuario(id: number): Promise<ListUsuarioDto> {
     const usuario = await this.usuariosRepository.findOneBy({ id });
 
@@ -78,14 +63,7 @@ export class UsuariosService {
     return dto;
   }
 
-  // ------------------------------------------------------------
-  // registrarUsuario
-  // usuarioActivo es el admin que crea el nuevo usuario.
-  // Se registra después del save() para asegurar que solo
-  // se loguea si la operación tuvo éxito.
-  // usuario.id está disponible después del save() porque
-  // TypeORM lo completa automáticamente con el valor generado por PostgreSQL.
-  // ------------------------------------------------------------
+
   async registrarUsuario(dto: CrearUsuarioDto, usuarioActivo: UsuarioActivo): Promise<{ id: number }> {
     const nombreExistente = await this.usuariosRepository.findOneBy({
       nombre: dto.nombre,
@@ -115,17 +93,7 @@ export class UsuariosService {
     return { id: usuario.id };
   }
 
-  // ------------------------------------------------------------
-  // modificarUsuario
-  // Se guarda nombreAnterior AL INICIO, antes de cualquier modificación,
-  // porque el nombre puede cambiar dentro de este mismo método (dto.nombre).
-  // Si se guardara después del bloque de cambios, ya tendría el nombre nuevo
-  // y la descripción del historial perdería el nombre original.
-  //
-  // La acción registrada depende del estado:
-  // - Si dto.estado === 'BAJA' → se registra como ELIMINAR
-  // - Cualquier otro cambio → se registra como MODIFICAR
-  // ------------------------------------------------------------
+
   async modificarUsuario(id: number, dto: ModificarUsuarioDto, usuarioActivo: UsuarioActivo): Promise<{ mensaje: string }> {
     const usuario = await this.usuariosRepository.findOneBy({ id });
 
@@ -133,7 +101,6 @@ export class UsuariosService {
       throw new BadRequestException('Usuario no encontrado');
     }
 
-    // Se guarda ANTES de cualquier modificación para preservar el nombre original
     const nombreAnterior = usuario.nombre;
 
     if (dto.nombre && dto.nombre !== usuario.nombre) {
@@ -158,12 +125,8 @@ export class UsuariosService {
       usuario.estado = dto.estado;
     }
 
-    // save() siempre antes del registrar() para asegurar que
-    // solo se loguea si la operación tuvo éxito
     await this.usuariosRepository.save(usuario);
 
-    // Si el estado cambió a BAJA se registra como ELIMINAR,
-    // igual que en darDeBaja() de proyectos y clientes
     const accion = (dto.estado === EstadosUsuariosEnum.BAJA)
       ? AccionTipoEnum.ELIMINAR
       : AccionTipoEnum.MODIFICAR;

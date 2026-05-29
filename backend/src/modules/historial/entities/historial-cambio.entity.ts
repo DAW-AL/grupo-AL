@@ -24,7 +24,6 @@ export class HistorialCambio {
   @Column({ type: 'enum', enum: EntidadTipoEnum })
   entidad!: EntidadTipoEnum;
 
-  // ID del registro afectado
   @Column({ name: 'entidad_id' })
   entidadId!: number;
 
