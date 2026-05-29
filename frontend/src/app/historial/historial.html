@@ -1,0 +1,45 @@
+<p-toast />
+
+<div class="page-wrapper">
+  <div class="page-header">
+    <h1 class="page-title">Historial de cambios</h1>
+    <div class="header-actions">
+      <p-select
+        [options]="entidadOpciones"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="true"
+        placeholder="Todas las entidades"
+        [ngModel]="filtroEntidad()"
+        (ngModelChange)="onFiltroChange($event)" />
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-loading" *ngIf="loading()"><div class="spinner"></div></div>
+
+    <table class="data-table" *ngIf="!loading()">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Entidad</th>
+          <th>Acción</th>
+          <th>Usuario</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let h of filtrados()">
+          <td class="col-fecha">{{ formatFecha(h.fechaCambio) }}</td>
+          <td><span class="entidad-tag">{{ h.entidad }} #{{ h.entidadId }}</span></td>
+          <td><span class="accion-badge" [class]="accionClass(h.accion)">{{ h.accion }}</span></td>
+          <td class="col-usuario">{{ h.usuarioNombre }}</td>
+          <td class="col-desc">{{ h.descripcion }}</td>
+        </tr>
+        <tr *ngIf="sinResultados()">
+          <td colspan="5" class="empty-state">No hay registros en el historial.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

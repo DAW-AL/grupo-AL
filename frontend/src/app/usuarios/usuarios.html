@@ -1,0 +1,125 @@
+<p-toast />
+<div class="drawer-overlay" [class.visible]="drawerOpen()" (click)="cerrarDrawer()"></div>
+
+<div class="page-wrapper">
+  <div class="page-header">
+    <h1 class="page-title">Usuarios</h1>
+    <div class="header-actions">
+      <p-button
+        label="Nuevo Usuario"
+        icon="pi pi-plus"
+        (onClick)="abrirNuevo()" />
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-loading" *ngIf="loading()"><div class="spinner"></div></div>
+
+    <table class="data-table" *ngIf="!loading()">
+      <thead>
+        <tr><th>Usuario</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of usuarios()">
+          <td>{{ u.nombre }}</td>
+          <td><span class="rol-tag">{{ u.rol }}</span></td>
+          <td>
+            <span class="badge" [class.badge-activo]="isActivo(u)" [class.badge-baja]="!isActivo(u)">
+              {{ isActivo(u) ? 'Activo' : 'Baja' }}
+            </span>
+          </td>
+          <td>
+            <p-button
+              label="Editar"
+              severity="secondary"
+              size="small"
+              (onClick)="abrirEditar(u)" />
+          </td>
+        </tr>
+        <tr *ngIf="usuarios().length === 0">
+          <td colspan="4" class="empty-state">No hay usuarios registrados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<aside class="drawer" [class.open]="drawerOpen()">
+
+  <div class="drawer-header">
+    <h2 class="drawer-title">{{ tituloDrawer() }}</h2>
+    <button class="drawer-close" (click)="cerrarDrawer()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="drawer-body" [formGroup]="form">
+
+    <div class="form-group">
+      <label class="form-label">Nombre de usuario</label>
+      <input
+        pInputText
+        [fluid]="true"
+        [invalid]="tieneError('nombre','required')"
+        type="text"
+        placeholder="Ej: jperez"
+        formControlName="nombre" />
+      <small class="form-error" *ngIf="tieneError('nombre','required')">
+        El nombre es requerido
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        Contraseña
+        <span class="form-hint" *ngIf="editando()">(dejar vacío para no cambiar)</span>
+      </label>
+      <p-password
+        [fluid]="true"
+        [feedback]="false"
+        [toggleMask]="true"
+        [invalid]="tieneError('clave','required')"
+        [placeholder]="editando() ? 'Dejar vacío para no cambiar' : 'Mínimo 6 caracteres'"
+        formControlName="clave" />
+      <small class="form-error" *ngIf="tieneError('clave','required')">
+        La contraseña es requerida
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Rol</label>
+      <p-select
+        [fluid]="true"
+        [options]="rolesOpciones"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="rol" />
+    </div>
+
+    <div class="form-group" *ngIf="editando()">
+      <label class="form-label">Estado</label>
+      <p-select
+        [fluid]="true"
+        [options]="estadoOpciones"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="estado" />
+    </div>
+
+  </div>
+
+  <div class="drawer-footer">
+    <p-button
+      label="Cancelar"
+      severity="secondary"
+      [disabled]="guardando()"
+      (onClick)="cerrarDrawer()" />
+    <p-button
+      [label]="guardando() ? 'Guardando...' : 'Guardar'"
+      [loading]="guardando()"
+      (onClick)="guardar()" />
+  </div>
+
+</aside>

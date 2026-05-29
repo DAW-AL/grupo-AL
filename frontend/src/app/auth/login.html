@@ -1,0 +1,15 @@
+    <form [formGroup]="form" (keydown.enter)="iniciarSesion()">
+    <div id="main">
+        <img id="logo" src="/logo.svg" alt="DAW26 Sistema de gestión de proyectos" />
+        <h3 id="subheader">Hola (:</h3>
+        <div class="campo">
+            <label for="nombre">Usuario</label>
+            <input pInputText id="nombre" type="text" placeholder="Nombre de usuario" formControlName="nombre" />
+        </div>
+        <div class="campo">
+            <label for="clave">Contraseña</label>
+            <p-password id="clave" formControlName="clave" [feedback]="false" [toggleMask]="true" autocomplete="off" placeholder="Clave de acceso"/>
+        </div>
+        <p-button id="btn-login" label="Iniciar sesión" (click)="iniciarSesion()"/>
+    </div>
+</form>
