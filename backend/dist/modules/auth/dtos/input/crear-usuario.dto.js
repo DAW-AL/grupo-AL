@@ -20,20 +20,20 @@ class CrearUsuarioDto {
 }
 exports.CrearUsuarioDto = CrearUsuarioDto;
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'usuario' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'El nombre es obligatorio.' }),
     __metadata("design:type", String)
 ], CrearUsuarioDto.prototype, "nombre", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'clave' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'La clave es obligatoria.' }),
     (0, class_validator_1.MinLength)(6, { message: 'La clave debe tener al menos 6 caracteres.' }),
     __metadata("design:type", String)
 ], CrearUsuarioDto.prototype, "clave", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'user' }),
     (0, class_validator_1.IsEnum)(rol_usuario_enum_1.RolUsuarioEnum),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)

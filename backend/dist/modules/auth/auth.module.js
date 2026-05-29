@@ -17,6 +17,7 @@ const usuarios_service_1 = require("./services/usuarios.service");
 const auth_service_1 = require("./services/auth.service");
 const auth_guard_1 = require("./guards/auth.guard");
 const usuarios_controller_1 = require("./controllers/usuarios.controller");
+const historial_module_1 = require("../historial/historial.module");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -36,6 +37,7 @@ exports.AuthModule = AuthModule = __decorate([
                     };
                 },
             }),
+            historial_module_1.HistorialModule,
         ],
         exports: [auth_guard_1.AuthGuard],
     })

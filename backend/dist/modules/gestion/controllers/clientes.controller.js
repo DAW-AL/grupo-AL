@@ -29,17 +29,17 @@ let ClientesController = class ClientesController {
     constructor(clientesService) {
         this.clientesService = clientesService;
     }
-    async crearCliente(dto) {
-        return await this.clientesService.crearCliente(dto);
+    async crearCliente(dto, req) {
+        return await this.clientesService.crearCliente(dto, req.usuario);
     }
-    async actualizarDatos(id, dto) {
-        return await this.clientesService.actualizarCliente(id, dto);
+    async actualizarDatos(id, dto, req) {
+        return await this.clientesService.actualizarCliente(id, dto, req.usuario);
     }
-    async darDeBaja(id) {
-        return await this.clientesService.darDeBaja(id);
+    async darDeBaja(id, req) {
+        return await this.clientesService.darDeBaja(id, req.usuario);
     }
-    async reactivarCliente(id) {
-        return await this.clientesService.reactivarCliente(id);
+    async reactivarCliente(id, req) {
+        return await this.clientesService.reactivarCliente(id, req.usuario);
     }
     async obtenerClientes(estado) {
         return await this.clientesService.obtenerClientes(estado);
@@ -55,8 +55,9 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Crear un Cliente' }),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_cliente_dto_1.CreateClienteDto]),
+    __metadata("design:paramtypes", [create_cliente_dto_1.CreateClienteDto, Object]),
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "crearCliente", null);
 __decorate([
@@ -71,8 +72,9 @@ __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, update_cliente_dto_1.UpdateClienteDto]),
+    __metadata("design:paramtypes", [Number, update_cliente_dto_1.UpdateClienteDto, Object]),
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "actualizarDatos", null);
 __decorate([
@@ -82,8 +84,9 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Dar de baja un Cliente' }),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "darDeBaja", null);
 __decorate([
@@ -98,8 +101,9 @@ __decorate([
     }),
     (0, common_1.Patch)(':id/reactivar'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "reactivarCliente", null);
 __decorate([

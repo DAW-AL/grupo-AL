@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Request
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { TareaService } from '../services/tarea.service';
@@ -57,8 +58,9 @@ export class TareaController {
   create(
     @Param('proyecto_id', ParseIntPipe) proyecto_id: number,
     @Body() crearTarea: CrearTareaDto,
+    @Request() req,
   ) {
-    return this.tareaServicios.create(proyecto_id, crearTarea);
+    return this.tareaServicios.create(proyecto_id, crearTarea, req.usuario);
   }
 
   @ApiBearerAuth()
@@ -69,8 +71,9 @@ export class TareaController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() actualizarTarea: ActualizarTareaDto,
+    @Request() req,
   ) {
-    return this.tareaServicios.update(id, actualizarTarea);
+    return this.tareaServicios.update(id, actualizarTarea, req.usuario);
   }
 
   @ApiBearerAuth()
@@ -81,7 +84,8 @@ export class TareaController {
   @ApiParam({ name: 'id', type: Number, description: 'ID de la tarea' })
   delete(
     @Param('id', ParseIntPipe) id: number,
+    @Request() req,
   ) {
-    return this.tareaServicios.delete(id);
+    return this.tareaServicios.delete(id, req.usuario);
   }
 }

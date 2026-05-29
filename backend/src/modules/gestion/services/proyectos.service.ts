@@ -18,6 +18,16 @@ import { ClientesService } from './clientes.service';
 import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
 import { Tarea } from '../entities/tarea.entity';
 import { Estados_Tareas } from '../enums/estados-tareas.enum';
+import { HistorialService } from '../../historial/services/historial.service';
+import { AccionTipoEnum, EntidadTipoEnum } from '../../historial/entities/historial-cambio.entity';
+
+
+// la forma del objeto que viene del JWT
+interface UsuarioActivo {
+  sub: number;
+  nombre: string;
+  rol: string;
+}
 
 @Injectable()
 export class ProyectosService {
@@ -28,9 +38,10 @@ export class ProyectosService {
     private readonly clientesService: ClientesService,
     @InjectRepository(Tarea)
     private readonly tareaRepository: Repository<Tarea>,
+    private readonly historialService: HistorialService,  // ← NUEVO
   ) {}
 
-  async crearProyecto(dto: CreateProyectoDto): Promise<{ id: number }> {
+  async crearProyecto(dto: CreateProyectoDto, usuarioActivo: UsuarioActivo): Promise<{ id: number }> {
     const proyecto: Proyecto = this.repository.create(dto);
     proyecto.estado = EstadosProyectosEnum.ACTIVO;
 
@@ -46,10 +57,19 @@ export class ProyectosService {
     }
 
     await this.repository.save(proyecto);
+
+    await this.historialService.registrar({
+      entidad: EntidadTipoEnum.PROYECTO,
+      entidadId: proyecto.id,
+      accion: AccionTipoEnum.CREAR,
+      usuarioNombre: usuarioActivo.nombre,
+      descripcion: `${usuarioActivo.nombre} creó el proyecto "${proyecto.nombre}"`,
+  }); 
+
     return { id: proyecto.id };
   }
 
-  async actualizarProyecto(id: number, dto: UpdateProyectoDto): Promise<void> {
+  async actualizarProyecto(id: number, dto: UpdateProyectoDto, usuarioActivo: UsuarioActivo): Promise<void> {
     const proyecto: Proyecto | null = await this.repository.findOne({
       where: { id },
       relations: ['cliente'],
@@ -72,9 +92,19 @@ export class ProyectosService {
 
     await this.validarCambioDeEstado(proyecto, dto);
 
+    const nombreAnterior = proyecto.nombre; // ← AGREGAR antes del merge
+
     this.repository.merge(proyecto, dto);
 
     await this.repository.save(proyecto);
+
+  await this.historialService.registrar({
+    entidad: EntidadTipoEnum.PROYECTO,
+    entidadId: proyecto.id,
+    accion: AccionTipoEnum.MODIFICAR,
+    usuarioNombre: usuarioActivo.nombre,
+    descripcion: `${usuarioActivo.nombre} modificó el proyecto "${nombreAnterior}"`,
+  });
   }
 
   async obtenerProyectos(): Promise<ListProyectoDTO[]> {
@@ -146,7 +176,7 @@ export class ProyectosService {
     return existe;
   }
 
-  async darBajaProyecto(id: number): Promise<void> {
+  async darBajaProyecto(id: number, usuarioActivo: UsuarioActivo): Promise<void> {
     const proyecto: Proyecto | null = await this.repository.findOne({
       where: { id },
     });
@@ -167,6 +197,14 @@ export class ProyectosService {
     proyecto.estado = EstadosProyectosEnum.BAJA;
 
     await this.repository.save(proyecto);
+
+    await this.historialService.registrar({
+      entidad: EntidadTipoEnum.PROYECTO,
+      entidadId: proyecto.id,
+      accion: AccionTipoEnum.ELIMINAR,
+      usuarioNombre: usuarioActivo.nombre,
+      descripcion: `${usuarioActivo.nombre} dio de baja el proyecto "${proyecto.nombre}"`,
+  });
   }
 
   /* Funcion para validar cambios de estado en actualizarProyecto */

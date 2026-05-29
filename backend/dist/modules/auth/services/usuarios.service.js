@@ -54,10 +54,14 @@ const usuario_entity_1 = require("../entities/usuario.entity");
 const estados_usuarios_enum_1 = require("../enums/estados-usuarios.enum");
 const list_usuario_dto_1 = require("../dtos/output/list-usuario.dto");
 const rol_usuario_enum_1 = require("../enums/rol-usuario.enum");
+const historial_service_1 = require("../../historial/services/historial.service");
+const historial_cambio_entity_1 = require("../../historial/entities/historial-cambio.entity");
 let UsuariosService = class UsuariosService {
     usuariosRepository;
-    constructor(usuariosRepository) {
+    historialService;
+    constructor(usuariosRepository, historialService) {
         this.usuariosRepository = usuariosRepository;
+        this.historialService = historialService;
     }
     async buscarUsuarioActivoPorNombre(nombre) {
         return await this.usuariosRepository.findOneBy({
@@ -90,7 +94,7 @@ let UsuariosService = class UsuariosService {
         dto.rol = usuario.rol;
         return dto;
     }
-    async registrarUsuario(dto) {
+    async registrarUsuario(dto, usuarioActivo) {
         const nombreExistente = await this.usuariosRepository.findOneBy({
             nombre: dto.nombre,
         });
@@ -104,13 +108,21 @@ let UsuariosService = class UsuariosService {
             rol: dto.rol ?? rol_usuario_enum_1.RolUsuarioEnum.USER,
         });
         await this.usuariosRepository.save(usuario);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.USUARIO,
+            entidadId: usuario.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.CREAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} registró el usuario "${usuario.nombre}"`,
+        });
         return { id: usuario.id };
     }
-    async modificarUsuario(id, dto) {
+    async modificarUsuario(id, dto, usuarioActivo) {
         const usuario = await this.usuariosRepository.findOneBy({ id });
         if (!usuario) {
             throw new common_1.BadRequestException('Usuario no encontrado');
         }
+        const nombreAnterior = usuario.nombre;
         if (dto.nombre && dto.nombre !== usuario.nombre) {
             const nombreExistente = await this.usuariosRepository.findOneBy({
                 nombre: dto.nombre,
@@ -130,12 +142,27 @@ let UsuariosService = class UsuariosService {
             usuario.estado = dto.estado;
         }
         await this.usuariosRepository.save(usuario);
+        const accion = (dto.estado === estados_usuarios_enum_1.EstadosUsuariosEnum.BAJA)
+            ? historial_cambio_entity_1.AccionTipoEnum.ELIMINAR
+            : historial_cambio_entity_1.AccionTipoEnum.MODIFICAR;
+        const descripcion = (dto.estado === estados_usuarios_enum_1.EstadosUsuariosEnum.BAJA)
+            ? `${usuarioActivo.nombre} dio de baja el usuario "${nombreAnterior}"`
+            : `${usuarioActivo.nombre} modificó el usuario "${nombreAnterior}"`;
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.USUARIO,
+            entidadId: usuario.id,
+            accion,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion,
+        });
+        return { mensaje: 'Usuario modificado correctamente' };
     }
 };
 exports.UsuariosService = UsuariosService;
 exports.UsuariosService = UsuariosService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(usuario_entity_1.Usuario)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        historial_service_1.HistorialService])
 ], UsuariosService);
 //# sourceMappingURL=usuarios.service.js.map

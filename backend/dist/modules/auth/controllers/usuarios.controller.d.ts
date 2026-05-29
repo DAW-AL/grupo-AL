@@ -7,8 +7,10 @@ export declare class UsuariosController {
     constructor(usuariosService: UsuariosService);
     listarUsuarios(): Promise<ListUsuarioDto[]>;
     consultarUsuario(id: number): Promise<ListUsuarioDto>;
-    registrarUsuario(dto: CrearUsuarioDto): Promise<{
+    registrarUsuario(dto: CrearUsuarioDto, req: any): Promise<{
         id: number;
     }>;
-    modificarUsuario(id: number, dto: ModificarUsuarioDto): Promise<void>;
+    modificarUsuario(id: number, dto: ModificarUsuarioDto, req: any): Promise<{
+        mensaje: string;
+    }>;
 }

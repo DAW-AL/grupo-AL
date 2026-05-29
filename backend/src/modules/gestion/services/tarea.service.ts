@@ -6,7 +6,15 @@ import { CrearTareaDto } from '../dtos/input/create-tarea.dto';
 import { ActualizarTareaDto } from '../dtos/input/update-tarea.dto';
 import { Estados_Tareas } from '../enums/estados-tareas.enum';
 import { ProyectosService } from './proyectos.service';
+import { HistorialService } from '../../historial/services/historial.service';
+import { AccionTipoEnum, EntidadTipoEnum } from '../../historial/entities/historial-cambio.entity';
 
+
+interface UsuarioActivo {
+  sub: number;
+  nombre: string;
+  rol: string;
+}
 @Injectable()
 export class TareaService {
   constructor(
@@ -14,6 +22,7 @@ export class TareaService {
     private readonly tareaRepositorio: Repository<Tarea>,
 
     private readonly proyectoServices: ProyectosService,
+    private readonly historialService: HistorialService,  // ← NUEVO
   ) {}
 
   async findAll(proyecto_id: number): Promise<Tarea[]> {
@@ -47,7 +56,9 @@ export class TareaService {
     return tarea;
   }
 
-  async create(proyecto_id: number, crearTarea: CrearTareaDto): Promise<Tarea> {
+
+
+  async create(proyecto_id: number, crearTarea: CrearTareaDto, usuarioActivo: UsuarioActivo): Promise<Tarea> {
 
     const nuevaTarea = this.tareaRepositorio.create({
       ...crearTarea,
@@ -55,12 +66,24 @@ export class TareaService {
       proyecto: { id: proyecto_id },
     });
 
-    return await this.tareaRepositorio.save(nuevaTarea);
+    const tareaGuardada = await this.tareaRepositorio.save(nuevaTarea);  // ← lo guarde en una variable
+
+  await this.historialService.registrar({
+    entidad: EntidadTipoEnum.TAREA,
+    entidadId: tareaGuardada.id,
+    accion: AccionTipoEnum.CREAR,
+    usuarioNombre: usuarioActivo.nombre,
+    descripcion: `${usuarioActivo.nombre} creó la tarea "${tareaGuardada.descripcion}" en el proyecto ${proyecto_id}`,
+  });
+
+    //return await this.tareaRepositorio.save(nuevaTarea);
+    return tareaGuardada;
+
+    
   }
 
   async update(
-    id: number,
-    actualizarTarea: ActualizarTareaDto,
+id: number, actualizarTarea: ActualizarTareaDto, usuarioActivo: UsuarioActivo,
   ): Promise<Tarea> {
 
     const tareaActualizada = await this.tareaRepositorio.update(
@@ -72,10 +95,24 @@ export class TareaService {
       throw new NotFoundException('No se pudo actualizar la tarea');
     }
 
-    return this.findOne(id);
+    //return this.findOne(id);
+    const tarea = await this.findOne(id); //lo guardé en una variable para usarlo en el historial
+
+
+  await this.historialService.registrar({
+    entidad: EntidadTipoEnum.TAREA,
+    entidadId: id,
+    accion: AccionTipoEnum.MODIFICAR,
+    usuarioNombre: usuarioActivo.nombre,
+    descripcion: `${usuarioActivo.nombre} modificó la tarea "${tarea.descripcion}"`,
+  });
+
+  return tarea;
+
+    
   }
 
-  async delete(id: number): Promise<{ message: string }> {
+  async delete(id: number, usuarioActivo: UsuarioActivo): Promise<{ message: string }> {
 
     const buscarTarea = await this.findOne(id);
 
@@ -90,6 +127,15 @@ export class TareaService {
     if (eliminarTarea.affected === 0) {
       throw new NotFoundException('No se pudo eliminar la tarea');
     }
+
+    await this.historialService.registrar({
+      entidad: EntidadTipoEnum.TAREA,
+      entidadId: id,
+      accion: AccionTipoEnum.ELIMINAR,
+      usuarioNombre: usuarioActivo.nombre,
+      descripcion: `${usuarioActivo.nombre} dio de baja la tarea "${buscarTarea.descripcion}"`,
+    });
+
 
     return {
       message: `Se elimino la tarea con id: ${id}`,

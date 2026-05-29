@@ -21,20 +21,31 @@ const typeorm_2 = require("typeorm");
 const list_cliente_dto_1 = require("../dtos/output/list-cliente.dto");
 const common_1 = require("@nestjs/common");
 const proyectos_service_1 = require("./proyectos.service");
+const historial_service_1 = require("../../historial/services/historial.service");
+const historial_cambio_entity_1 = require("../../historial/entities/historial-cambio.entity");
 let ClientesService = class ClientesService {
     repository;
     proyectosService;
-    constructor(repository, proyectosService) {
+    historialService;
+    constructor(repository, proyectosService, historialService) {
         this.repository = repository;
         this.proyectosService = proyectosService;
+        this.historialService = historialService;
     }
-    async crearCliente(dto) {
+    async crearCliente(dto, usuarioActivo) {
         const cliente = this.repository.create(dto);
         cliente.estado = estados_clientes_enum_1.EstadosClientesEnum.ACTIVO;
         await this.repository.save(cliente);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.CLIENTE,
+            entidadId: cliente.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.CREAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} creó el cliente "${cliente.nombre}"`,
+        });
         return { id: cliente.id };
     }
-    async actualizarCliente(id, dto) {
+    async actualizarCliente(id, dto, usuarioActivo) {
         const cliente = await this.repository.findOneBy({ id });
         if (!cliente) {
             throw new common_1.BadRequestException('Cliente no encontrado');
@@ -42,8 +53,16 @@ let ClientesService = class ClientesService {
         if (cliente.estado === estados_clientes_enum_1.EstadosClientesEnum.BAJA) {
             throw new common_1.BadRequestException('No se pueden actualizar los datos de un cliente que se encuentra en estado BAJA');
         }
+        const nombreAnterior = cliente.nombre;
         this.repository.merge(cliente, dto);
         await this.repository.save(cliente);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.CLIENTE,
+            entidadId: cliente.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.MODIFICAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} modificó el cliente "${nombreAnterior}"`,
+        });
         return {
             id: cliente.id,
             nombre: cliente.nombre,
@@ -79,7 +98,7 @@ let ClientesService = class ClientesService {
         }
         return dtoList;
     }
-    async darDeBaja(id) {
+    async darDeBaja(id, usuarioActivo) {
         const cliente = await this.repository.findOneBy({ id });
         if (!cliente)
             throw new common_1.BadRequestException('Cliente no encontrado');
@@ -92,13 +111,20 @@ let ClientesService = class ClientesService {
         }
         cliente.estado = estados_clientes_enum_1.EstadosClientesEnum.BAJA;
         await this.repository.save(cliente);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.CLIENTE,
+            entidadId: cliente.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.ELIMINAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} dio de baja el cliente "${cliente.nombre}"`,
+        });
         return {
             id: cliente.id,
             nombre: cliente.nombre,
             estado: cliente.estado,
         };
     }
-    async reactivarCliente(id) {
+    async reactivarCliente(id, usuarioActivo) {
         const cliente = await this.repository.findOneBy({ id });
         if (!cliente)
             throw new common_1.BadRequestException('Cliente no encontrado');
@@ -107,6 +133,13 @@ let ClientesService = class ClientesService {
         }
         cliente.estado = estados_clientes_enum_1.EstadosClientesEnum.ACTIVO;
         await this.repository.save(cliente);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.CLIENTE,
+            entidadId: cliente.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.MODIFICAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} reactivó el cliente "${cliente.nombre}"`,
+        });
         return {
             id: cliente.id,
             nombre: cliente.nombre,
@@ -135,6 +168,7 @@ exports.ClientesService = ClientesService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(cliente_entity_1.Cliente)),
     __param(1, (0, common_1.Inject)((0, common_1.forwardRef)(() => proyectos_service_1.ProyectosService))),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        proyectos_service_1.ProyectosService])
+        proyectos_service_1.ProyectosService,
+        historial_service_1.HistorialService])
 ], ClientesService);
 //# sourceMappingURL=clientes.service.js.map
