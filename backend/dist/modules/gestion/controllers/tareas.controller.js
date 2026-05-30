@@ -34,14 +34,14 @@ let TareaController = class TareaController {
     findOne(id) {
         return this.tareaServicios.findOne(id);
     }
-    create(proyecto_id, crearTarea) {
-        return this.tareaServicios.create(proyecto_id, crearTarea);
+    create(proyecto_id, crearTarea, req) {
+        return this.tareaServicios.create(proyecto_id, crearTarea, req.usuario);
     }
-    update(id, actualizarTarea) {
-        return this.tareaServicios.update(id, actualizarTarea);
+    update(id, actualizarTarea, req) {
+        return this.tareaServicios.update(id, actualizarTarea, req.usuario);
     }
-    delete(id) {
-        return this.tareaServicios.delete(id);
+    delete(id, req) {
+        return this.tareaServicios.delete(id, req.usuario);
     }
 };
 exports.TareaController = TareaController;
@@ -83,8 +83,9 @@ __decorate([
     }),
     __param(0, (0, common_2.Param)('proyecto_id', common_2.ParseIntPipe)),
     __param(1, (0, common_2.Body)()),
+    __param(2, (0, common_2.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, create_tarea_dto_1.CrearTareaDto]),
+    __metadata("design:paramtypes", [Number, create_tarea_dto_1.CrearTareaDto, Object]),
     __metadata("design:returntype", void 0)
 ], TareaController.prototype, "create", null);
 __decorate([
@@ -95,8 +96,9 @@ __decorate([
     (0, swagger_1.ApiParam)({ name: 'id', type: Number, description: 'ID de la tarea' }),
     __param(0, (0, common_2.Param)('id', common_2.ParseIntPipe)),
     __param(1, (0, common_2.Body)()),
+    __param(2, (0, common_2.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, update_tarea_dto_1.ActualizarTareaDto]),
+    __metadata("design:paramtypes", [Number, update_tarea_dto_1.ActualizarTareaDto, Object]),
     __metadata("design:returntype", void 0)
 ], TareaController.prototype, "update", null);
 __decorate([
@@ -107,8 +109,9 @@ __decorate([
     (0, common_2.Delete)('/tareas/:id'),
     (0, swagger_1.ApiParam)({ name: 'id', type: Number, description: 'ID de la tarea' }),
     __param(0, (0, common_2.Param)('id', common_2.ParseIntPipe)),
+    __param(1, (0, common_2.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", void 0)
 ], TareaController.prototype, "delete", null);
 exports.TareaController = TareaController = __decorate([

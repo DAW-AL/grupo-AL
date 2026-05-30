@@ -19,12 +19,16 @@ const typeorm_2 = require("typeorm");
 const tarea_entity_1 = require("../entities/tarea.entity");
 const estados_tareas_enum_1 = require("../enums/estados-tareas.enum");
 const proyectos_service_1 = require("./proyectos.service");
+const historial_service_1 = require("../../historial/services/historial.service");
+const historial_cambio_entity_1 = require("../../historial/entities/historial-cambio.entity");
 let TareaService = class TareaService {
     tareaRepositorio;
     proyectoServices;
-    constructor(tareaRepositorio, proyectoServices) {
+    historialService;
+    constructor(tareaRepositorio, proyectoServices, historialService) {
         this.tareaRepositorio = tareaRepositorio;
         this.proyectoServices = proyectoServices;
+        this.historialService = historialService;
     }
     async findAll(proyecto_id) {
         await this.proyectoServices.obtenerProyecto(proyecto_id);
@@ -50,22 +54,38 @@ let TareaService = class TareaService {
         }
         return tarea;
     }
-    async create(proyecto_id, crearTarea) {
+    async create(proyecto_id, crearTarea, usuarioActivo) {
         const nuevaTarea = this.tareaRepositorio.create({
             ...crearTarea,
             estado: estados_tareas_enum_1.Estados_Tareas.pendiente,
             proyecto: { id: proyecto_id },
         });
-        return await this.tareaRepositorio.save(nuevaTarea);
+        const tareaGuardada = await this.tareaRepositorio.save(nuevaTarea);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.TAREA,
+            entidadId: tareaGuardada.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.CREAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} creó la tarea "${tareaGuardada.descripcion}" en el proyecto ${proyecto_id}`,
+        });
+        return tareaGuardada;
     }
-    async update(id, actualizarTarea) {
+    async update(id, actualizarTarea, usuarioActivo) {
         const tareaActualizada = await this.tareaRepositorio.update(id, actualizarTarea);
         if (tareaActualizada.affected === 0) {
             throw new common_1.NotFoundException('No se pudo actualizar la tarea');
         }
-        return this.findOne(id);
+        const tarea = await this.findOne(id);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.TAREA,
+            entidadId: id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.MODIFICAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} modificó la tarea "${tarea.descripcion}"`,
+        });
+        return tarea;
     }
-    async delete(id) {
+    async delete(id, usuarioActivo) {
         const buscarTarea = await this.findOne(id);
         if (buscarTarea.estado === estados_tareas_enum_1.Estados_Tareas.baja) {
             throw new common_1.NotFoundException('La tarea ya esta dada de baja');
@@ -76,6 +96,13 @@ let TareaService = class TareaService {
         if (eliminarTarea.affected === 0) {
             throw new common_1.NotFoundException('No se pudo eliminar la tarea');
         }
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.TAREA,
+            entidadId: id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.ELIMINAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} dio de baja la tarea "${buscarTarea.descripcion}"`,
+        });
         return {
             message: `Se elimino la tarea con id: ${id}`,
         };
@@ -86,6 +113,7 @@ exports.TareaService = TareaService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(tarea_entity_1.Tarea)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        proyectos_service_1.ProyectosService])
+        proyectos_service_1.ProyectosService,
+        historial_service_1.HistorialService])
 ], TareaService);
 //# sourceMappingURL=tarea.service.js.map

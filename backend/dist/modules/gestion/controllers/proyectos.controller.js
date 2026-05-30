@@ -28,11 +28,11 @@ let ProyectosController = class ProyectosController {
     constructor(proyectosService) {
         this.proyectosService = proyectosService;
     }
-    async crearProyecto(dto) {
-        return await this.proyectosService.crearProyecto(dto);
+    async crearProyecto(dto, req) {
+        return await this.proyectosService.crearProyecto(dto, req.usuario);
     }
-    async actualizarProyecto(dto, id) {
-        await this.proyectosService.actualizarProyecto(id, dto);
+    async actualizarProyecto(dto, id, req) {
+        await this.proyectosService.actualizarProyecto(id, dto, req.usuario);
     }
     async obtenerProyectos() {
         return await this.proyectosService.obtenerProyectos();
@@ -40,8 +40,8 @@ let ProyectosController = class ProyectosController {
     async obtenerProyecto(id) {
         return await this.proyectosService.obtenerProyecto(id);
     }
-    async darBajaProyecto(id) {
-        return await this.proyectosService.darBajaProyecto(id);
+    async darBajaProyecto(id, req) {
+        return await this.proyectosService.darBajaProyecto(id, req.usuario);
     }
 };
 exports.ProyectosController = ProyectosController;
@@ -51,8 +51,9 @@ __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_proyecto_dto_1.CreateProyectoDto]),
+    __metadata("design:paramtypes", [create_proyecto_dto_1.CreateProyectoDto, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectosController.prototype, "crearProyecto", null);
 __decorate([
@@ -62,8 +63,9 @@ __decorate([
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Param)('id')),
+    __param(2, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [update_proyecto_dto_1.UpdateProyectoDto, Number]),
+    __metadata("design:paramtypes", [update_proyecto_dto_1.UpdateProyectoDto, Number, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectosController.prototype, "actualizarProyecto", null);
 __decorate([
@@ -93,8 +95,9 @@ __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectosController.prototype, "darBajaProyecto", null);
 exports.ProyectosController = ProyectosController = __decorate([

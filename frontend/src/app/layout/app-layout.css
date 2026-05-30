@@ -1,0 +1,111 @@
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--p-surface-50);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.sidebar {
+  width: 148px;
+  min-width: 148px;
+  background: #fff;
+  border-right: 1px solid var(--p-surface-100);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--p-surface-100);
+}
+
+.sidebar-logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.sidebar-nav { flex: 1; padding: 20px 0 0; overflow-y: auto; }
+.sidebar-section-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; color: var(--p-surface-400); margin: 0 0 8px 16px; font-family: 'Montserrat', sans-serif; }
+.sidebar-nav ul { list-style: none; margin: 0; padding: 0; }
+
+.sidebar-nav ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--p-surface-600);
+  text-decoration: none;
+  transition: background .15s, color .15s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.sidebar-nav ul li a:hover { background: var(--p-surface-50); color: var(--p-surface-800); }
+.sidebar-nav ul li a.active { background: var(--p-primary-50); color: var(--p-primary-600); font-weight: 600; }
+.sidebar-nav ul li a.active svg { stroke: var(--p-primary-600); }
+
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  border-top: 1px solid var(--p-surface-100);
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--p-primary-500);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.user-name {
+  font-size: 13px;
+  color: var(--p-surface-700);
+  font-weight: 500;
+  font-family: 'Montserrat', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-logout {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  color: var(--p-surface-400);
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+.btn-logout:hover { background: #fee2e2; color: #dc2626; }
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}

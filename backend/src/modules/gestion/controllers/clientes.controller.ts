@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   UseGuards,
+  Request
 } from '@nestjs/common';
 import { CreateClienteDto } from '../dtos/input/create-cliente.dto';
 import {
@@ -26,6 +27,7 @@ import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 
+
 @Controller('clientes')
 export class ClientesController {
   constructor(private readonly clientesService: ClientesService) {}
@@ -34,9 +36,10 @@ export class ClientesController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Crear un Cliente' })
   @Post()
-  async crearCliente(@Body() dto: CreateClienteDto): Promise<{ id: number }> {
-    return await this.clientesService.crearCliente(dto);
+  async crearCliente(@Body() dto: CreateClienteDto, @Request() req, ): Promise<{ id: number }> {
+    return await this.clientesService.crearCliente(dto, req.usuario);
   }
+  
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -50,8 +53,9 @@ export class ClientesController {
   async actualizarDatos(
     @Param('id') id: number,
     @Body() dto: UpdateClienteDto,
+    @Request() req,
   ): Promise<{ id: number; nombre: string; email: string; telefono: string }> {
-    return await this.clientesService.actualizarCliente(id, dto);
+    return await this.clientesService.actualizarCliente(id, dto, req.usuario);
   }
 
   @ApiBearerAuth()
@@ -61,8 +65,9 @@ export class ClientesController {
   @Delete(':id')
   async darDeBaja(
     @Param('id') id: number,
+    @Request() req,
   ): Promise<{ id: number; nombre: string; estado: EstadosClientesEnum }> {
-    return await this.clientesService.darDeBaja(id);
+    return await this.clientesService.darDeBaja(id, req.usuario);
   }
 
   @ApiBearerAuth()
@@ -77,8 +82,9 @@ export class ClientesController {
   @Patch(':id/reactivar')
   async reactivarCliente(
     @Param('id') id: number,
+    @Request() req,
   ): Promise<{ id: number; nombre: string; estado: EstadosClientesEnum }> {
-    return await this.clientesService.reactivarCliente(id);
+    return await this.clientesService.reactivarCliente(id, req.usuario);
   }
 
   @ApiBearerAuth()

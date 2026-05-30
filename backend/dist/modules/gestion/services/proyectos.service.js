@@ -25,16 +25,20 @@ const clientes_service_1 = require("./clientes.service");
 const list_cliente_dto_1 = require("../dtos/output/list-cliente.dto");
 const tarea_entity_1 = require("../entities/tarea.entity");
 const estados_tareas_enum_1 = require("../enums/estados-tareas.enum");
+const historial_service_1 = require("../../historial/services/historial.service");
+const historial_cambio_entity_1 = require("../../historial/entities/historial-cambio.entity");
 let ProyectosService = class ProyectosService {
     repository;
     clientesService;
     tareaRepository;
-    constructor(repository, clientesService, tareaRepository) {
+    historialService;
+    constructor(repository, clientesService, tareaRepository, historialService) {
         this.repository = repository;
         this.clientesService = clientesService;
         this.tareaRepository = tareaRepository;
+        this.historialService = historialService;
     }
-    async crearProyecto(dto) {
+    async crearProyecto(dto, usuarioActivo) {
         const proyecto = this.repository.create(dto);
         proyecto.estado = estados_proyectos_enum_1.EstadosProyectosEnum.ACTIVO;
         if (dto.idCliente) {
@@ -44,9 +48,16 @@ let ProyectosService = class ProyectosService {
             }
         }
         await this.repository.save(proyecto);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.PROYECTO,
+            entidadId: proyecto.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.CREAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} creó el proyecto "${proyecto.nombre}"`,
+        });
         return { id: proyecto.id };
     }
-    async actualizarProyecto(id, dto) {
+    async actualizarProyecto(id, dto, usuarioActivo) {
         const proyecto = await this.repository.findOne({
             where: { id },
             relations: ['cliente'],
@@ -61,8 +72,16 @@ let ProyectosService = class ProyectosService {
             }
         }
         await this.validarCambioDeEstado(proyecto, dto);
+        const nombreAnterior = proyecto.nombre;
         this.repository.merge(proyecto, dto);
         await this.repository.save(proyecto);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.PROYECTO,
+            entidadId: proyecto.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.MODIFICAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} modificó el proyecto "${nombreAnterior}"`,
+        });
     }
     async obtenerProyectos() {
         const proyectos = await this.repository.find({
@@ -123,7 +142,7 @@ let ProyectosService = class ProyectosService {
         });
         return existe;
     }
-    async darBajaProyecto(id) {
+    async darBajaProyecto(id, usuarioActivo) {
         const proyecto = await this.repository.findOne({
             where: { id },
         });
@@ -136,6 +155,13 @@ let ProyectosService = class ProyectosService {
             throw new common_1.BadRequestException('El proyecto se encuentra finalizado');
         proyecto.estado = estados_proyectos_enum_1.EstadosProyectosEnum.BAJA;
         await this.repository.save(proyecto);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.PROYECTO,
+            entidadId: proyecto.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.ELIMINAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} dio de baja el proyecto "${proyecto.nombre}"`,
+        });
     }
     async validarCambioDeEstado(proyecto, dto) {
         if (!dto.estado) {
@@ -169,6 +195,7 @@ exports.ProyectosService = ProyectosService = __decorate([
     __param(2, (0, typeorm_1.InjectRepository)(tarea_entity_1.Tarea)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         clientes_service_1.ClientesService,
-        typeorm_2.Repository])
+        typeorm_2.Repository,
+        historial_service_1.HistorialService])
 ], ProyectosService);
 //# sourceMappingURL=proyectos.service.js.map

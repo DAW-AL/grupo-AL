@@ -12,11 +12,16 @@ import { ClientesService } from './services/clientes.service';
 import { ProyectosService } from './services/proyectos.service';
 import { EstadisticasController } from './controllers/estadisticas.controller';
 import { EstadisticasService } from './services/estadisticas.service';
+import { HistorialModule } from '../historial/historial.module';
 
 @Module({
   controllers: [ClientesController, ProyectosController, TareaController, EstadisticasController],
   providers: [TareaService, ClientesService, ProyectosService, EstadisticasService],
   exports: [],
-  imports: [TypeOrmModule.forFeature([Tarea, Cliente, Proyecto]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Tarea, Cliente, Proyecto]),
+    AuthModule,
+    HistorialModule,
+  ],
 })
 export class GestionModule {}

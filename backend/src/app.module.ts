@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { GestionModule } from './modules/gestion/gestion.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HistorialModule } from './modules/historial/historial.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     AuthModule,
     GestionModule,
+    HistorialModule,
   ],
   controllers: [],
   providers: [],

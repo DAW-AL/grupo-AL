@@ -22,26 +22,26 @@ class ModificarUsuarioDto {
 }
 exports.ModificarUsuarioDto = ModificarUsuarioDto;
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'usuario' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], ModificarUsuarioDto.prototype, "nombre", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'clave' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.MinLength)(6, { message: 'La clave debe tener al menos 6 caracteres.' }),
     __metadata("design:type", String)
 ], ModificarUsuarioDto.prototype, "clave", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'user' }),
     (0, class_validator_1.IsEnum)(rol_usuario_enum_1.RolUsuarioEnum),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], ModificarUsuarioDto.prototype, "rol", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({ example: 'ACTIVO' }),
     (0, class_validator_1.IsEnum)(estados_usuarios_enum_1.EstadosUsuariosEnum),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)

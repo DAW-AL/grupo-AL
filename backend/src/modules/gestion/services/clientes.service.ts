@@ -13,6 +13,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ProyectosService } from './proyectos.service';
+import { HistorialService } from '../../historial/services/historial.service';
+import { AccionTipoEnum, EntidadTipoEnum } from '../../historial/entities/historial-cambio.entity';
+
+
+interface UsuarioActivo {
+  sub: number;
+  nombre: string;
+  rol: string;
+}
 
 @Injectable()
 export class ClientesService {
@@ -20,18 +29,29 @@ export class ClientesService {
     @InjectRepository(Cliente) private readonly repository: Repository<Cliente>,
     @Inject(forwardRef(() => ProyectosService))
     private readonly proyectosService: ProyectosService,
+    private readonly historialService: HistorialService, 
   ) {}
 
-  async crearCliente(dto: CreateClienteDto): Promise<{ id: number }> {
+  async crearCliente(dto: CreateClienteDto, usuarioActivo: UsuarioActivo): Promise<{ id: number }> {
     const cliente: Cliente = this.repository.create(dto);
     cliente.estado = EstadosClientesEnum.ACTIVO;
     await this.repository.save(cliente);
+
+
+  await this.historialService.registrar({
+    entidad: EntidadTipoEnum.CLIENTE,
+    entidadId: cliente.id,
+    accion: AccionTipoEnum.CREAR,
+    usuarioNombre: usuarioActivo.nombre,
+    descripcion: `${usuarioActivo.nombre} creó el cliente "${cliente.nombre}"`,
+  });
+
     return { id: cliente.id };
   }
 
   async actualizarCliente(
     id: number,
-    dto: UpdateClienteDto,
+    dto: UpdateClienteDto, usuarioActivo: UsuarioActivo
   ): Promise<{ id: number; nombre: string; email: string; telefono: string }> {
     const cliente: Cliente | null = await this.repository.findOneBy({ id });
 
@@ -45,8 +65,19 @@ export class ClientesService {
       );
     }
 
+    const nombreAnterior = cliente.nombre;  
+
     this.repository.merge(cliente, dto);
     await this.repository.save(cliente);
+
+  await this.historialService.registrar({
+    entidad: EntidadTipoEnum.CLIENTE,
+    entidadId: cliente.id,
+    accion: AccionTipoEnum.MODIFICAR,
+    usuarioNombre: usuarioActivo.nombre,
+    descripcion: `${usuarioActivo.nombre} modificó el cliente "${nombreAnterior}"`,
+  });
+    
     return {
       id: cliente.id,
       nombre: cliente.nombre,
@@ -93,6 +124,7 @@ export class ClientesService {
 
   async darDeBaja(
     id: number,
+    usuarioActivo: UsuarioActivo
   ): Promise<{ id: number; nombre: string; estado: EstadosClientesEnum }> {
     const cliente = await this.repository.findOneBy({ id });
     if (!cliente) throw new BadRequestException('Cliente no encontrado');
@@ -113,6 +145,15 @@ export class ClientesService {
 
     cliente.estado = EstadosClientesEnum.BAJA;
     await this.repository.save(cliente);
+
+  await this.historialService.registrar({
+    entidad: EntidadTipoEnum.CLIENTE,
+    entidadId: cliente.id,
+    accion: AccionTipoEnum.ELIMINAR,
+    usuarioNombre: usuarioActivo.nombre,
+    descripcion: `${usuarioActivo.nombre} dio de baja el cliente "${cliente.nombre}"`,
+  });
+
     return {
       id: cliente.id,
       nombre: cliente.nombre,
@@ -122,6 +163,7 @@ export class ClientesService {
 
   async reactivarCliente(
     id: number,
+    usuarioActivo: UsuarioActivo
   ): Promise<{ id: number; nombre: string; estado: EstadosClientesEnum }> {
     const cliente = await this.repository.findOneBy({ id });
     if (!cliente) throw new BadRequestException('Cliente no encontrado');
@@ -134,6 +176,15 @@ export class ClientesService {
 
     cliente.estado = EstadosClientesEnum.ACTIVO;
     await this.repository.save(cliente);
+
+  await this.historialService.registrar({
+    entidad: EntidadTipoEnum.CLIENTE,
+    entidadId: cliente.id,
+    accion: AccionTipoEnum.MODIFICAR,
+    usuarioNombre: usuarioActivo.nombre,
+    descripcion: `${usuarioActivo.nombre} reactivó el cliente "${cliente.nombre}"`,
+  });
+
     return {
       id: cliente.id,
       nombre: cliente.nombre,

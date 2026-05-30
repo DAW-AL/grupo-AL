@@ -33,11 +33,11 @@ let UsuariosController = class UsuariosController {
     async consultarUsuario(id) {
         return await this.usuariosService.consultarUsuario(id);
     }
-    async registrarUsuario(dto) {
-        return await this.usuariosService.registrarUsuario(dto);
+    async registrarUsuario(dto, req) {
+        return await this.usuariosService.registrarUsuario(dto, req.usuario);
     }
-    async modificarUsuario(id, dto) {
-        await this.usuariosService.modificarUsuario(id, dto);
+    async modificarUsuario(id, dto, req) {
+        return await this.usuariosService.modificarUsuario(id, dto, req.usuario);
     }
 };
 exports.UsuariosController = UsuariosController;
@@ -60,17 +60,19 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Registrar Usuarios' }),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [crear_usuario_dto_1.CrearUsuarioDto]),
+    __metadata("design:paramtypes", [crear_usuario_dto_1.CrearUsuarioDto, Object]),
     __metadata("design:returntype", Promise)
 ], UsuariosController.prototype, "registrarUsuario", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Modificar Usuarios' }),
-    (0, common_1.Put)(':id'),
+    (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, modificar_usuario_dto_1.ModificarUsuarioDto]),
+    __metadata("design:paramtypes", [Number, modificar_usuario_dto_1.ModificarUsuarioDto, Object]),
     __metadata("design:returntype", Promise)
 ], UsuariosController.prototype, "modificarUsuario", null);
 exports.UsuariosController = UsuariosController = __decorate([
