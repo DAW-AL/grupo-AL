@@ -35,8 +35,8 @@ let TareaService = class TareaService {
         const tareas = await this.tareaRepositorio.find({
             where: { proyecto: { id: proyecto_id } },
             relations: {
-                proyecto: true
-            }
+                proyecto: true,
+            },
         });
         return tareas;
     }
@@ -46,8 +46,8 @@ let TareaService = class TareaService {
                 id: id,
             },
             relations: {
-                proyecto: true
-            }
+                proyecto: true,
+            },
         });
         if (!tarea) {
             throw new common_1.NotFoundException(`No se encontro tarea con id: ${id}`);

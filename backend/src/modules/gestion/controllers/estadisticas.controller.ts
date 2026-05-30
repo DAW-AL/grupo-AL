@@ -6,17 +6,14 @@ import { ListarEstadisticasDto } from '../dtos/output/list-estadisticas.dto';
 
 @Controller('estadisticas')
 export class EstadisticasController {
+  constructor(private readonly estadisticasServicios: EstadisticasService) {}
 
-    constructor(
-        private readonly estadisticasServicios: EstadisticasService
-    ){}
-
-    @ApiBearerAuth()
-    @ApiOperation({ summary: 'Obtener Estadisticas' })
-    @ApiOkResponse({ type: ListarEstadisticasDto, isArray: true })
-    @UseGuards(AuthGuard)
-    @Get()
-    findAll () {
-        return this.estadisticasServicios.findAll()
-    }
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Obtener Estadisticas' })
+  @ApiOkResponse({ type: ListarEstadisticasDto, isArray: true })
+  @UseGuards(AuthGuard)
+  @Get()
+  findAll() {
+    return this.estadisticasServicios.findAll();
+  }
 }

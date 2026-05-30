@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Request
+  Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { TareaService } from '../services/tarea.service';
@@ -40,9 +40,7 @@ export class TareaController {
   @ApiOperation({ summary: 'Obtener una tarea' })
   @Get('/tarea/:id')
   @ApiParam({ name: 'id', type: Number, description: 'ID de la tarea' })
-  findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.tareaServicios.findOne(id);
   }
 
@@ -82,10 +80,7 @@ export class TareaController {
   @ApiOperation({ summary: 'Eliminar una tarea' })
   @Delete('/tareas/:id')
   @ApiParam({ name: 'id', type: Number, description: 'ID de la tarea' })
-  delete(
-    @Param('id', ParseIntPipe) id: number,
-    @Request() req,
-  ) {
+  delete(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.tareaServicios.delete(id, req.usuario);
   }
 }

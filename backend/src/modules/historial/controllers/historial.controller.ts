@@ -1,12 +1,20 @@
-import { Controller, Get, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '../../auth/guards/auth.guard';
 import { RolesGuard } from '../../gestion/guards/roles.guard';
 import { Roles } from '../../gestion/decorators/roles.decorator';
 import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
 import { HistorialService } from '../services/historial.service';
-import { EntidadTipoEnum, HistorialCambio } from '../entities/historial-cambio.entity';
-
+import {
+  EntidadTipoEnum,
+  HistorialCambio,
+} from '../entities/historial-cambio.entity';
 
 @ApiBearerAuth()
 @Roles(RolUsuarioEnum.ADMIN)

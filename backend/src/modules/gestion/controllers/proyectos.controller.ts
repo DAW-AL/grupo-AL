@@ -8,7 +8,7 @@ import {
   Post,
   Put,
   UseGuards,
-  Request
+  Request,
 } from '@nestjs/common';
 import { CreateProyectoDto } from '../dtos/input/create-proyecto.dto';
 import { UpdateProyectoDto } from '../dtos/input/update-proyecto.dto';
@@ -29,9 +29,10 @@ export class ProyectosController {
   @ApiOperation({ summary: 'Crear un Proyecto' })
   @UseGuards(AuthGuard)
   @Post()
-  async crearProyecto(@Body() dto: CreateProyectoDto,
-  @Request() req,
-): Promise<{ id: number }> {
+  async crearProyecto(
+    @Body() dto: CreateProyectoDto,
+    @Request() req,
+  ): Promise<{ id: number }> {
     return await this.proyectosService.crearProyecto(dto, req.usuario);
   }
 
@@ -42,7 +43,7 @@ export class ProyectosController {
   async actualizarProyecto(
     @Body() dto: UpdateProyectoDto,
     @Param('id') id: number,
-    @Request() req, 
+    @Request() req,
   ): Promise<void> {
     await this.proyectosService.actualizarProyecto(id, dto, req.usuario);
   }
@@ -69,9 +70,10 @@ export class ProyectosController {
   @ApiOperation({ summary: 'Eliminar un Proyecto' })
   @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
-  async darBajaProyecto(@Param('id', ParseIntPipe) id: number,
-  @Request() req,
-): Promise<void> {
+  async darBajaProyecto(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req,
+  ): Promise<void> {
     return await this.proyectosService.darBajaProyecto(id, req.usuario);
   }
 }

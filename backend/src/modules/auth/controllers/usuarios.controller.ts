@@ -19,7 +19,6 @@ import { CrearUsuarioDto } from '../dtos/input/crear-usuario.dto';
 import { ModificarUsuarioDto } from '../dtos/input/modificar-usuario.dto';
 import { ListUsuarioDto } from '../dtos/output/list-usuario.dto';
 
-
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
 @Roles(RolUsuarioEnum.ADMIN)

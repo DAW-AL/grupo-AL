@@ -8,7 +8,7 @@ import {
   Post,
   Query,
   UseGuards,
-  Request
+  Request,
 } from '@nestjs/common';
 import { CreateClienteDto } from '../dtos/input/create-cliente.dto';
 import {
@@ -27,7 +27,6 @@ import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 
-
 @Controller('clientes')
 export class ClientesController {
   constructor(private readonly clientesService: ClientesService) {}
@@ -36,10 +35,12 @@ export class ClientesController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Crear un Cliente' })
   @Post()
-  async crearCliente(@Body() dto: CreateClienteDto, @Request() req, ): Promise<{ id: number }> {
+  async crearCliente(
+    @Body() dto: CreateClienteDto,
+    @Request() req,
+  ): Promise<{ id: number }> {
     return await this.clientesService.crearCliente(dto, req.usuario);
   }
-  
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)

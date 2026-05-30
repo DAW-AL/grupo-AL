@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AccionTipoEnum, EntidadTipoEnum, HistorialCambio } from '../entities/historial-cambio.entity';
+import {
+  AccionTipoEnum,
+  EntidadTipoEnum,
+  HistorialCambio,
+} from '../entities/historial-cambio.entity';
 
 // Define la forma del objeto que recibe registrar().
 interface RegistrarCambioDto {
@@ -14,15 +18,14 @@ interface RegistrarCambioDto {
 
 @Injectable()
 export class HistorialService {
-
   constructor(
     @InjectRepository(HistorialCambio)
     private readonly repository: Repository<HistorialCambio>,
   ) {}
 
   async registrar(dto: RegistrarCambioDto): Promise<void> {
-    const cambio = this.repository.create(dto); 
-    await this.repository.save(cambio);         
+    const cambio = this.repository.create(dto);
+    await this.repository.save(cambio);
   }
 
   async obtenerTodos(): Promise<HistorialCambio[]> {
@@ -30,6 +33,4 @@ export class HistorialService {
       order: { fechaCambio: 'DESC' },
     });
   }
-
-
 }

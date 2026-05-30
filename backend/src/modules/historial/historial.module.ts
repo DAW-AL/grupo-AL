@@ -5,9 +5,7 @@ import { HistorialService } from './services/historial.service';
 import { HistorialController } from './controllers/historial.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([HistorialCambio]),
-  ],
+  imports: [TypeOrmModule.forFeature([HistorialCambio])],
   controllers: [HistorialController],
   providers: [HistorialService],
   exports: [HistorialService],
