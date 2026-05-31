@@ -10,7 +10,6 @@ import { AuthGuard } from './guards/auth.guard';
 import { UsuariosController } from './controllers/usuarios.controller';
 import { HistorialModule } from '../historial/historial.module';
 
-
 @Module({
   controllers: [AuthController, UsuariosController],
   providers: [UsuariosService, AuthService, AuthGuard],

@@ -19,8 +19,10 @@ import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
 import { Tarea } from '../entities/tarea.entity';
 import { Estados_Tareas } from '../enums/estados-tareas.enum';
 import { HistorialService } from '../../historial/services/historial.service';
-import { AccionTipoEnum, EntidadTipoEnum } from '../../historial/entities/historial-cambio.entity';
-
+import {
+  AccionTipoEnum,
+  EntidadTipoEnum,
+} from '../../historial/entities/historial-cambio.entity';
 
 // la forma del objeto que viene del JWT
 interface UsuarioActivo {
@@ -38,10 +40,13 @@ export class ProyectosService {
     private readonly clientesService: ClientesService,
     @InjectRepository(Tarea)
     private readonly tareaRepository: Repository<Tarea>,
-    private readonly historialService: HistorialService,  // ← NUEVO
+    private readonly historialService: HistorialService, // ← NUEVO
   ) {}
 
-  async crearProyecto(dto: CreateProyectoDto, usuarioActivo: UsuarioActivo): Promise<{ id: number }> {
+  async crearProyecto(
+    dto: CreateProyectoDto,
+    usuarioActivo: UsuarioActivo,
+  ): Promise<{ id: number }> {
     const proyecto: Proyecto = this.repository.create(dto);
     proyecto.estado = EstadosProyectosEnum.ACTIVO;
 
@@ -64,12 +69,16 @@ export class ProyectosService {
       accion: AccionTipoEnum.CREAR,
       usuarioNombre: usuarioActivo.nombre,
       descripcion: `${usuarioActivo.nombre} creó el proyecto "${proyecto.nombre}"`,
-  }); 
+    });
 
     return { id: proyecto.id };
   }
 
-  async actualizarProyecto(id: number, dto: UpdateProyectoDto, usuarioActivo: UsuarioActivo): Promise<void> {
+  async actualizarProyecto(
+    id: number,
+    dto: UpdateProyectoDto,
+    usuarioActivo: UsuarioActivo,
+  ): Promise<void> {
     const proyecto: Proyecto | null = await this.repository.findOne({
       where: { id },
       relations: ['cliente'],
@@ -98,13 +107,13 @@ export class ProyectosService {
 
     await this.repository.save(proyecto);
 
-  await this.historialService.registrar({
-    entidad: EntidadTipoEnum.PROYECTO,
-    entidadId: proyecto.id,
-    accion: AccionTipoEnum.MODIFICAR,
-    usuarioNombre: usuarioActivo.nombre,
-    descripcion: `${usuarioActivo.nombre} modificó el proyecto "${nombreAnterior}"`,
-  });
+    await this.historialService.registrar({
+      entidad: EntidadTipoEnum.PROYECTO,
+      entidadId: proyecto.id,
+      accion: AccionTipoEnum.MODIFICAR,
+      usuarioNombre: usuarioActivo.nombre,
+      descripcion: `${usuarioActivo.nombre} modificó el proyecto "${nombreAnterior}"`,
+    });
   }
 
   async obtenerProyectos(): Promise<ListProyectoDTO[]> {
@@ -176,23 +185,23 @@ export class ProyectosService {
     return existe;
   }
 
-  async darBajaProyecto(id: number, usuarioActivo: UsuarioActivo): Promise<void> {
+  async darBajaProyecto(
+    id: number,
+    usuarioActivo: UsuarioActivo,
+  ): Promise<void> {
     const proyecto: Proyecto | null = await this.repository.findOne({
       where: { id },
     });
 
     if (!proyecto) {
-      throw new NotFoundException(
-        'Proyecto no encontrado');
+      throw new NotFoundException('Proyecto no encontrado');
     }
 
     if (proyecto.estado === EstadosProyectosEnum.BAJA)
-      throw new BadRequestException(
-        'El proyecto ya esta dado de baja');
+      throw new BadRequestException('El proyecto ya esta dado de baja');
 
     if (proyecto.estado === EstadosProyectosEnum.FINALIZADO)
-      throw new BadRequestException(
-        'El proyecto se encuentra finalizado');
+      throw new BadRequestException('El proyecto se encuentra finalizado');
 
     proyecto.estado = EstadosProyectosEnum.BAJA;
 
@@ -204,13 +213,15 @@ export class ProyectosService {
       accion: AccionTipoEnum.ELIMINAR,
       usuarioNombre: usuarioActivo.nombre,
       descripcion: `${usuarioActivo.nombre} dio de baja el proyecto "${proyecto.nombre}"`,
-  });
+    });
   }
 
   /* Funcion para validar cambios de estado en actualizarProyecto */
   /* Baja desde endpoint DELETE, Finalizar desde endpoint PUT */
-  private async validarCambioDeEstado(proyecto: Proyecto, dto: UpdateProyectoDto): Promise<void> {
-
+  private async validarCambioDeEstado(
+    proyecto: Proyecto,
+    dto: UpdateProyectoDto,
+  ): Promise<void> {
     if (!dto.estado) {
       return;
     }
@@ -221,14 +232,14 @@ export class ProyectosService {
       );
     }
 
-    if ( proyecto.estado === EstadosProyectosEnum.FINALIZADO &&
-      dto.estado === EstadosProyectosEnum.ACTIVO) {
-      throw new BadRequestException (
-        'No se puede reactivar un proyecto')
+    if (
+      proyecto.estado === EstadosProyectosEnum.FINALIZADO &&
+      dto.estado === EstadosProyectosEnum.ACTIVO
+    ) {
+      throw new BadRequestException('No se puede reactivar un proyecto');
     }
 
     if (dto.estado === EstadosProyectosEnum.FINALIZADO) {
-
       const existenTareasPendientes = await this.tareaRepository.exists({
         where: {
           proyecto: { id: proyecto.id },

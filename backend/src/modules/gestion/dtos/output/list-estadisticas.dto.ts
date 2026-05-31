@@ -1,14 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ListarEstadisticasDto {
+  @ApiProperty()
+  proyecto!: object;
 
-    @ApiProperty()
-    proyecto!: object;
+  @ApiProperty()
+  cliente!: object;
 
-    @ApiProperty()
-    cliente!: object;
-
-    @ApiProperty()
-    tarea!: object;
-    
+  @ApiProperty()
+  tarea!: object;
 }

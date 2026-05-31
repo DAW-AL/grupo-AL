@@ -17,9 +17,7 @@ let HistorialModule = class HistorialModule {
 exports.HistorialModule = HistorialModule;
 exports.HistorialModule = HistorialModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            typeorm_1.TypeOrmModule.forFeature([historial_cambio_entity_1.HistorialCambio]),
-        ],
+        imports: [typeorm_1.TypeOrmModule.forFeature([historial_cambio_entity_1.HistorialCambio])],
         controllers: [historial_controller_1.HistorialController],
         providers: [historial_service_1.HistorialService],
         exports: [historial_service_1.HistorialService],

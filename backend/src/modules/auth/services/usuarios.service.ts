@@ -9,8 +9,10 @@ import { ModificarUsuarioDto } from '../dtos/input/modificar-usuario.dto';
 import { ListUsuarioDto } from '../dtos/output/list-usuario.dto';
 import { RolUsuarioEnum } from '../enums/rol-usuario.enum';
 import { HistorialService } from '../../historial/services/historial.service';
-import { AccionTipoEnum, EntidadTipoEnum } from '../../historial/entities/historial-cambio.entity';
-
+import {
+  AccionTipoEnum,
+  EntidadTipoEnum,
+} from '../../historial/entities/historial-cambio.entity';
 
 interface UsuarioActivo {
   sub: number;
@@ -63,8 +65,10 @@ export class UsuariosService {
     return dto;
   }
 
-
-  async registrarUsuario(dto: CrearUsuarioDto, usuarioActivo: UsuarioActivo): Promise<{ id: number }> {
+  async registrarUsuario(
+    dto: CrearUsuarioDto,
+    usuarioActivo: UsuarioActivo,
+  ): Promise<{ id: number }> {
     const nombreExistente = await this.usuariosRepository.findOneBy({
       nombre: dto.nombre,
     });
@@ -93,8 +97,11 @@ export class UsuariosService {
     return { id: usuario.id };
   }
 
-
-  async modificarUsuario(id: number, dto: ModificarUsuarioDto, usuarioActivo: UsuarioActivo): Promise<{ mensaje: string }> {
+  async modificarUsuario(
+    id: number,
+    dto: ModificarUsuarioDto,
+    usuarioActivo: UsuarioActivo,
+  ): Promise<{ mensaje: string }> {
     const usuario = await this.usuariosRepository.findOneBy({ id });
 
     if (!usuario) {
@@ -127,13 +134,15 @@ export class UsuariosService {
 
     await this.usuariosRepository.save(usuario);
 
-    const accion = (dto.estado === EstadosUsuariosEnum.BAJA)
-      ? AccionTipoEnum.ELIMINAR
-      : AccionTipoEnum.MODIFICAR;
+    const accion =
+      dto.estado === EstadosUsuariosEnum.BAJA
+        ? AccionTipoEnum.ELIMINAR
+        : AccionTipoEnum.MODIFICAR;
 
-    const descripcion = (dto.estado === EstadosUsuariosEnum.BAJA)
-      ? `${usuarioActivo.nombre} dio de baja el usuario "${nombreAnterior}"`
-      : `${usuarioActivo.nombre} modificó el usuario "${nombreAnterior}"`;
+    const descripcion =
+      dto.estado === EstadosUsuariosEnum.BAJA
+        ? `${usuarioActivo.nombre} dio de baja el usuario "${nombreAnterior}"`
+        : `${usuarioActivo.nombre} modificó el usuario "${nombreAnterior}"`;
 
     await this.historialService.registrar({
       entidad: EntidadTipoEnum.USUARIO,

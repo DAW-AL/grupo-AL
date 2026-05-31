@@ -4,23 +4,23 @@ import { EstadosUsuariosEnum } from '../../enums/estados-usuarios.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ModificarUsuarioDto {
-  @ApiProperty({example: 'usuario'})
+  @ApiProperty({ example: 'usuario' })
   @IsString()
   @IsOptional()
   nombre?: string;
 
-  @ApiProperty({example: 'clave'})
+  @ApiProperty({ example: 'clave' })
   @IsString()
   @IsOptional()
   @MinLength(6, { message: 'La clave debe tener al menos 6 caracteres.' })
   clave?: string;
 
-  @ApiProperty({example: 'user'})
+  @ApiProperty({ example: 'user' })
   @IsEnum(RolUsuarioEnum)
   @IsOptional()
   rol?: RolUsuarioEnum;
 
-  @ApiProperty({example: 'ACTIVO'})
+  @ApiProperty({ example: 'ACTIVO' })
   @IsEnum(EstadosUsuariosEnum)
   @IsOptional()
   estado?: EstadosUsuariosEnum;

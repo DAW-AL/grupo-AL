@@ -1,4 +1,9 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 // en qué entidad del sistema se hizo el cambio
 export enum EntidadTipoEnum {
@@ -17,7 +22,6 @@ export enum AccionTipoEnum {
 
 @Entity('historial_cambios')
 export class HistorialCambio {
-
   @PrimaryGeneratedColumn()
   id!: number;
 
