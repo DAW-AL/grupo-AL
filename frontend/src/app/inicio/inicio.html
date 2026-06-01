@@ -1,0 +1,71 @@
+<section>
+    <app-header 
+        [mostrarBoton]="esAdmin()"
+        (mostrarTodas)="todas.set(!todas())"
+        [labelBoton]="todas() ? 'Solo destacadas' : 'Todas estadísticas'"
+    />
+    @if (esAdmin()) {
+        <div class="favoritas">
+            <h4>Destacadas</h4>
+            <div class="section">
+                @for (card of favCards(); track $index) {
+                    @if (card.value >= 0) {
+                        <app-stat-card 
+                            [title]="card.title"
+                            [value] = "card.value"
+                            [description]="card.description"
+                            [clase]="card.title.toLowerCase()"
+                        />
+                    }
+                }
+            </div>
+        </div>
+        @if (todas()) {
+            <div class="todas">
+                <h4>Todas</h4>
+                <div class="section">
+                    @for (card of allCards(); track $index) {
+                        @if (card.value >= 0) {
+                            <app-stat-card 
+                                [title]="card.title"
+                                [value]="card.value"
+                                [description]="card.description"
+                                [clase]="card.title.toLowerCase()"
+                            />
+                        }
+                    }
+                </div>
+            </div>
+            <div>
+                <h4>Porcentajes</h4>
+                <div class="graphs">
+                    @for (p of porcentajes(); track $index) {
+                        <app-stat-graph 
+                            [titulo]="p.titulo",
+                            [detalles]="p.detalles",
+                            [datos]="p.datos"
+                        />
+                    }
+                </div>
+            </div>
+        }
+        @if (comentarios().length > 0) {
+            <div class="action-plan">
+                <h4>Plan de acción</h4>
+                <div>
+                    <ul>
+                        @for (cr of comentarios(); track $index) {
+                            <li class="action-list">{{cr}}</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    } @else {
+        <div class="bienvenida">
+            <h2>¡Bienvenido, <span class="nombreUsuario">{{ nombreUsuario() }}</span>!</h2>
+            <p>Explorá y administrá los proyectos y ayuda a mantener las tareas al día.</p>
+            <button routerLink="/proyectos">Ver proyectos →</button>
+        </div>
+    }
+</section>

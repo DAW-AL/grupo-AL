@@ -142,10 +142,10 @@ let UsuariosService = class UsuariosService {
             usuario.estado = dto.estado;
         }
         await this.usuariosRepository.save(usuario);
-        const accion = (dto.estado === estados_usuarios_enum_1.EstadosUsuariosEnum.BAJA)
+        const accion = dto.estado === estados_usuarios_enum_1.EstadosUsuariosEnum.BAJA
             ? historial_cambio_entity_1.AccionTipoEnum.ELIMINAR
             : historial_cambio_entity_1.AccionTipoEnum.MODIFICAR;
-        const descripcion = (dto.estado === estados_usuarios_enum_1.EstadosUsuariosEnum.BAJA)
+        const descripcion = dto.estado === estados_usuarios_enum_1.EstadosUsuariosEnum.BAJA
             ? `${usuarioActivo.nombre} dio de baja el usuario "${nombreAnterior}"`
             : `${usuarioActivo.nombre} modificó el usuario "${nombreAnterior}"`;
         await this.historialService.registrar({

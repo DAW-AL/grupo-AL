@@ -35,8 +35,8 @@ let TareaService = class TareaService {
         const tareas = await this.tareaRepositorio.find({
             where: { proyecto: { id: proyecto_id } },
             relations: {
-                proyecto: true
-            }
+                proyecto: true,
+            },
         });
         return tareas;
     }
@@ -46,8 +46,8 @@ let TareaService = class TareaService {
                 id: id,
             },
             relations: {
-                proyecto: true
-            }
+                proyecto: true,
+            },
         });
         if (!tarea) {
             throw new common_1.NotFoundException(`No se encontro tarea con id: ${id}`);
@@ -57,7 +57,7 @@ let TareaService = class TareaService {
     async create(proyecto_id, crearTarea, usuarioActivo) {
         const nuevaTarea = this.tareaRepositorio.create({
             ...crearTarea,
-            estado: estados_tareas_enum_1.Estados_Tareas.pendiente,
+            estado: estados_tareas_enum_1.Estados_Tareas.PENDIENTE,
             proyecto: { id: proyecto_id },
         });
         const tareaGuardada = await this.tareaRepositorio.save(nuevaTarea);
@@ -85,13 +85,35 @@ let TareaService = class TareaService {
         });
         return tarea;
     }
+    async reactivarTarea(id, usuarioActivo) {
+        const tarea = await this.tareaRepositorio.findOneBy({ id });
+        if (!tarea)
+            throw new common_1.BadRequestException('Tarea no encontrada');
+        if (tarea.estado === estados_tareas_enum_1.Estados_Tareas.PENDIENTE) {
+            throw new common_1.BadRequestException('El cliente aun esta en estado pendiente');
+        }
+        tarea.estado = estados_tareas_enum_1.Estados_Tareas.PENDIENTE;
+        await this.tareaRepositorio.save(tarea);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.TAREA,
+            entidadId: tarea.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.MODIFICAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} reactivó la teare "${tarea.descripcion}"`,
+        });
+        return {
+            id: tarea.id,
+            descripcion: tarea.descripcion,
+            estado: tarea.estado,
+        };
+    }
     async delete(id, usuarioActivo) {
         const buscarTarea = await this.findOne(id);
-        if (buscarTarea.estado === estados_tareas_enum_1.Estados_Tareas.baja) {
+        if (buscarTarea.estado === estados_tareas_enum_1.Estados_Tareas.BAJA) {
             throw new common_1.NotFoundException('La tarea ya esta dada de baja');
         }
         const eliminarTarea = await this.tareaRepositorio.update(id, {
-            estado: estados_tareas_enum_1.Estados_Tareas.baja,
+            estado: estados_tareas_enum_1.Estados_Tareas.BAJA,
         });
         if (eliminarTarea.affected === 0) {
             throw new common_1.NotFoundException('No se pudo eliminar la tarea');

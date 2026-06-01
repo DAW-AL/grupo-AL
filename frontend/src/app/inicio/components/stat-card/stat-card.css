@@ -1,0 +1,54 @@
+.panel-estadisticas {
+    margin: 20px;
+    width: 200px;
+}
+
+.card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+    border: 0.5px solid rgb(218, 218, 218);
+    border-radius: 20px;
+    padding: 15px 25px;
+}
+
+.card-container > * {
+    margin: 0px;
+    padding: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: #808080;
+}
+
+.card-number {
+    font-size: 25px !important;
+    color: black !important;
+}
+
+.proyectos {
+    border-left: 2px solid #661c1a;
+    /* background-color: #fdf6f6; */
+}
+
+.proyectos > span {
+    color: #661c1a !important;
+}
+
+.clientes {
+    border-left: 2px solid #1e88e5;
+    /* background-color: #eaf4fd; */
+}
+
+.clientes > span {
+    color: #1e88e5 !important;
+}
+
+.tareas {
+    border-left: 2px solid #226d26;
+    /* background-color: #f6fff6; */
+}
+
+.tareas > span {
+    color: #226d26 !important;
+}

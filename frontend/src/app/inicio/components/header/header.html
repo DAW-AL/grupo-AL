@@ -1,0 +1,15 @@
+<div class="section">
+    <div class="page-wrapper">
+    <div class="page-header">
+        <h2 class="page-title">Inicio</h2>
+        <div class="header-actions">
+        @if (mostrarBoton()) {
+            <p-button
+                [label]="labelBoton()"
+                icon="pi pi-chart-bar"
+                (onClick)="mostrarTodas.emit()"
+            />
+        }
+        </div>
+    </div>
+</div>

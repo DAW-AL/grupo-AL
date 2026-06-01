@@ -1,0 +1,64 @@
+.favoritas, .todas {
+    width: 100%;
+}
+
+.section {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    margin: 0;
+    padding: 0;
+}
+
+h4 {
+    color: #808080;
+    margin: 25px 0px 0px 25px;
+    font-size: 12px;
+}
+
+.graphs {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-around;
+}
+
+.action-plan {
+    width: 75%;
+}
+
+.action-list {
+  padding: 12px 15px;
+  font-size: 14px;
+  line-height: 1.6;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.action-list::before {
+  content: '→';
+  color: #7c6fcd;
+  flex-shrink: 0;
+}
+
+.bienvenida {
+    text-align: center;
+    height: 500px;
+}
+
+.nombreUsuario {
+    color: #7c6fcd;
+    font-weight: 800;
+}
+
+.bienvenida > button {
+    text-decoration: none;
+    color: white;
+    background-color: #7c6fcd;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}

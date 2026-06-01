@@ -15,8 +15,18 @@ import { EstadisticasService } from './services/estadisticas.service';
 import { HistorialModule } from '../historial/historial.module';
 
 @Module({
-  controllers: [ClientesController, ProyectosController, TareaController, EstadisticasController],
-  providers: [TareaService, ClientesService, ProyectosService, EstadisticasService],
+  controllers: [
+    ClientesController,
+    ProyectosController,
+    TareaController,
+    EstadisticasController,
+  ],
+  providers: [
+    TareaService,
+    ClientesService,
+    ProyectosService,
+    EstadisticasService,
+  ],
   exports: [],
   imports: [
     TypeOrmModule.forFeature([Tarea, Cliente, Proyecto]),

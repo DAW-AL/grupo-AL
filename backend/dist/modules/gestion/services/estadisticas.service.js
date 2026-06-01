@@ -48,54 +48,70 @@ let EstadisticasService = class EstadisticasService {
         let cliente = {};
         let tarea = {};
         const proyectos = await this.getProyectos();
-        const totalProyectosActivos = proyectos.filter(v => v.estado === estados_proyectos_enum_1.EstadosProyectosEnum.ACTIVO);
-        const totalProyectosfinalizados = proyectos.filter(v => v.estado === estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO);
-        const totalProyectosBajas = proyectos.filter(v => v.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA);
-        proyecto["numeros"] = {
+        const totalProyectosActivos = proyectos.filter((v) => v.estado === estados_proyectos_enum_1.EstadosProyectosEnum.ACTIVO);
+        const totalProyectosfinalizados = proyectos.filter((v) => v.estado === estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO);
+        const totalProyectosBajas = proyectos.filter((v) => v.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA);
+        proyecto['numeros'] = {
             total: proyectos.length,
             totalActivos: totalProyectosActivos.length,
             totalFinalizados: totalProyectosfinalizados.length,
-            totalBajas: totalProyectosBajas.length
+            totalBajas: totalProyectosBajas.length,
         };
         const clientes = await this.getClientes();
-        const totalClientesActivos = clientes.filter(v => v.estado === estados_clientes_enum_1.EstadosClientesEnum.ACTIVO);
-        const totalClientesBaja = clientes.filter(v => v.estado === estados_clientes_enum_1.EstadosClientesEnum.BAJA);
-        cliente["numeros"] = {
+        const totalClientesActivos = clientes.filter((v) => v.estado === estados_clientes_enum_1.EstadosClientesEnum.ACTIVO);
+        const totalClientesBaja = clientes.filter((v) => v.estado === estados_clientes_enum_1.EstadosClientesEnum.BAJA);
+        cliente['numeros'] = {
             total: clientes.length,
             totalActivos: totalClientesActivos.length,
-            totalBajas: totalClientesBaja.length
+            totalBajas: totalClientesBaja.length,
         };
         const tareas = await this.getTareas();
-        const totalTareasPendientes = tareas.filter(v => v.estado === estados_tareas_enum_1.Estados_Tareas.pendiente);
-        const totalTareasFinalizadas = tareas.filter(v => v.estado === estados_tareas_enum_1.Estados_Tareas.finalizada);
-        const totalTareasBajas = tareas.filter(v => v.estado === estados_tareas_enum_1.Estados_Tareas.baja);
-        tarea["numeros"] = {
+        const totalTareasPendientes = tareas.filter((v) => v.estado === estados_tareas_enum_1.Estados_Tareas.PENDIENTE);
+        const totalTareasFinalizadas = tareas.filter((v) => v.estado === estados_tareas_enum_1.Estados_Tareas.FINALIZADA);
+        const totalTareasBajas = tareas.filter((v) => v.estado === estados_tareas_enum_1.Estados_Tareas.BAJA);
+        tarea['numeros'] = {
             total: tareas.length,
             totalPendientes: totalTareasPendientes.length,
             totalFinalizadas: totalTareasFinalizadas.length,
-            totalBajas: totalTareasBajas.length
+            totalBajas: totalTareasBajas.length,
         };
-        proyecto["porcentajes"] = {
-            activos: totalProyectosActivos.length > 0 ? (100 / proyectos.length * totalProyectosActivos.length).toFixed(0) : '0',
-            finalizados: totalProyectosfinalizados.length > 0 ? (100 / proyectos.length * totalProyectosfinalizados.length).toFixed(0) : '0',
-            bajas: totalProyectosBajas.length > 0 ? (100 / proyectos.length * totalProyectosBajas.length).toFixed(0) : '0'
+        proyecto['porcentajes'] = {
+            activos: totalProyectosActivos.length > 0
+                ? ((100 / proyectos.length) * totalProyectosActivos.length).toFixed(0)
+                : '0',
+            finalizados: totalProyectosfinalizados.length > 0
+                ? ((100 / proyectos.length) *
+                    totalProyectosfinalizados.length).toFixed(0)
+                : '0',
+            bajas: totalProyectosBajas.length > 0
+                ? ((100 / proyectos.length) * totalProyectosBajas.length).toFixed(0)
+                : '0',
         };
-        cliente["porcentajes"] = {
-            activos: totalClientesActivos.length > 0 ? (100 / clientes.length * totalClientesActivos.length).toFixed(0) : '0',
-            bajas: totalClientesBaja.length > 0 ? (100 / clientes.length * totalClientesBaja.length).toFixed(0) : '0'
+        cliente['porcentajes'] = {
+            activos: totalClientesActivos.length > 0
+                ? ((100 / clientes.length) * totalClientesActivos.length).toFixed(0)
+                : '0',
+            bajas: totalClientesBaja.length > 0
+                ? ((100 / clientes.length) * totalClientesBaja.length).toFixed(0)
+                : '0',
         };
-        tarea["porcentajes"] = {
-            pendientes: totalTareasPendientes.length > 0 ? (100 / tareas.length * totalTareasPendientes.length).toFixed(0) : '0',
-            finalizadas: totalTareasFinalizadas.length > 0 ? (100 / tareas.length * totalTareasFinalizadas.length).toFixed(0) : '0',
-            bajas: totalTareasBajas.length > 0 ? (100 / tareas.length * totalTareasBajas.length).toFixed(0) : '0'
+        tarea['porcentajes'] = {
+            pendientes: totalTareasPendientes.length > 0
+                ? ((100 / tareas.length) * totalTareasPendientes.length).toFixed(0)
+                : '0',
+            finalizadas: totalTareasFinalizadas.length > 0
+                ? ((100 / tareas.length) * totalTareasFinalizadas.length).toFixed(0)
+                : '0',
+            bajas: totalTareasBajas.length > 0
+                ? ((100 / tareas.length) * totalTareasBajas.length).toFixed(0)
+                : '0',
         };
         return {
             proyecto,
             cliente,
-            tarea
+            tarea,
         };
     }
-    ;
 };
 exports.EstadisticasService = EstadisticasService;
 exports.EstadisticasService = EstadisticasService = __decorate([

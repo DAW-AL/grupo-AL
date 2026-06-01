@@ -1,0 +1,158 @@
+<p-toast />
+<p-confirmdialog />
+
+<div class="drawer-overlay" [class.visible]="drawerOpen()" (click)="cerrarDrawer()"></div>
+
+<div class="page-wrapper">
+  <div class="page-header">
+    <h1 class="page-title">Clientes</h1>
+    <div class="header-actions">
+      <div class="filter-group">
+        <span>Estado:</span>
+        <p-select
+          [options]="filtroOpciones"
+          [(ngModel)]="filtroEstado"
+          optionLabel="label"
+          optionValue="value"
+          (onChange)="cargar()" />
+      </div>
+      <p-button
+        label="Nuevo Cliente"
+        icon="pi pi-plus"
+        (onClick)="abrirNuevo()" />
+    </div>
+  </div>
+
+  <div class="table-container">
+    @if (loading()) {
+      <div class="table-loading"><div class="spinner"></div></div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of clientes(); track c.id) {
+            <tr>
+              <td data-label="Nombre" class="font-semibold">{{ c.nombre }}</td>
+              <td data-label="Email">{{ c.email }}</td>
+              <td data-label="Teléfono">{{ c.telefono ? c.telefono : '-' }}</td>
+              <td data-label="Estado">
+                <span class="badge" [class.badge-activo]="isActivo(c)" [class.badge-baja]="!isActivo(c)">
+                  {{ isActivo(c) ? 'Activo' : 'Baja' }}
+                </span>
+              </td>
+              <td data-label="Acciones">
+                <div class="actions-cell">
+                  <p-button
+                    label="Editar"
+                    severity="secondary"
+                    size="small"
+                    [disabled]="!isActivo(c)"
+                    (onClick)="abrirEditar(c)" />
+                  
+                  @if (esAdmin()) {
+                    @if (isActivo(c)) {
+                      <p-button
+                        label="Dar de Baja"
+                        severity="danger"
+                        size="small"
+                        (onClick)="darDeBaja(c)" />
+                    } @else {
+                      <p-button
+                        label="Reactivar"
+                        severity="success"
+                        size="small"
+                        (onClick)="reactivar(c)" />
+                    }
+                  }
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty-state">No hay clientes registrados con el filtro seleccionado.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>
+
+<aside class="drawer" [class.open]="drawerOpen()">
+  <div class="drawer-header">
+    <h2 class="drawer-title">{{ tituloDrawer() }}</h2>
+    <button class="drawer-close" (click)="cerrarDrawer()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="drawer-body" [formGroup]="form">
+    <div class="form-group">
+      <label class="form-label">Nombre del cliente</label>
+      <input
+        pInputText
+        [fluid]="true"
+        [invalid]="tieneError('nombre','required')"
+        type="text"
+        placeholder="Ej: Ezequiel"
+        formControlName="nombre" />
+      @if (tieneError('nombre','required')) {
+        <small class="form-error">El nombre es requerido</small>
+      }
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input
+        pInputText
+        [fluid]="true"
+        [invalid]="tieneError('email','required') || tieneError('email','email')"
+        type="email"
+        placeholder="ejemplo@correo.com"
+        formControlName="email" />
+      @if (tieneError('email','required')) {
+        <small class="form-error">El correo electrónico es requerido</small>
+      }
+      @if (tieneError('email','email')) {
+        <small class="form-error">Debe ingresar un formato de correo válido</small>
+      }
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Teléfono <span style="color: var(--p-surface-400); font-weight: normal;">(Opcional)</span></label>
+      <input
+        pInputText
+        [fluid]="true"
+        [invalid]="tieneError('telefono','pattern')"
+        type="text"
+        placeholder="Ej: +541123456789"
+        formControlName="telefono" />
+      @if (tieneError('telefono','pattern')) {
+        <small class="form-error">Formato inválido. Debe empezar con +54 seguido de 10 u 11 dígitos</small>
+      }
+    </div>
+  </div>
+
+  <div class="drawer-footer">
+    <p-button
+      label="Cancelar"
+      severity="secondary"
+      [disabled]="guardando()"
+      (onClick)="cerrarDrawer()" />
+    <p-button
+      [label]="guardando() ? 'Guardando...' : 'Guardar'"
+      [loading]="guardando()"
+      [disabled]="form.invalid"
+      (onClick)="guardar()" />
+  </div>
+</aside>

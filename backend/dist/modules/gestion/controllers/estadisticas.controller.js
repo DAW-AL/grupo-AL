@@ -15,6 +15,9 @@ const estadisticas_service_1 = require("../services/estadisticas.service");
 const swagger_1 = require("@nestjs/swagger");
 const auth_guard_1 = require("../../auth/guards/auth.guard");
 const list_estadisticas_dto_1 = require("../dtos/output/list-estadisticas.dto");
+const roles_decorator_1 = require("../decorators/roles.decorator");
+const rol_usuario_enum_1 = require("../../auth/enums/rol-usuario.enum");
+const roles_guard_1 = require("../guards/roles.guard");
 let EstadisticasController = class EstadisticasController {
     estadisticasServicios;
     constructor(estadisticasServicios) {
@@ -27,9 +30,10 @@ let EstadisticasController = class EstadisticasController {
 exports.EstadisticasController = EstadisticasController;
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
+    (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
     (0, swagger_1.ApiOperation)({ summary: 'Obtener Estadisticas' }),
     (0, swagger_1.ApiOkResponse)({ type: list_estadisticas_dto_1.ListarEstadisticasDto, isArray: true }),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

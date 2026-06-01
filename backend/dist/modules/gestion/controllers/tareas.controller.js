@@ -38,7 +38,13 @@ let TareaController = class TareaController {
         return this.tareaServicios.create(proyecto_id, crearTarea, req.usuario);
     }
     update(id, actualizarTarea, req) {
+        if (actualizarTarea.estado !== undefined && req.usuario.rol !== 'admin') {
+            throw new common_1.ForbiddenException('No tenés permisos para hacer eso :(');
+        }
         return this.tareaServicios.update(id, actualizarTarea, req.usuario);
+    }
+    async reactivarCliente(id, req) {
+        return await this.tareaServicios.reactivarTarea(id, req.usuario);
     }
     delete(id, req) {
         return this.tareaServicios.delete(id, req.usuario);
@@ -101,6 +107,23 @@ __decorate([
     __metadata("design:paramtypes", [Number, update_tarea_dto_1.ActualizarTareaDto, Object]),
     __metadata("design:returntype", void 0)
 ], TareaController.prototype, "update", null);
+__decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Reactivar una tarea dada de baja' }),
+    (0, swagger_1.ApiParam)({
+        name: 'id',
+        description: 'ID de la tarea a reactivar',
+        example: 1,
+    }),
+    (0, common_2.Patch)('/tareas/:id/reactivar'),
+    __param(0, (0, common_2.Param)('id')),
+    __param(1, (0, common_2.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], TareaController.prototype, "reactivarCliente", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
