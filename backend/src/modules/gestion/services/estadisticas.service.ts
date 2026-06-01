@@ -80,13 +80,13 @@ export class EstadisticasService {
     // Numeros de tareas activas
     const tareas = await this.getTareas();
     const totalTareasPendientes = tareas.filter(
-      (v) => v.estado === Estados_Tareas.pendiente,
+      (v) => v.estado === Estados_Tareas.PENDIENTE,
     );
     const totalTareasFinalizadas = tareas.filter(
-      (v) => v.estado === Estados_Tareas.finalizada,
+      (v) => v.estado === Estados_Tareas.FINALIZADA,
     );
     const totalTareasBajas = tareas.filter(
-      (v) => v.estado === Estados_Tareas.baja,
+      (v) => v.estado === Estados_Tareas.BAJA,
     );
     tarea['numeros'] = {
       total: tareas.length,

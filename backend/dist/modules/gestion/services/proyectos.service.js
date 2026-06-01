@@ -178,7 +178,7 @@ let ProyectosService = class ProyectosService {
             const existenTareasPendientes = await this.tareaRepository.exists({
                 where: {
                     proyecto: { id: proyecto.id },
-                    estado: estados_tareas_enum_1.Estados_Tareas.pendiente,
+                    estado: estados_tareas_enum_1.Estados_Tareas.PENDIENTE,
                 },
             });
             if (existenTareasPendientes) {

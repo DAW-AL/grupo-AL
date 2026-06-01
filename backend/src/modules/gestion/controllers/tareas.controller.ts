@@ -1,4 +1,4 @@
-import { Controller, UseGuards } from '@nestjs/common';
+import { Controller, ForbiddenException, UseGuards } from '@nestjs/common';
 import {
   Body,
   Delete,
@@ -17,6 +17,7 @@ import { AuthGuard } from '../../auth/guards/auth.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
 import { RolesGuard } from '../guards/roles.guard';
+import { Estados_Tareas } from '../enums/estados-tareas.enum';
 
 @Controller('proyectos')
 export class TareaController {
@@ -71,7 +72,30 @@ export class TareaController {
     @Body() actualizarTarea: ActualizarTareaDto,
     @Request() req,
   ) {
+
+    if (actualizarTarea.estado !== undefined && req.usuario.rol !== 'admin') {
+      throw new ForbiddenException('No tenés permisos para hacer eso :(');
+    }
+
     return this.tareaServicios.update(id, actualizarTarea, req.usuario);
+  }
+
+  //AGREGUE ESTA NUEVA FORMA DE DAR DE ALTA UNA TAREA QUE ESTUVO COMO BAJA
+  @ApiBearerAuth()
+  @Roles(RolUsuarioEnum.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Reactivar una tarea dada de baja' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID de la tarea a reactivar',
+    example: 1,
+  })
+  @Patch('/tareas/:id/reactivar')
+  async reactivarCliente(
+    @Param('id') id: number,
+    @Request() req,
+  ): Promise<{ id: number; descripcion: string; estado: Estados_Tareas }> {
+    return await this.tareaServicios.reactivarTarea(id, req.usuario);
   }
 
   @ApiBearerAuth()

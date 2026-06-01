@@ -243,7 +243,7 @@ export class ProyectosService {
       const existenTareasPendientes = await this.tareaRepository.exists({
         where: {
           proyecto: { id: proyecto.id },
-          estado: Estados_Tareas.pendiente,
+          estado: Estados_Tareas.PENDIENTE,
         },
       });
 

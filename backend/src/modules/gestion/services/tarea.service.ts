@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tarea } from '../entities/tarea.entity';
@@ -17,6 +17,7 @@ interface UsuarioActivo {
   nombre: string;
   rol: string;
 }
+
 @Injectable()
 export class TareaService {
   constructor(
@@ -64,7 +65,7 @@ export class TareaService {
   ): Promise<Tarea> {
     const nuevaTarea = this.tareaRepositorio.create({
       ...crearTarea,
-      estado: Estados_Tareas.pendiente,
+      estado: Estados_Tareas.PENDIENTE,
       proyecto: { id: proyecto_id },
     });
 
@@ -110,18 +111,47 @@ export class TareaService {
     return tarea;
   }
 
+   //AGREGUE ESTA NUEVA FORMA DE DAR DE ALTA UNA TAREA QUE ESTUVO COMO BAJA
+  async reactivarTarea(id: number, usuarioActivo: UsuarioActivo) {
+    const tarea = await this.tareaRepositorio.findOneBy({ id });
+    if (!tarea) throw new BadRequestException('Tarea no encontrada');
+
+    if (tarea.estado === Estados_Tareas.PENDIENTE) {
+      throw new BadRequestException(
+        'El cliente aun esta en estado pendiente',
+      );
+    }
+
+    tarea.estado = Estados_Tareas.PENDIENTE;
+    await this.tareaRepositorio.save(tarea);
+
+    await this.historialService.registrar({
+      entidad: EntidadTipoEnum.TAREA,
+      entidadId: tarea.id,
+      accion: AccionTipoEnum.MODIFICAR,
+      usuarioNombre: usuarioActivo.nombre,
+      descripcion: `${usuarioActivo.nombre} reactivó la teare "${tarea.descripcion}"`,
+    });
+
+    return {
+      id: tarea.id,
+      descripcion: tarea.descripcion,
+      estado: tarea.estado,
+    };
+  }
+
   async delete(
     id: number,
     usuarioActivo: UsuarioActivo,
   ): Promise<{ message: string }> {
     const buscarTarea = await this.findOne(id);
 
-    if (buscarTarea.estado === Estados_Tareas.baja) {
+    if (buscarTarea.estado === Estados_Tareas.BAJA) {
       throw new NotFoundException('La tarea ya esta dada de baja');
     }
 
     const eliminarTarea = await this.tareaRepositorio.update(id, {
-      estado: Estados_Tareas.baja,
+      estado: Estados_Tareas.BAJA,
     });
 
     if (eliminarTarea.affected === 0) {

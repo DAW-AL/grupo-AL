@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { Tarea } from '../entities/tarea.entity';
 import { CrearTareaDto } from '../dtos/input/create-tarea.dto';
 import { ActualizarTareaDto } from '../dtos/input/update-tarea.dto';
+import { Estados_Tareas } from '../enums/estados-tareas.enum';
 import { ProyectosService } from './proyectos.service';
 import { HistorialService } from '../../historial/services/historial.service';
 interface UsuarioActivo {
@@ -18,6 +19,11 @@ export declare class TareaService {
     findOne(id: number): Promise<Tarea>;
     create(proyecto_id: number, crearTarea: CrearTareaDto, usuarioActivo: UsuarioActivo): Promise<Tarea>;
     update(id: number, actualizarTarea: ActualizarTareaDto, usuarioActivo: UsuarioActivo): Promise<Tarea>;
+    reactivarTarea(id: number, usuarioActivo: UsuarioActivo): Promise<{
+        id: number;
+        descripcion: string;
+        estado: Estados_Tareas.PENDIENTE;
+    }>;
     delete(id: number, usuarioActivo: UsuarioActivo): Promise<{
         message: string;
     }>;

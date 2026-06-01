@@ -66,9 +66,9 @@ let EstadisticasService = class EstadisticasService {
             totalBajas: totalClientesBaja.length,
         };
         const tareas = await this.getTareas();
-        const totalTareasPendientes = tareas.filter((v) => v.estado === estados_tareas_enum_1.Estados_Tareas.pendiente);
-        const totalTareasFinalizadas = tareas.filter((v) => v.estado === estados_tareas_enum_1.Estados_Tareas.finalizada);
-        const totalTareasBajas = tareas.filter((v) => v.estado === estados_tareas_enum_1.Estados_Tareas.baja);
+        const totalTareasPendientes = tareas.filter((v) => v.estado === estados_tareas_enum_1.Estados_Tareas.PENDIENTE);
+        const totalTareasFinalizadas = tareas.filter((v) => v.estado === estados_tareas_enum_1.Estados_Tareas.FINALIZADA);
+        const totalTareasBajas = tareas.filter((v) => v.estado === estados_tareas_enum_1.Estados_Tareas.BAJA);
         tarea['numeros'] = {
             total: tareas.length,
             totalPendientes: totalTareasPendientes.length,
