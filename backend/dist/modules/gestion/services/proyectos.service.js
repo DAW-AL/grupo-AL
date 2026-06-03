@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProyectosService = void 0;
 const typeorm_1 = require("@nestjs/typeorm");
@@ -22,6 +23,7 @@ const list_proyecto_dto_1 = require("../dtos/output/list-proyecto.dto");
 const proyecto_dto_1 = require("../dtos/output/proyecto.dto");
 const list_tarea_dto_1 = require("../dtos/output/list-tarea.dto");
 const clientes_service_1 = require("./clientes.service");
+const pdf_service_1 = require("./pdf.service");
 const list_cliente_dto_1 = require("../dtos/output/list-cliente.dto");
 const tarea_entity_1 = require("../entities/tarea.entity");
 const estados_tareas_enum_1 = require("../enums/estados-tareas.enum");
@@ -32,11 +34,13 @@ let ProyectosService = class ProyectosService {
     clientesService;
     tareaRepository;
     historialService;
-    constructor(repository, clientesService, tareaRepository, historialService) {
+    pdfService;
+    constructor(repository, clientesService, tareaRepository, historialService, pdfService) {
         this.repository = repository;
         this.clientesService = clientesService;
         this.tareaRepository = tareaRepository;
         this.historialService = historialService;
+        this.pdfService = pdfService;
     }
     async crearProyecto(dto, usuarioActivo) {
         const proyecto = this.repository.create(dto);
@@ -83,8 +87,13 @@ let ProyectosService = class ProyectosService {
             descripcion: `${usuarioActivo.nombre} modificó el proyecto "${nombreAnterior}"`,
         });
     }
-    async obtenerProyectos() {
+    async obtenerProyectos(estado) {
+        const whereCondition = {};
+        if (estado) {
+            whereCondition.estado = estado;
+        }
         const proyectos = await this.repository.find({
+            where: whereCondition,
             relations: ['cliente'],
             order: { id: 'ASC' },
         });
@@ -186,6 +195,33 @@ let ProyectosService = class ProyectosService {
             }
         }
     }
+    async reactivarProyecto(id, usuarioActivo) {
+        const proyecto = await this.repository.findOne({
+            where: { id },
+        });
+        if (!proyecto) {
+            throw new common_1.NotFoundException('Proyecto no encontrado');
+        }
+        if (proyecto.estado !== estados_proyectos_enum_1.EstadosProyectosEnum.BAJA) {
+            throw new common_1.BadRequestException('Solo se pueden reactivar proyectos dados de baja');
+        }
+        proyecto.estado = estados_proyectos_enum_1.EstadosProyectosEnum.ACTIVO;
+        await this.repository.save(proyecto);
+        await this.historialService.registrar({
+            entidad: historial_cambio_entity_1.EntidadTipoEnum.PROYECTO,
+            entidadId: proyecto.id,
+            accion: historial_cambio_entity_1.AccionTipoEnum.MODIFICAR,
+            usuarioNombre: usuarioActivo.nombre,
+            descripcion: `${usuarioActivo.nombre} reactivó el proyecto "${proyecto.nombre}"`,
+        });
+    }
+    async generarReporteProyectos(response) {
+        const proyectos = await this.repository.find({
+            relations: ['cliente', 'tareas'],
+            order: { id: 'ASC' },
+        });
+        return this.pdfService.generarReporteProyectos(proyectos, response);
+    }
 };
 exports.ProyectosService = ProyectosService;
 exports.ProyectosService = ProyectosService = __decorate([
@@ -196,6 +232,6 @@ exports.ProyectosService = ProyectosService = __decorate([
     __metadata("design:paramtypes", [typeorm_2.Repository,
         clientes_service_1.ClientesService,
         typeorm_2.Repository,
-        historial_service_1.HistorialService])
+        historial_service_1.HistorialService, typeof (_a = typeof pdf_service_1.PdfService !== "undefined" && pdf_service_1.PdfService) === "function" ? _a : Object])
 ], ProyectosService);
 //# sourceMappingURL=proyectos.service.js.map

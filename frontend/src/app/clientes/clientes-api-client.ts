@@ -42,4 +42,13 @@ export class ClientesApiClient {
   reactivar(id: number): Observable<{ id: number; nombre: string; estado: string }> {
     return this.http.patch<{ id: number; nombre: string; estado: string }>(`${this.base}/${id}/reactivar`, {});
   }
+
+  descargarReporte(): Observable<Blob> {
+    return this.http.get(
+      `${this.base}/reporte`,
+      {
+        responseType: 'blob',
+      },
+    );
+  }
 }

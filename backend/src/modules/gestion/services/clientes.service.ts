@@ -18,6 +18,9 @@ import {
   AccionTipoEnum,
   EntidadTipoEnum,
 } from '../../historial/entities/historial-cambio.entity';
+import { PdfService } from './pdf.service'
+import type { Response } from 'express';
+
 
 interface UsuarioActivo {
   sub: number;
@@ -32,6 +35,7 @@ export class ClientesService {
     @Inject(forwardRef(() => ProyectosService))
     private readonly proyectosService: ProyectosService,
     private readonly historialService: HistorialService,
+    private readonly pdfService: PdfService,
   ) {}
 
   async crearCliente(
@@ -214,5 +218,21 @@ export class ClientesService {
     }
 
     return cliente;
+  }
+
+  async generarReporteClientes(
+    response: Response,
+  ): Promise<void> {
+
+    const clientes = await this.repository.find({
+      order: {
+        id: 'ASC',
+      },
+    });
+
+    return this.pdfService.generarReporteClientes(
+      clientes,
+      response,
+    );
   }
 }

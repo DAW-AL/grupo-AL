@@ -23,10 +23,14 @@ const auth_guard_1 = require("../../auth/guards/auth.guard");
 const rol_usuario_enum_1 = require("../../auth/enums/rol-usuario.enum");
 const roles_guard_1 = require("../guards/roles.guard");
 const roles_decorator_1 = require("../decorators/roles.decorator");
+const estados_proyectos_enum_1 = require("../enums/estados-proyectos.enum");
 let ProyectosController = class ProyectosController {
     proyectosService;
     constructor(proyectosService) {
         this.proyectosService = proyectosService;
+    }
+    async generarReporte(response) {
+        return this.proyectosService.generarReporteProyectos(response);
     }
     async crearProyecto(dto, req) {
         return await this.proyectosService.crearProyecto(dto, req.usuario);
@@ -34,8 +38,8 @@ let ProyectosController = class ProyectosController {
     async actualizarProyecto(dto, id, req) {
         await this.proyectosService.actualizarProyecto(id, dto, req.usuario);
     }
-    async obtenerProyectos() {
-        return await this.proyectosService.obtenerProyectos();
+    async obtenerProyectos(estado) {
+        return await this.proyectosService.obtenerProyectos(estado);
     }
     async obtenerProyecto(id) {
         return await this.proyectosService.obtenerProyecto(id);
@@ -43,8 +47,24 @@ let ProyectosController = class ProyectosController {
     async darBajaProyecto(id, req) {
         return await this.proyectosService.darBajaProyecto(id, req.usuario);
     }
+    async reactivarProyecto(id, Req) {
+        return await this.proyectosService.reactivarProyecto(id, Req.usuario);
+    }
 };
 exports.ProyectosController = ProyectosController;
+__decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Generar reporte PDF de proyectos',
+    }),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.Get)('reporte'),
+    __param(0, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProyectosController.prototype, "generarReporte", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: 'Crear un Proyecto' }),
@@ -72,10 +92,16 @@ __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: 'Obtener Proyectos' }),
     (0, swagger_1.ApiOkResponse)({ type: list_proyecto_dto_1.ListProyectoDTO, isArray: true }),
+    (0, swagger_1.ApiQuery)({
+        name: 'estado',
+        required: false,
+        enum: estados_proyectos_enum_1.EstadosProyectosEnum
+    }),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('estado')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProyectosController.prototype, "obtenerProyectos", null);
 __decorate([
@@ -100,6 +126,18 @@ __decorate([
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectosController.prototype, "darBajaProyecto", null);
+__decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
+    (0, swagger_1.ApiOperation)({ summary: 'Reactivar un Proyecto' }),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.Patch)(':id/reactivar'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], ProyectosController.prototype, "reactivarProyecto", null);
 exports.ProyectosController = ProyectosController = __decorate([
     (0, common_1.Controller)('proyectos'),
     __metadata("design:paramtypes", [proyectos_service_1.ProyectosService])

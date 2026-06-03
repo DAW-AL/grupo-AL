@@ -3,9 +3,11 @@ import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
 import { UpdateClienteDto } from '../dtos/input/update-cliente.dto';
 import { EstadosClientesEnum } from '../enums/estados-clientes.enum';
 import { ClientesService } from '../services/clientes.service';
+import type { Response } from 'express';
 export declare class ClientesController {
     private readonly clientesService;
     constructor(clientesService: ClientesService);
+    generarReporte(response: Response): Promise<void>;
     crearCliente(dto: CreateClienteDto, req: any): Promise<{
         id: number;
     }>;

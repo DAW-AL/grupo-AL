@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Res,
   Query,
   UseGuards,
   Request,
@@ -26,11 +27,27 @@ import { AuthGuard } from '../../auth/guards/auth.guard';
 import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
+import type { Response } from 'express';
 
 @Controller('clientes')
 export class ClientesController {
   constructor(private readonly clientesService: ClientesService) {}
 
+  @ApiBearerAuth()
+  @Roles(RolUsuarioEnum.ADMIN)
+  @ApiOperation({
+    summary: 'Generar reporte PDF de clientes',
+  })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Get('reporte')
+  async generarReporte(
+    @Res() response: Response,
+  ): Promise<void> {
+    return this.clientesService.generarReporteClientes(
+      response,
+    );
+  }
+  
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Crear un Cliente' })

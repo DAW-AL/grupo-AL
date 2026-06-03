@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProyectoDto } from '../dtos/input/create-proyecto.dto';
 import { Proyecto } from '../entities/proyecto.entity';
-import { Repository, In } from 'typeorm';
+import { Repository, In, FindOptionsWhere } from 'typeorm';
 import { EstadosProyectosEnum } from '../enums/estados-proyectos.enum';
 import { UpdateProyectoDto } from '../dtos/input/update-proyecto.dto';
 import {
@@ -15,6 +15,7 @@ import { ListProyectoDTO } from '../dtos/output/list-proyecto.dto';
 import { ProyectoDTO } from '../dtos/output/proyecto.dto';
 import { ListTareaDTO } from '../dtos/output/list-tarea.dto';
 import { ClientesService } from './clientes.service';
+import { PdfService } from './pdf.service'
 import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
 import { Tarea } from '../entities/tarea.entity';
 import { Estados_Tareas } from '../enums/estados-tareas.enum';
@@ -23,6 +24,10 @@ import {
   AccionTipoEnum,
   EntidadTipoEnum,
 } from '../../historial/entities/historial-cambio.entity';
+import { error } from 'console';
+import PDFDocument from 'pdfkit';
+import type { Response } from 'express';
+
 
 // la forma del objeto que viene del JWT
 interface UsuarioActivo {
@@ -41,6 +46,7 @@ export class ProyectosService {
     @InjectRepository(Tarea)
     private readonly tareaRepository: Repository<Tarea>,
     private readonly historialService: HistorialService, // ← NUEVO
+    private readonly pdfService: PdfService,
   ) {}
 
   async crearProyecto(
@@ -101,7 +107,7 @@ export class ProyectosService {
 
     await this.validarCambioDeEstado(proyecto, dto);
 
-    const nombreAnterior = proyecto.nombre; // ← AGREGAR antes del merge
+    const nombreAnterior = proyecto.nombre;
 
     this.repository.merge(proyecto, dto);
 
@@ -116,8 +122,18 @@ export class ProyectosService {
     });
   }
 
-  async obtenerProyectos(): Promise<ListProyectoDTO[]> {
+  async obtenerProyectos(
+    estado?: EstadosProyectosEnum,
+  ): Promise<ListProyectoDTO[]> {
+
+    const whereCondition: FindOptionsWhere<Proyecto> = {};
+
+    if (estado) {
+      whereCondition.estado = estado;
+    }
+    
     const proyectos: Proyecto[] = await this.repository.find({
+      where: whereCondition,
       relations: ['cliente'],
       order: { id: 'ASC' },
     });
@@ -129,6 +145,7 @@ export class ProyectosService {
       dto.id = p.id;
       dto.nombre = p.nombre;
       dto.estado = p.estado;
+      
       if (p.cliente) {
         dto.cliente = new ListClienteDTO();
         dto.cliente.id = p.cliente.id;
@@ -216,6 +233,7 @@ export class ProyectosService {
     });
   }
 
+  
   /* Funcion para validar cambios de estado en actualizarProyecto */
   /* Baja desde endpoint DELETE, Finalizar desde endpoint PUT */
   private async validarCambioDeEstado(
@@ -254,4 +272,51 @@ export class ProyectosService {
       }
     }
   }
+
+  async reactivarProyecto(
+  id: number,
+  usuarioActivo: UsuarioActivo,
+): Promise<void> {
+  const proyecto: Proyecto | null = await this.repository.findOne({
+    where: { id },
+  });
+
+  if (!proyecto) {
+    throw new NotFoundException('Proyecto no encontrado');
+  }
+
+  if (proyecto.estado !== EstadosProyectosEnum.BAJA) {
+    throw new BadRequestException(
+      'Solo se pueden reactivar proyectos dados de baja',
+    );
+  }
+
+  proyecto.estado = EstadosProyectosEnum.ACTIVO;
+
+  await this.repository.save(proyecto);
+
+  await this.historialService.registrar({
+    entidad: EntidadTipoEnum.PROYECTO,
+    entidadId: proyecto.id,
+    accion: AccionTipoEnum.MODIFICAR,
+    usuarioNombre: usuarioActivo.nombre,
+    descripcion: `${usuarioActivo.nombre} reactivó el proyecto "${proyecto.nombre}"`,
+  });
+}
+
+  async generarReporteProyectos(
+    response: Response,
+  ): Promise<void> {
+
+    const proyectos = await this.repository.find({
+      relations: ['cliente', 'tareas'],
+      order: { id: 'ASC' },
+    });
+
+    return this.pdfService.generarReporteProyectos(
+      proyectos,
+      response,
+    );
+  }
+
 }

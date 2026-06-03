@@ -22,6 +22,7 @@ const proyectos_service_1 = require("./services/proyectos.service");
 const estadisticas_controller_1 = require("./controllers/estadisticas.controller");
 const estadisticas_service_1 = require("./services/estadisticas.service");
 const historial_module_1 = require("../historial/historial.module");
+const pdf_service_1 = require("./services/pdf.service");
 let GestionModule = class GestionModule {
 };
 exports.GestionModule = GestionModule;
@@ -38,6 +39,7 @@ exports.GestionModule = GestionModule = __decorate([
             clientes_service_1.ClientesService,
             proyectos_service_1.ProyectosService,
             estadisticas_service_1.EstadisticasService,
+            pdf_service_1.PdfService,
         ],
         exports: [],
         imports: [
