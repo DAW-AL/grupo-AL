@@ -13,6 +13,7 @@ import { ProyectosService } from './services/proyectos.service';
 import { EstadisticasController } from './controllers/estadisticas.controller';
 import { EstadisticasService } from './services/estadisticas.service';
 import { HistorialModule } from '../historial/historial.module';
+import { PdfService } from './services/pdf.service';
 
 @Module({
   controllers: [
@@ -26,6 +27,7 @@ import { HistorialModule } from '../historial/historial.module';
     ClientesService,
     ProyectosService,
     EstadisticasService,
+    PdfService,
   ],
   exports: [],
   imports: [

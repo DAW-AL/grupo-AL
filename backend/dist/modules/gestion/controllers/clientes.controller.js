@@ -29,6 +29,9 @@ let ClientesController = class ClientesController {
     constructor(clientesService) {
         this.clientesService = clientesService;
     }
+    async generarReporte(response) {
+        return this.clientesService.generarReporteClientes(response);
+    }
     async crearCliente(dto, req) {
         return await this.clientesService.crearCliente(dto, req.usuario);
     }
@@ -49,6 +52,19 @@ let ClientesController = class ClientesController {
     }
 };
 exports.ClientesController = ClientesController;
+__decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, roles_decorator_1.Roles)(rol_usuario_enum_1.RolUsuarioEnum.ADMIN),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Generar reporte PDF de clientes',
+    }),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.Get)('reporte'),
+    __param(0, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ClientesController.prototype, "generarReporte", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),

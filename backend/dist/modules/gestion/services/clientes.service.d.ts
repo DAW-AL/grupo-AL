@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { ListClienteDTO } from '../dtos/output/list-cliente.dto';
 import { ProyectosService } from './proyectos.service';
 import { HistorialService } from '../../historial/services/historial.service';
+import { PdfService } from './pdf.service';
+import type { Response } from 'express';
 interface UsuarioActivo {
     sub: number;
     nombre: string;
@@ -15,7 +17,8 @@ export declare class ClientesService {
     private readonly repository;
     private readonly proyectosService;
     private readonly historialService;
-    constructor(repository: Repository<Cliente>, proyectosService: ProyectosService, historialService: HistorialService);
+    private readonly pdfService;
+    constructor(repository: Repository<Cliente>, proyectosService: ProyectosService, historialService: HistorialService, pdfService: PdfService);
     crearCliente(dto: CreateClienteDto, usuarioActivo: UsuarioActivo): Promise<{
         id: number;
     }>;
@@ -38,5 +41,6 @@ export declare class ClientesService {
     }>;
     existeClienteActivoPorId(id: number): Promise<boolean>;
     obtenerCliente(id: number): Promise<Cliente>;
+    generarReporteClientes(response: Response): Promise<void>;
 }
 export {};

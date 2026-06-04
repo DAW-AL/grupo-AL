@@ -164,4 +164,31 @@ export class ClientesComponent implements OnInit {
     const control = this.form.get(field);
     return !!(control?.touched && control?.hasError(error));
   }
+
+  descargarPdf(): void {
+
+    this.api
+      .descargarReporte()
+      .subscribe({
+        next: (blob) => {
+
+          const url =
+            window.URL.createObjectURL(blob);
+
+          const link =
+            document.createElement('a');
+
+          link.href = url;
+          link.download =
+            'Reporte-Cliente.pdf';
+
+          link.click();
+
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
+  }
 }

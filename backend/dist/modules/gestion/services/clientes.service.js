@@ -23,14 +23,17 @@ const common_1 = require("@nestjs/common");
 const proyectos_service_1 = require("./proyectos.service");
 const historial_service_1 = require("../../historial/services/historial.service");
 const historial_cambio_entity_1 = require("../../historial/entities/historial-cambio.entity");
+const pdf_service_1 = require("./pdf.service");
 let ClientesService = class ClientesService {
     repository;
     proyectosService;
     historialService;
-    constructor(repository, proyectosService, historialService) {
+    pdfService;
+    constructor(repository, proyectosService, historialService, pdfService) {
         this.repository = repository;
         this.proyectosService = proyectosService;
         this.historialService = historialService;
+        this.pdfService = pdfService;
     }
     async crearCliente(dto, usuarioActivo) {
         const cliente = this.repository.create(dto);
@@ -161,6 +164,14 @@ let ClientesService = class ClientesService {
         }
         return cliente;
     }
+    async generarReporteClientes(response) {
+        const clientes = await this.repository.find({
+            order: {
+                id: 'ASC',
+            },
+        });
+        return this.pdfService.generarReporteClientes(clientes, response);
+    }
 };
 exports.ClientesService = ClientesService;
 exports.ClientesService = ClientesService = __decorate([
@@ -169,6 +180,7 @@ exports.ClientesService = ClientesService = __decorate([
     __param(1, (0, common_1.Inject)((0, common_1.forwardRef)(() => proyectos_service_1.ProyectosService))),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         proyectos_service_1.ProyectosService,
-        historial_service_1.HistorialService])
+        historial_service_1.HistorialService,
+        pdf_service_1.PdfService])
 ], ClientesService);
 //# sourceMappingURL=clientes.service.js.map
