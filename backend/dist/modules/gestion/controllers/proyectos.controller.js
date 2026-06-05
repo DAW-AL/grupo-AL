@@ -95,7 +95,7 @@ __decorate([
     (0, swagger_1.ApiQuery)({
         name: 'estado',
         required: false,
-        enum: estados_proyectos_enum_1.EstadosProyectosEnum
+        enum: estados_proyectos_enum_1.EstadosProyectosEnum,
     }),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),

@@ -1,9 +1,5 @@
 # Dependencias
 node_modules/
 
-# Compiled output
-/dist
-/tmp
-
 # Variables de entorno
 .env

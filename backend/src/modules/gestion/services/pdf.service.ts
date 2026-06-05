@@ -7,179 +7,126 @@ import { Injectable } from '@nestjs/common';
 import PDFDocument from 'pdfkit';
 import type { Response } from 'express';
 
-
 @Injectable()
-export class PdfService{
+export class PdfService {
+  private crearDocumento(
+    response: Response,
+    nombreArchivo: string,
+  ): PDFKit.PDFDocument {
+    response.setHeader('Content-Type', 'application/pdf');
 
-    private crearDocumento(
-        response: Response,
-        nombreArchivo: string,
-    ): PDFKit.PDFDocument {
+    response.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${nombreArchivo}"`,
+    );
 
-        response.setHeader(
-        'Content-Type',
-        'application/pdf',
-        );
+    const doc = new PDFDocument({
+      margin: 50,
+    });
 
-        response.setHeader(
-        'Content-Disposition',
-        `attachment; filename="${nombreArchivo}"`,
-        );
+    doc.pipe(response);
 
-        const doc = new PDFDocument({
-        margin: 50,
-        });
+    return doc;
+  }
 
-        doc.pipe(response);
+  private agregarEncabezado(doc: PDFKit.PDFDocument, titulo: string): void {
+    doc.image('public/logo.png', 195, 25, {
+      width: 200,
+    });
 
-        return doc;
-    }
+    doc.moveDown(7);
 
-    private agregarEncabezado(
-        doc: PDFKit.PDFDocument,
-        titulo: string,
-    ): void {
+    doc.font('Helvetica-Bold').fontSize(18).text(titulo, {
+      align: 'center',
+    });
 
-        doc.image(
-        'public/logo.png',
-        195,
-        25,
-        {
-            width: 200,
-        },
-        );
+    doc.moveDown(0.5);
 
-        doc.moveDown(7);
+    doc
+      .font('Helvetica')
+      .fontSize(10)
+      .text(`Fecha de emisión: ${new Date().toLocaleDateString('es-AR')}`, {
+        align: 'center',
+      });
 
-        doc
-        .font('Helvetica-Bold')
-        .fontSize(18)
-        .text(
-            titulo,
-            {
-            align: 'center',
-            },
-        );
+    doc.moveDown();
 
-        doc.moveDown(0.5);
+    doc
+      .moveTo(50, doc.y)
+      .lineTo(550, doc.y)
+      .strokeColor('#000000')
+      .lineWidth(1)
+      .stroke();
 
-        doc
-        .font('Helvetica')
-        .fontSize(10)
-        .text(
-            `Fecha de emisión: ${new Date().toLocaleDateString('es-AR')}`,
-            {
-            align: 'center',
-            },
-        );
+    doc.moveDown(1.5);
+  }
 
-        doc.moveDown();
+  private agregarPiePagina(doc: PDFKit.PDFDocument): void {
+    doc
+      .fontSize(8)
+      .fillColor('gray')
+      .text('DAW26 - Sistema de Gestión de Proyectos', 50, 730, {
+        align: 'center',
+        width: 500,
+      });
+  }
 
-        doc
-        .moveTo(50, doc.y)
-        .lineTo(550, doc.y)
-        .strokeColor('#000000')
-        .lineWidth(1)
-        .stroke();
+  private agregarResumen(doc: PDFKit.PDFDocument, lineas: string[]): void {
+    doc.font('Helvetica-Bold').fontSize(13).text('Resumen general');
 
-        doc.moveDown(1.5);
-    }
+    doc.moveDown(0.5);
 
-    private agregarPiePagina(
-        doc: PDFKit.PDFDocument,
-    ): void {
+    doc.font('Helvetica').fontSize(11);
 
-        doc
-        .fontSize(8)
-        .fillColor('gray')
-        .text(
-            'DAW26 - Sistema de Gestión de Proyectos',
-            50,
-            730,
-            {
-            align: 'center',
-            width: 500,
-            },
-        );
-    }
+    lineas.forEach((linea) => doc.text(linea));
 
-    private agregarResumen(
-        doc: PDFKit.PDFDocument,
-        lineas: string[],
-    ): void {
+    doc.moveDown(1.5);
+  }
 
-        doc
-        .font('Helvetica-Bold')
-        .fontSize(13)
-        .text('Resumen general');
-
-        doc.moveDown(0.5);
-
-        doc
-        .font('Helvetica')
-        .fontSize(11);
-
-        lineas.forEach(
-        (linea) => doc.text(linea),
-        );
-
-        doc.moveDown(1.5);
-    }
-
-    // PROYECTOS
-    async generarReporteProyectos(
+  // PROYECTOS
+  async generarReporteProyectos(
     proyectos: Proyecto[],
     response: Response,
-    ): Promise<void> {
+  ): Promise<void> {
+    const doc = this.crearDocumento(response, 'Reporte Proyectos.pdf');
 
-    const doc = this.crearDocumento(
-        response,
-        'Reporte Proyectos.pdf',
-    );
-
-    this.agregarEncabezado(
-        doc,
-        'REPORTE DE PROYECTOS',
-    );
+    this.agregarEncabezado(doc, 'REPORTE DE PROYECTOS');
 
     // ESTADISTICAS
 
     const activos = proyectos.filter(
-        p => p.estado === EstadosProyectosEnum.ACTIVO,
+      (p) => p.estado === EstadosProyectosEnum.ACTIVO,
     ).length;
 
     const finalizados = proyectos.filter(
-        p => p.estado === EstadosProyectosEnum.FINALIZADO,
+      (p) => p.estado === EstadosProyectosEnum.FINALIZADO,
     ).length;
 
     const bajas = proyectos.filter(
-        p => p.estado === EstadosProyectosEnum.BAJA,
+      (p) => p.estado === EstadosProyectosEnum.BAJA,
     ).length;
 
-    this.agregarResumen(
-        doc,
-        [
-        `Total de proyectos: ${proyectos.length}`,
-        `Activos: ${activos}`,
-        `Finalizados: ${finalizados}`,
-        `Dados de baja: ${bajas}`,
-        ],
-    );
+    this.agregarResumen(doc, [
+      `Total de proyectos: ${proyectos.length}`,
+      `Activos: ${activos}`,
+      `Finalizados: ${finalizados}`,
+      `Dados de baja: ${bajas}`,
+    ]);
 
     doc.moveDown(1.5);
 
     // TRADUCCIONES
 
     const estadosProyecto = {
-        ACTIVO: 'Activo',
-        FINALIZADO: 'Finalizado',
-        BAJA: 'Baja',
+      ACTIVO: 'Activo',
+      FINALIZADO: 'Finalizado',
+      BAJA: 'Baja',
     };
 
     const estadosTareas = {
-        PENDIENTE: 'Pendiente',
-        FINALIZADA: 'Finalizada',
-        BAJA: 'Baja',
+      PENDIENTE: 'Pendiente',
+      FINALIZADA: 'Finalizada',
+      BAJA: 'Baja',
     };
 
     // PROYECTOS
@@ -187,174 +134,126 @@ export class PdfService{
     let numeroProyecto = 1;
 
     for (const proyecto of proyectos) {
-
-        if (doc.y > 650) {
+      if (doc.y > 650) {
         doc.addPage();
-        }
+      }
 
-        // Título del proyecto
+      // Título del proyecto
 
-        doc
+      doc
         .font('Helvetica-Bold')
         .fontSize(15)
         .fillColor('#2c3e50')
-        .text(
-            `${numeroProyecto}. ${proyecto.nombre}`,
-        );
+        .text(`${numeroProyecto}. ${proyecto.nombre}`);
 
-        numeroProyecto++;
+      numeroProyecto++;
 
-        doc.moveDown(0.5);
+      doc.moveDown(0.5);
 
-        // Cliente
+      // Cliente
 
-        doc
+      doc
         .font('Helvetica-Bold')
         .fontSize(11)
         .fillColor('black')
-        .text(
-            'Cliente asociado:',
-            {
-            continued: true,
-            },
-        );
+        .text('Cliente asociado:', {
+          continued: true,
+        });
 
-        doc
-        .font('Helvetica')
-        .text(
-            ` ${proyecto.cliente?.nombre ?? 'Interno'}`,
-        );
+      doc.font('Helvetica').text(` ${proyecto.cliente?.nombre ?? 'Interno'}`);
 
-        // Estado
+      // Estado
 
-        let colorEstado = '#16a34a';
+      let colorEstado = '#16a34a';
 
-        if (
-        proyecto.estado ===
-        EstadosProyectosEnum.FINALIZADO
-        ) {
+      if (proyecto.estado === EstadosProyectosEnum.FINALIZADO) {
         colorEstado = '#2563eb';
-        }
+      }
 
-        if (
-        proyecto.estado ===
-        EstadosProyectosEnum.BAJA
-        ) {
+      if (proyecto.estado === EstadosProyectosEnum.BAJA) {
         colorEstado = '#dc2626';
-        }
+      }
 
-        doc
-        .font('Helvetica-Bold')
-        .fillColor('black')
-        .text(
-            'Estado:',
-            {
-            continued: true,
-            },
-        );
+      doc.font('Helvetica-Bold').fillColor('black').text('Estado:', {
+        continued: true,
+      });
 
-        doc
+      doc
         .font('Helvetica-Bold')
         .fillColor(colorEstado)
-        .text(
-            ` ${estadosProyecto[proyecto.estado]}`,
-        );
+        .text(` ${estadosProyecto[proyecto.estado]}`);
 
-        doc.fillColor('black');
+      doc.fillColor('black');
 
-        doc.moveDown(0.5);
+      doc.moveDown(0.5);
 
-        // Tareas
+      // Tareas
 
-        doc
-        .font('Helvetica-Bold')
-        .text('Tareas:');
+      doc.font('Helvetica-Bold').text('Tareas:');
 
-        doc.moveDown(0.2);
+      doc.moveDown(0.2);
 
-        doc.font('Helvetica');
+      doc.font('Helvetica');
 
-        if (proyecto.tareas.length === 0) {
-
-        doc.text(
-            '• Sin tareas registradas',
-        );
-
-        } else {
-
+      if (proyecto.tareas.length === 0) {
+        doc.text('• Sin tareas registradas');
+      } else {
         for (const tarea of proyecto.tareas) {
-
-            doc.text(
-            `• ${tarea.descripcion} - ${
-                estadosTareas[tarea.estado]
-            }`,
-            );
-
+          doc.text(`• ${tarea.descripcion} - ${estadosTareas[tarea.estado]}`);
         }
+      }
 
-        }
+      doc.moveDown(1);
 
-        doc.moveDown(1);
+      // Línea separadora
 
-        // Línea separadora
-
-        doc
+      doc
         .moveTo(50, doc.y)
         .lineTo(550, doc.y)
         .strokeColor('#dddddd')
         .lineWidth(1)
         .stroke();
 
-        doc.moveDown(1.5);
+      doc.moveDown(1.5);
     }
 
-    this.agregarPiePagina(doc)
+    this.agregarPiePagina(doc);
 
     doc.end();
-    }
+  }
 
-    // CLIENTES
-    async generarReporteClientes(
+  // CLIENTES
+  async generarReporteClientes(
     clientes: Cliente[],
     response: Response,
-    ): Promise<void> {
+  ): Promise<void> {
+    const doc = this.crearDocumento(response, 'Reporte Clientes.pdf');
 
-    const doc = this.crearDocumento(
-        response,
-        'Reporte Clientes.pdf',
-    );
-
-    this.agregarEncabezado(
-        doc,
-        'REPORTE DE CLIENTES',
-    );
+    this.agregarEncabezado(doc, 'REPORTE DE CLIENTES');
 
     // ESTADÍSTICAS
 
     const activos = clientes.filter(
-        c => c.estado === EstadosClientesEnum.ACTIVO,
+      (c) => c.estado === EstadosClientesEnum.ACTIVO,
     ).length;
 
     const bajas = clientes.filter(
-        c => c.estado === EstadosClientesEnum.BAJA,
+      (c) => c.estado === EstadosClientesEnum.BAJA,
     ).length;
 
-    this.agregarResumen(
-        doc,
-        [
-        `Total de clientes: ${clientes.length}`,
-        `Activos: ${activos}`,
-        `Dados de baja: ${bajas}`,
-        ],
-    );
+    this.agregarResumen(doc, [
+      `Total de clientes: ${clientes.length}`,
+      `Activos: ${activos}`,
+      `Dados de baja: ${bajas}`,
+    ]);
 
     doc.moveDown(1.5);
 
     // TRADUCCIONES
 
     const estadosClientes = {
-        ACTIVO: 'Activo',
-        BAJA: 'Baja',
+      ACTIVO: 'Activo',
+      BAJA: 'Baja',
     };
 
     // CLIENTES
@@ -362,87 +261,68 @@ export class PdfService{
     let numeroCliente = 1;
 
     for (const cliente of clientes) {
-
-        if (doc.y > 650) {
+      if (doc.y > 650) {
         doc.addPage();
-        }
+      }
 
-        // TÍTULO DEL CLIENTE
+      // TÍTULO DEL CLIENTE
 
-        doc
+      doc
         .font('Helvetica-Bold')
         .fontSize(15)
         .fillColor('#2c3e50')
-        .text(
-            `${numeroCliente}. ${cliente.nombre}`,
-        );
+        .text(`${numeroCliente}. ${cliente.nombre}`);
 
-        numeroCliente++;
+      numeroCliente++;
 
-        doc.moveDown(0.5);
+      doc.moveDown(0.5);
 
-        // EMAIL
+      // EMAIL
 
-        doc
+      doc
         .font('Helvetica')
         .fontSize(11)
         .fillColor('black')
-        .text(
-            `Email: ${cliente.email}`,
-        );
+        .text(`Email: ${cliente.email}`);
 
-        // TELÉFONO
+      // TELÉFONO
 
-        doc.text(
-        `Teléfono: ${cliente.telefono}`,
-        );
+      doc.text(`Teléfono: ${cliente.telefono}`);
 
-        doc.moveDown(0.5);
+      doc.moveDown(0.5);
 
-        // ESTADO
+      // ESTADO
 
-        const colorEstado =
-        cliente.estado === EstadosClientesEnum.BAJA
-            ? '#dc2626'
-            : '#16a34a';
+      const colorEstado =
+        cliente.estado === EstadosClientesEnum.BAJA ? '#dc2626' : '#16a34a';
 
-        doc
-        .font('Helvetica-Bold')
-        .fillColor('black')
-        .text(
-            'Estado:',
-            {
-            continued: true,
-            },
-        );
+      doc.font('Helvetica-Bold').fillColor('black').text('Estado:', {
+        continued: true,
+      });
 
-        doc
+      doc
         .font('Helvetica-Bold')
         .fillColor(colorEstado)
-        .text(
-            ` ${estadosClientes[cliente.estado]}`,
-        );
+        .text(` ${estadosClientes[cliente.estado]}`);
 
-        doc.fillColor('black');
+      doc.fillColor('black');
 
-        doc.moveDown();
+      doc.moveDown();
 
-        // LÍNEA SEPARADORA
+      // LÍNEA SEPARADORA
 
-        doc
+      doc
         .moveTo(50, doc.y)
         .lineTo(550, doc.y)
         .strokeColor('#dddddd')
         .lineWidth(1)
         .stroke();
 
-        doc.moveDown(1.5);
+      doc.moveDown(1.5);
     }
 
     this.agregarPiePagina(doc);
 
     doc.end();
-    }
-    
-
+  }
 }
