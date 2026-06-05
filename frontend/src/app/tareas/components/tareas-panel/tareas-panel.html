@@ -1,0 +1,66 @@
+<section>
+    <div class="header">
+        <h4 class="m-0 align-self-center">Tareas</h4>
+    </div>
+    <div class="detalles">
+        <ul>
+            @for(item of tareasFiltradas(); track $index) {
+                <li class="detalles-list">
+                    <div>
+                        <input 
+                            type="checkbox" 
+                            class="custom-checkbox" 
+                            [checked]="item.estado === 'FINALIZADA'"
+                            (change)="checked($event, item)">
+                        <p 
+                            class="m-0 align-self-center"
+                            [class.tachado]="item.estado === 'FINALIZADA'"
+                        >{{item.descripcion}}</p>
+                    </div>
+                    <div>
+                        <p 
+                            class="m-0" 
+                            [class.finalizado]="item.estado === 'FINALIZADA'"
+                            [class.pendiente]="item.estado === 'PENDIENTE'"
+                        >{{item.estado | lowercase}}</p>
+                        <app-button-regular 
+                            boton="Editar",
+                            icono="",
+                            (clicked)="editar(item)"
+                        />
+                    </div>
+                </li>
+            } @empty {
+                <p class="text-center text-muted">No hay tareas pendientes o finalizadas para este proyecto</p>
+            }
+        </ul>
+    </div>
+    @if (esAdmin()) {
+        <div class="header-baja">
+            <h4 class="baja-section">Tareas de baja</h4>
+        </div>
+        <div class="detalles">
+            <ul>
+                @for(item of tareasBaja(); track $index) {
+                    <li class="detalles-list baja-list">
+                        <div>
+                            <p>{{item.descripcion}}</p>
+                        </div>
+                        <div>
+                            <p 
+                                [class.baja]="item.estado === 'BAJA'"
+                            >{{item.estado | lowercase}}</p>
+                            <app-button-regular 
+                                boton="Reactivar tarea",
+                                icono="",
+                                (clicked)="reactivar(item.id)"
+                            />
+                        </div>
+                    </li>
+                } @empty {
+                    <p class="text-center text-muted">No hay tareas dadas de baja para este proyecto</p>
+                }
+            </ul>
+        </div>
+    }
+</section>

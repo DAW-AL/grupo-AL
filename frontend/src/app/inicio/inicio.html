@@ -1,34 +1,95 @@
 <section>
     <app-header 
+        class="app-header"
         [mostrarBoton]="esAdmin()"
         (mostrarTodas)="todas.set(!todas())"
         [labelBoton]="todas() ? 'Solo destacadas' : 'Todas estadísticas'"
     />
     @if (esAdmin()) {
-        <div class="favoritas">
-            <h4>Destacadas</h4>
-            <div class="section">
-                @for (card of favCards(); track $index) {
-                    @if (card.value >= 0) {
-                        <app-stat-card 
-                            [title]="card.title"
-                            [value] = "card.value"
-                            [description]="card.description"
-                            [clase]="card.title.toLowerCase()"
-                        />
-                    }
+        <div class="bienvenida-admin">
+            <h2>¡Bienvenido, <span class="nombreUsuario">{{ nombreUsuario() }}</span>!</h2>
+            <p>Este espacio es exclusivo para <span class="enfasis">vos</span></p>
+        </div>
+    } @else {
+        <div class="bienvenida-user">
+            <h2>¡Bienvenido, <span class="nombreUsuario">{{ nombreUsuario() }}</span>!</h2>
+            <p>Explorá y administrá los proyectos y ayuda a mantener las tareas al día.</p>
+            <button routerLink="/proyectos">Ver proyectos →</button>
+        </div>
+    }
+
+    @if (tareas().length > 0) {
+        <div class="panel-tareas">
+            <div class="anuncio">
+                <p>Consulta el <span class="enfasis">panel de tareas</span> para mayor visualización de tareas pendientes, finalizadas o de baja. <br> ¡Toma acción y completa tantas tareas como sea posible o prioritario!</p>
+            </div>
+            <!-- <h4>Tareas</h4> -->
+            <div class="tarea-section">
+                @if (pendientes().length > 0) {
+                    <div class="pendiente">
+                        <!-- <h6>Pendientes</h6> -->
+                        <div class="contenedor-tareas">
+                            @for (t of pendientes(); track t.tareaId) {
+                                    <app-tarea-card 
+                                        [proyectoId]="t.proyectoId"
+                                        [tareaId]="t.tareaId"
+                                        [estado]="t.estado"
+                                        [tarea]="t.tarea"
+                                        [proyecto]="t.proyecto"
+                                        [cliente]="t.cliente"
+                                    />
+                            }
+                        </div>
+                    </div>
+                }
+                @if (finalizadas().length > 0) {
+                    <div class="finalizada">
+                        <!-- <h6>Finalizadas</h6> -->
+                        <div class="contenedor-tareas">
+                            @for (t of finalizadas(); track t.tareaId) { 
+                                <app-tarea-card 
+                                    [proyectoId]="t.proyectoId"
+                                    [tareaId]="t.tareaId"
+                                    [estado]="t.estado"
+                                    [tarea]="t.tarea"
+                                    [proyecto]="t.proyecto"
+                                    [cliente]="t.cliente"
+                                />
+                            }
+                        </div>
+                    </div>
+                }
+                @if (bajas().length > 0) {
+                    <div class="baja">
+                        <!-- <h6>Baja</h6> -->
+                        <div class="contenedor-tareas">
+                            @for (t of bajas(); track t.tareaId) {
+                                <app-tarea-card 
+                                    [proyectoId]="t.proyectoId"
+                                    [tareaId]="t.tareaId"
+                                    [estado]="t.estado"
+                                    [tarea]="t.tarea"
+                                    [proyecto]="t.proyecto"
+                                    [cliente]="t.cliente"
+                                />
+                            }
+                        </div>
+                    </div>
                 }
             </div>
         </div>
-        @if (todas()) {
-            <div class="todas">
-                <h4>Todas</h4>
+    }
+
+    @if (esAdmin()) {
+        <div class="panel-datos">
+            <div class="favoritas">
+                <h4>Destacadas</h4>
                 <div class="section">
-                    @for (card of allCards(); track $index) {
+                    @for (card of favCards(); track $index) {
                         @if (card.value >= 0) {
                             <app-stat-card 
                                 [title]="card.title"
-                                [value]="card.value"
+                                [value] = "card.value"
                                 [description]="card.description"
                                 [clase]="card.title.toLowerCase()"
                             />
@@ -36,8 +97,30 @@
                     }
                 </div>
             </div>
-            <div>
-                <h4>Porcentajes</h4>
+            @if (todas()) {
+                <div class="todas">
+                    <h4>Todas</h4>
+                    <div class="section">
+                        @for (card of allCards(); track $index) {
+                            @if (card.value >= 0) {
+                                <app-stat-card 
+                                    [title]="card.title"
+                                    [value]="card.value"
+                                    [description]="card.description"
+                                    [clase]="card.title.toLowerCase()"
+                                />
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        @if (todas()) {
+            <div class="graph-wrapper">
+                <!-- <h4>Porcentajes</h4> -->
+                <div class="anuncio">
+                    <p>Consulta la <span class="enfasis">gráfica de porcentajes</span> y obtén datos para estudios generales de factibilidad. <br> ¡Mirá el estado actual de los proyectos, clientes y tareas!</p>
+                </div>
                 <div class="graphs">
                     @for (p of porcentajes(); track $index) {
                         <app-stat-graph 
@@ -50,22 +133,19 @@
             </div>
         }
         @if (comentarios().length > 0) {
-            <div class="action-plan">
-                <h4>Plan de acción</h4>
-                <div>
-                    <ul>
-                        @for (cr of comentarios(); track $index) {
-                            <li class="action-list">{{cr}}</li>
-                        }
-                    </ul>
+            <div class="action-plan-wrapper">
+                <div class="action-plan">
+                    <h4>Plan de acción</h4>
+                    <div>
+                        <ul>
+                            @for (cr of comentarios(); track $index) {
+                                <li class="action-list">{{cr}}</li>
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         }
-    } @else {
-        <div class="bienvenida">
-            <h2>¡Bienvenido, <span class="nombreUsuario">{{ nombreUsuario() }}</span>!</h2>
-            <p>Explorá y administrá los proyectos y ayuda a mantener las tareas al día.</p>
-            <button routerLink="/proyectos">Ver proyectos →</button>
-        </div>
     }
+
 </section>

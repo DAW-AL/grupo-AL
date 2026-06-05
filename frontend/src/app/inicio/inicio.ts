@@ -1,17 +1,19 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Header } from "./components/header/header";
 import { StatCard } from './components/stat-card/stat-card';
-import { Estadisticas, EstadisticasApi } from './inicio-api';
+import { Estadisticas, EstadisticasApi, Proyectos } from './inicio-api';
 import { StatGraph } from "./components/stat-graph/stat-graph";
 import { AuthStore } from '../auth/auth-store';
 import { RouterLink } from '@angular/router';
+import { TareaCard } from './components/tarea-card/tarea-card';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
   templateUrl: './inicio.html',
   styleUrl: './inicio.css',
-  imports: [Header, StatCard, StatGraph, RouterLink]
+  imports: [Header, StatCard, StatGraph, RouterLink, TareaCard]
 })
 export class InicioComponent implements OnInit {
 
@@ -20,6 +22,13 @@ export class InicioComponent implements OnInit {
   allCards = signal<{ title: string; value: number; description: string }[]>([]);
   porcentajes = signal<{ titulo: string; detalles: string[]; datos: number[]}[]>([]);
   comentarios = signal<string[]>([]);
+  tareas = signal<{proyectoId: number, proyecto: string, tareaId: number, tarea: string, cliente: string, estado: string}[]>([]); 
+  proyectosIds = signal<number[]>([]);
+
+  pendientes = computed(() => this.tareas().filter(t => t.estado === "PENDIENTE"));
+  finalizadas = computed(() => this.tareas().filter(t => t.estado === "FINALIZADA"));
+  bajas = computed(() => this.tareas().filter(t => t.estado === "BAJA"));
+
 
   todas = signal<boolean>(false);
 
@@ -33,6 +42,40 @@ export class InicioComponent implements OnInit {
     this.esAdmin.set(this.authStore.obtenerRol() === 'admin');
     this.nombreUsuario.set(this.authStore.obtenerNombre());
     if (this.esAdmin()) this.cargarEstadisticas();
+    this.cargarProyectos();
+  }
+
+   cargarTareas(proyectos: { proyectoId: number, proyecto: string, cliente: string}[]): void {
+      const resultadosTareas = proyectos.map( p => 
+        this.estadisticasApi.obtenerTareas(p.proyectoId).pipe(
+          map(tareas => tareas.map(t => ({
+              proyectoId: p.proyectoId,
+              proyecto: p.proyecto,
+              tareaId: t.id,
+              tarea: t.descripcion,
+              cliente: p.cliente,
+              estado: t.estado
+          })))
+        )
+      );
+      forkJoin(resultadosTareas).subscribe({
+        next: (resultado) => {
+          this.tareas.set(resultado.flat())
+        },
+        error: (err) => {
+          console.error('Error al cargar tareas', err);
+        }
+      })
+  }
+
+  cargarProyectos(): void {
+    this.estadisticasApi.obtenerProyectos().subscribe({
+      next: (proys) => {
+        const allProyectos = proys.map(p => ({ proyectoId: p.id, proyecto: p.nombre, cliente: p.cliente?.nombre ?? 'Interno'}));
+        this.cargarTareas(allProyectos);
+    }, error: (err) => {
+      console.error('Error al cargar proyectos', err);
+    }})
   }
 
   cargarEstadisticas(): void {

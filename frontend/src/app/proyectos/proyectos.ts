@@ -28,6 +28,7 @@ import {
   Cliente
 } from '../clientes/clientes-api-client';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-proyectos',
@@ -85,6 +86,8 @@ export class ProyectosComponent implements OnInit {
     nombre: ['', [Validators.required, Validators.minLength(2)]],
     idCliente: [null]
   });
+
+  constructor (private router: Router) {}
 
   ngOnInit(): void {
     this.esAdmin.set(this.authStore.obtenerRol() === 'admin');
@@ -409,5 +412,9 @@ export class ProyectosComponent implements OnInit {
           console.error(error);
         },
       });
+  }
+
+  abrirTarea(p: any) {
+    this.router.navigate(['proyectos', p.id]);
   }
 }

@@ -38,7 +38,7 @@ let TareaController = class TareaController {
         return this.tareaServicios.create(proyecto_id, crearTarea, req.usuario);
     }
     update(id, actualizarTarea, req) {
-        if (actualizarTarea.estado !== undefined && req.usuario.rol !== 'admin') {
+        if (actualizarTarea.estado === 'BAJA' && req.usuario.rol !== 'admin') {
             throw new common_1.ForbiddenException('No tenés permisos para hacer eso :(');
         }
         return this.tareaServicios.update(id, actualizarTarea, req.usuario);
