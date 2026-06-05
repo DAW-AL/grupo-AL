@@ -17,12 +17,12 @@
                             [class.tachado]="item.estado === 'FINALIZADA'"
                         >{{item.descripcion}}</p>
                     </div>
-                    <div>
+                    <div class="flex-label-button">
                         <p 
                             class="m-0" 
                             [class.finalizado]="item.estado === 'FINALIZADA'"
                             [class.pendiente]="item.estado === 'PENDIENTE'"
-                        >{{item.estado | lowercase}}</p>
+                        >{{item.estado | titlecase}}</p>
                         <app-button-regular 
                             boton="Editar",
                             icono="",
@@ -46,10 +46,10 @@
                         <div>
                             <p>{{item.descripcion}}</p>
                         </div>
-                        <div>
+                        <div class="flex-label-button">
                             <p 
                                 [class.baja]="item.estado === 'BAJA'"
-                            >{{item.estado | lowercase}}</p>
+                            >{{item.estado | titlecase}}</p>
                             <app-button-regular 
                                 boton="Reactivar tarea",
                                 icono="",

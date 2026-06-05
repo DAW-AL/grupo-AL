@@ -1,6 +1,7 @@
 section > * {
     max-width: 1200px;
     margin: auto;
+    font-family: "Montserrat", sans-serif !important;
 }
 
 section > .app-header {
@@ -66,12 +67,14 @@ h4 {
 
 .bienvenida-user > button {
     text-decoration: none;
-    color: white;
+    color: #ffffff;
     background-color: #7c6fcd;
-    padding: 10px;
+    padding: 0.5rem 0.75rem;
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    font-size: 16px !important;
+    font-weight: 500 !important;
 }
 
 .bienvenida-admin, .bienvenida-user {

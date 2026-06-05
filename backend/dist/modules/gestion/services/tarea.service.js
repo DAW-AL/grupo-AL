@@ -21,6 +21,7 @@ const estados_tareas_enum_1 = require("../enums/estados-tareas.enum");
 const proyectos_service_1 = require("./proyectos.service");
 const historial_service_1 = require("../../historial/services/historial.service");
 const historial_cambio_entity_1 = require("../../historial/entities/historial-cambio.entity");
+const estados_proyectos_enum_1 = require("../enums/estados-proyectos.enum");
 let TareaService = class TareaService {
     tareaRepositorio;
     proyectoServices;
@@ -55,6 +56,10 @@ let TareaService = class TareaService {
         return tarea;
     }
     async create(proyecto_id, crearTarea, usuarioActivo) {
+        const proyecto = await this.proyectoServices.obtenerProyecto(proyecto_id);
+        if (proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA) {
+            throw new common_1.BadRequestException('El proyecto asociado a la tarea esta de baja');
+        }
         const nuevaTarea = this.tareaRepositorio.create({
             ...crearTarea,
             estado: estados_tareas_enum_1.Estados_Tareas.PENDIENTE,
@@ -71,6 +76,26 @@ let TareaService = class TareaService {
         return tareaGuardada;
     }
     async update(id, actualizarTarea, usuarioActivo) {
+        const tareaModificar = await this.tareaRepositorio.findOne({
+            where: { id },
+            relations: ['proyecto'],
+        });
+        if (!tareaModificar) {
+            throw new common_1.NotFoundException('La tarea no existe');
+        }
+        if (tareaModificar.proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA) {
+            throw new common_1.BadRequestException('No se puede modificar una tarea cuyo proyecto este de baja');
+        }
+        if (actualizarTarea.estado === estados_tareas_enum_1.Estados_Tareas.BAJA) {
+            if (actualizarTarea.descripcion) {
+                const tareaActualizada = await this.tareaRepositorio.update(id, { descripcion: actualizarTarea.descripcion });
+                if (tareaActualizada.affected === 0) {
+                    throw new common_1.NotFoundException('No se pudo actualizar la tarea');
+                }
+            }
+            const resultado = await this.delete(id, usuarioActivo);
+            return resultado;
+        }
         const tareaActualizada = await this.tareaRepositorio.update(id, actualizarTarea);
         if (tareaActualizada.affected === 0) {
             throw new common_1.NotFoundException('No se pudo actualizar la tarea');
@@ -86,11 +111,17 @@ let TareaService = class TareaService {
         return tarea;
     }
     async reactivarTarea(id, usuarioActivo) {
-        const tarea = await this.tareaRepositorio.findOneBy({ id });
+        const tarea = await this.tareaRepositorio.findOne({
+            where: { id },
+            relations: ['proyecto'],
+        });
         if (!tarea)
             throw new common_1.BadRequestException('Tarea no encontrada');
+        if (tarea.proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA) {
+            throw new common_1.BadRequestException('El proyecto asociado a la tarea esta de baja');
+        }
         if (tarea.estado === estados_tareas_enum_1.Estados_Tareas.PENDIENTE) {
-            throw new common_1.BadRequestException('El cliente aun esta en estado pendiente');
+            throw new common_1.BadRequestException('La tarea aun esta en estado pendiente');
         }
         tarea.estado = estados_tareas_enum_1.Estados_Tareas.PENDIENTE;
         await this.tareaRepositorio.save(tarea);
