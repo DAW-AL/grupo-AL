@@ -43,7 +43,7 @@ export class Login {
         this.loginApiClient.iniciarSesion(nombre, clave).subscribe({
             next: (data)=>{
                 this.authStore.guardarToken(data.accessToken);
-                this.router.navigateByUrl("/proyectos");
+                this.router.navigateByUrl("/inicio");
             },
             error: (err)=>{
                 this.messageService.add({severity: "error", summary: "Ha ocurrido un error al iniciar sesión"})

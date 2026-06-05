@@ -72,7 +72,6 @@ export class TareaController {
     @Body() actualizarTarea: ActualizarTareaDto,
     @Request() req,
   ) {
-
     if (actualizarTarea.estado === 'BAJA' && req.usuario.rol !== 'admin') {
       throw new ForbiddenException('No tenés permisos para hacer eso :(');
     }

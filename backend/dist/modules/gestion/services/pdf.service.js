@@ -29,10 +29,7 @@ let PdfService = class PdfService {
             width: 200,
         });
         doc.moveDown(7);
-        doc
-            .font('Helvetica-Bold')
-            .fontSize(18)
-            .text(titulo, {
+        doc.font('Helvetica-Bold').fontSize(18).text(titulo, {
             align: 'center',
         });
         doc.moveDown(0.5);
@@ -61,23 +58,18 @@ let PdfService = class PdfService {
         });
     }
     agregarResumen(doc, lineas) {
-        doc
-            .font('Helvetica-Bold')
-            .fontSize(13)
-            .text('Resumen general');
+        doc.font('Helvetica-Bold').fontSize(13).text('Resumen general');
         doc.moveDown(0.5);
-        doc
-            .font('Helvetica')
-            .fontSize(11);
+        doc.font('Helvetica').fontSize(11);
         lineas.forEach((linea) => doc.text(linea));
         doc.moveDown(1.5);
     }
     async generarReporteProyectos(proyectos, response) {
         const doc = this.crearDocumento(response, 'Reporte Proyectos.pdf');
         this.agregarEncabezado(doc, 'REPORTE DE PROYECTOS');
-        const activos = proyectos.filter(p => p.estado === estados_proyectos_enum_1.EstadosProyectosEnum.ACTIVO).length;
-        const finalizados = proyectos.filter(p => p.estado === estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO).length;
-        const bajas = proyectos.filter(p => p.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA).length;
+        const activos = proyectos.filter((p) => p.estado === estados_proyectos_enum_1.EstadosProyectosEnum.ACTIVO).length;
+        const finalizados = proyectos.filter((p) => p.estado === estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO).length;
+        const bajas = proyectos.filter((p) => p.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA).length;
         this.agregarResumen(doc, [
             `Total de proyectos: ${proyectos.length}`,
             `Activos: ${activos}`,
@@ -114,22 +106,15 @@ let PdfService = class PdfService {
                 .text('Cliente asociado:', {
                 continued: true,
             });
-            doc
-                .font('Helvetica')
-                .text(` ${proyecto.cliente?.nombre ?? 'Interno'}`);
+            doc.font('Helvetica').text(` ${proyecto.cliente?.nombre ?? 'Interno'}`);
             let colorEstado = '#16a34a';
-            if (proyecto.estado ===
-                estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO) {
+            if (proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO) {
                 colorEstado = '#2563eb';
             }
-            if (proyecto.estado ===
-                estados_proyectos_enum_1.EstadosProyectosEnum.BAJA) {
+            if (proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.BAJA) {
                 colorEstado = '#dc2626';
             }
-            doc
-                .font('Helvetica-Bold')
-                .fillColor('black')
-                .text('Estado:', {
+            doc.font('Helvetica-Bold').fillColor('black').text('Estado:', {
                 continued: true,
             });
             doc
@@ -138,9 +123,7 @@ let PdfService = class PdfService {
                 .text(` ${estadosProyecto[proyecto.estado]}`);
             doc.fillColor('black');
             doc.moveDown(0.5);
-            doc
-                .font('Helvetica-Bold')
-                .text('Tareas:');
+            doc.font('Helvetica-Bold').text('Tareas:');
             doc.moveDown(0.2);
             doc.font('Helvetica');
             if (proyecto.tareas.length === 0) {
@@ -166,8 +149,8 @@ let PdfService = class PdfService {
     async generarReporteClientes(clientes, response) {
         const doc = this.crearDocumento(response, 'Reporte Clientes.pdf');
         this.agregarEncabezado(doc, 'REPORTE DE CLIENTES');
-        const activos = clientes.filter(c => c.estado === estados_clientes_enum_1.EstadosClientesEnum.ACTIVO).length;
-        const bajas = clientes.filter(c => c.estado === estados_clientes_enum_1.EstadosClientesEnum.BAJA).length;
+        const activos = clientes.filter((c) => c.estado === estados_clientes_enum_1.EstadosClientesEnum.ACTIVO).length;
+        const bajas = clientes.filter((c) => c.estado === estados_clientes_enum_1.EstadosClientesEnum.BAJA).length;
         this.agregarResumen(doc, [
             `Total de clientes: ${clientes.length}`,
             `Activos: ${activos}`,
@@ -197,13 +180,8 @@ let PdfService = class PdfService {
                 .text(`Email: ${cliente.email}`);
             doc.text(`Teléfono: ${cliente.telefono}`);
             doc.moveDown(0.5);
-            const colorEstado = cliente.estado === estados_clientes_enum_1.EstadosClientesEnum.BAJA
-                ? '#dc2626'
-                : '#16a34a';
-            doc
-                .font('Helvetica-Bold')
-                .fillColor('black')
-                .text('Estado:', {
+            const colorEstado = cliente.estado === estados_clientes_enum_1.EstadosClientesEnum.BAJA ? '#dc2626' : '#16a34a';
+            doc.font('Helvetica-Bold').fillColor('black').text('Estado:', {
                 continued: true,
             });
             doc

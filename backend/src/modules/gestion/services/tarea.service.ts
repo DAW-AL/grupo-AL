@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tarea } from '../entities/tarea.entity';
@@ -111,15 +115,13 @@ export class TareaService {
     return tarea;
   }
 
-   //AGREGUE ESTA NUEVA FORMA DE DAR DE ALTA UNA TAREA QUE ESTUVO COMO BAJA
+  //AGREGUE ESTA NUEVA FORMA DE DAR DE ALTA UNA TAREA QUE ESTUVO COMO BAJA
   async reactivarTarea(id: number, usuarioActivo: UsuarioActivo) {
     const tarea = await this.tareaRepositorio.findOneBy({ id });
     if (!tarea) throw new BadRequestException('Tarea no encontrada');
 
     if (tarea.estado === Estados_Tareas.PENDIENTE) {
-      throw new BadRequestException(
-        'El cliente aun esta en estado pendiente',
-      );
+      throw new BadRequestException('El cliente aun esta en estado pendiente');
     }
 
     tarea.estado = Estados_Tareas.PENDIENTE;

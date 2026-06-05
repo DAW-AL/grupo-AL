@@ -16,7 +16,12 @@ import {
 } from '@nestjs/common';
 import { CreateProyectoDto } from '../dtos/input/create-proyecto.dto';
 import { UpdateProyectoDto } from '../dtos/input/update-proyecto.dto';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { ListProyectoDTO } from '../dtos/output/list-proyecto.dto';
 import { ProyectoDTO } from '../dtos/output/proyecto.dto';
 import { ProyectosService } from '../services/proyectos.service';
@@ -38,9 +43,7 @@ export class ProyectosController {
   })
   @UseGuards(AuthGuard, RolesGuard)
   @Get('reporte')
-  async generarReporte(
-    @Res() response: Response,
-  ): Promise<void> {
+  async generarReporte(@Res() response: Response): Promise<void> {
     return this.proyectosService.generarReporteProyectos(response);
   }
 
@@ -73,7 +76,7 @@ export class ProyectosController {
   @ApiQuery({
     name: 'estado',
     required: false,
-    enum: EstadosProyectosEnum
+    enum: EstadosProyectosEnum,
   })
   @UseGuards(AuthGuard)
   @Get()

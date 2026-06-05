@@ -10,10 +10,9 @@ export class Cliente {
   @Column()
   nombre!: string;
 
-  //Funcionalidad nueva
   @Column()
   telefono!: string;
-  //Funcionalidad nueva
+
   @Column()
   email!: string;
 

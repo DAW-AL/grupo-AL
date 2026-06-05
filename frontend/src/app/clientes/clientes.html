@@ -140,14 +140,17 @@
     </div>
 
     <div class="form-group">
-      <label class="form-label">Teléfono <span style="color: var(--p-surface-400); font-weight: normal;">(Opcional)</span></label>
+      <label class="form-label">Teléfono <span style="color: var(--p-surface-400); font-weight: normal;"></span></label>
       <input
         pInputText
         [fluid]="true"
-        [invalid]="tieneError('telefono','pattern')"
+        [invalid]="tieneError('telefono','required') || tieneError('telefono','pattern')"
         type="text"
         placeholder="Ej: +541123456789"
         formControlName="telefono" />
+      @if (tieneError('telefono','required')) {
+        <small class="form-error">El teléfono es requerido</small>
+      }
       @if (tieneError('telefono','pattern')) {
         <small class="form-error">Formato inválido. Debe empezar con +54 seguido de 10 u 11 dígitos</small>
       }

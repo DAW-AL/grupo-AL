@@ -40,14 +40,10 @@ export class ClientesController {
   })
   @UseGuards(AuthGuard, RolesGuard)
   @Get('reporte')
-  async generarReporte(
-    @Res() response: Response,
-  ): Promise<void> {
-    return this.clientesService.generarReporteClientes(
-      response,
-    );
+  async generarReporte(@Res() response: Response): Promise<void> {
+    return this.clientesService.generarReporteClientes(response);
   }
-  
+
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Crear un Cliente' })

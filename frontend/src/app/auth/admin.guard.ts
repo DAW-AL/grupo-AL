@@ -8,5 +8,5 @@ export const adminGuard: CanActivateFn = () => {
 
     if (authStore.estaAutenticado() && authStore.obtenerRol() === 'admin') return true;
 
-    return router.createUrlTree(["/proyectos"]);
+    return router.createUrlTree(["/inicio"]);
 };

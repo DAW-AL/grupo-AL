@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Estados_Tareas } from '../../enums/estados-tareas.enum';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CrearTareaDto {
   @IsString()
