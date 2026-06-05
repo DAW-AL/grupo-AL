@@ -3,6 +3,7 @@ import { Login } from './auth/login';
 import { AppLayout } from './layout/app-layout';
 import { authGuard } from './auth/auth.guard';
 import { adminGuard } from './auth/admin.guard';
+import { TareasComponent } from './tareas/tareas';
 
 
 export const routes: Routes = [
@@ -39,6 +40,10 @@ export const routes: Routes = [
         canActivate: [authGuard, adminGuard],
         loadComponent: () =>
           import('./historial/historial').then(m => m.Historial)
+      },
+      {
+        path: 'proyectos/:id',
+        component: TareasComponent
       },
     ]
   },

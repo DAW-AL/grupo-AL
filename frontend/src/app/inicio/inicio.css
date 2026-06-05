@@ -1,3 +1,15 @@
+section > * {
+    max-width: 1200px;
+    margin: auto;
+}
+
+section > .app-header {
+    width: 100% !important;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
 .favoritas, .todas {
     width: 100%;
 }
@@ -25,7 +37,7 @@ h4 {
 }
 
 .action-plan {
-    width: 75%;
+    width: 60%;
 }
 
 .action-list {
@@ -43,9 +55,8 @@ h4 {
   flex-shrink: 0;
 }
 
-.bienvenida {
+.bienvenida-user {
     text-align: center;
-    height: 500px;
 }
 
 .nombreUsuario {
@@ -53,7 +64,7 @@ h4 {
     font-weight: 800;
 }
 
-.bienvenida > button {
+.bienvenida-user > button {
     text-decoration: none;
     color: white;
     background-color: #7c6fcd;
@@ -61,4 +72,90 @@ h4 {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+}
+
+.bienvenida-admin, .bienvenida-user {
+    text-align: center;
+    padding: 10em;
+    background: linear-gradient(to right bottom, white, white, #e0dcfd)
+}
+
+.enfasis {
+    color: #7c6fcd;
+    font-weight: 800;
+    text-decoration: underline;
+}
+
+.tarea-section {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 20px;
+}
+
+.pendiente, .finalizada, .baja {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.pendiente::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgb(15, 90, 161), transparent);
+}
+
+.finalizada::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgb(15, 161, 39), transparent);
+}
+
+.baja::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgb(161, 68, 15), transparent);
+}
+
+.contenedor-tareas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    padding: 5px 0;
+}
+
+.panel-tareas, .graph-wrapper {
+    padding: 4em 0px;
+}
+
+.action-plan-wrapper {
+    padding: 4em 0px;
+}
+
+.anuncio {
+    text-align: center;
+    padding: 20px 60px;
+    line-height: 1.5;
+}
+
+.panel-datos {
+    padding: 4em 0px;
+    background: linear-gradient(to top right, white, white, #e0dcfd)
 }

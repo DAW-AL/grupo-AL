@@ -1,0 +1,9 @@
+<div class="cardwraper" [routerLink]="['/proyectos', proyectoId()]">
+    <p class="card-header">
+            {{estado()}}</p>
+    <div class="card-main">
+        <p class="card-proyecto">{{truncar(proyecto())}}</p>
+        <h5 class="card-title">{{truncar(tarea(), 40)}}</h5>
+    </div>
+    <span class="card-cliente">{{truncar(cliente(), 15)}}</span>
+</div>

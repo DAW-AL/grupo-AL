@@ -73,7 +73,7 @@ export class TareaController {
     @Request() req,
   ) {
 
-    if (actualizarTarea.estado !== undefined && req.usuario.rol !== 'admin') {
+    if (actualizarTarea.estado === 'BAJA' && req.usuario.rol !== 'admin') {
       throw new ForbiddenException('No tenés permisos para hacer eso :(');
     }
 

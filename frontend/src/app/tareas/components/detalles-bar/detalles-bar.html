@@ -1,0 +1,11 @@
+<div class="detalle-bar-wrapper">
+    <h4 class="mb-0">{{titulo()}}</h4>
+    <div class="botones">
+        <app-button-action 
+            boton = "Nueva tarea",
+            icono="pi pi-plus",
+            (clicked)="abrirNuevo.emit()"
+        />
+        <i class="bi bi-three-dots-vertical px-3" (click)="showcase()"></i>
+    </div>
+</div>

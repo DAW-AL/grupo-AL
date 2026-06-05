@@ -1,0 +1,14 @@
+.btn {
+    color: rgb(255, 255, 255) !important;
+    background-color: #7c6fcd;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn > i {
+    color: rgb(255, 255, 255) !important;
+    font-size: 10px;
+    margin-right: 5px;
+}

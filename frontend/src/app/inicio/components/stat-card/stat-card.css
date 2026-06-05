@@ -52,3 +52,19 @@
 .tareas > span {
     color: #226d26 !important;
 }
+
+@media screen and (min-width: 1200px) {
+
+    .panel-estadisticas {
+        width: 300px;
+    }
+
+    .card-container > * {
+        font-size: 13px;
+    }
+
+    .card-number {
+        font-size: 26px !important;
+    }
+
+}

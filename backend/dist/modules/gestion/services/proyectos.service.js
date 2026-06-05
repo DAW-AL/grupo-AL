@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProyectosService = void 0;
 const typeorm_1 = require("@nestjs/typeorm");
@@ -232,6 +231,7 @@ exports.ProyectosService = ProyectosService = __decorate([
     __metadata("design:paramtypes", [typeorm_2.Repository,
         clientes_service_1.ClientesService,
         typeorm_2.Repository,
-        historial_service_1.HistorialService, typeof (_a = typeof pdf_service_1.PdfService !== "undefined" && pdf_service_1.PdfService) === "function" ? _a : Object])
+        historial_service_1.HistorialService,
+        pdf_service_1.PdfService])
 ], ProyectosService);
 //# sourceMappingURL=proyectos.service.js.map

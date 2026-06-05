@@ -103,6 +103,12 @@
                       (onClick)="reactivar(p)" />
                   }
 
+                  <p-button
+                    label="Ver tareas"
+                    severity="secondary"
+                    size="small"
+                    [disabled]="!isActivo(p)"
+                    (onClick)="abrirTarea(p)" />
 
                 </div>
               </td>

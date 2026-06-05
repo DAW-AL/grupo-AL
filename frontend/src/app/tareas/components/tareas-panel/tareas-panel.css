@@ -1,0 +1,118 @@
+section > * {
+    font-size: 12px;
+    margin: 30px 20px;
+}
+
+.header {
+    display: flex;
+    color: #5e5e5e;
+}
+
+.header > h4 {
+    margin: 0;
+}
+
+.detalles-list {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #fff !important;
+    border: 1px solid #e2e2e2 !important;
+    margin-bottom: 10px;
+}   
+
+.detalles-list > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn {
+    color: rgb(255, 255, 255) !important;
+    background-color: #7c6fcd;
+}
+
+.btn > i {
+    color: rgb(255, 255, 255) !important;
+}
+
+.botones > i {
+    cursor: pointer;
+}
+
+.btn-editar {
+    background-color: #808080;
+    border: 1px solid gray;
+    color: #7c6fcd !important;
+    font-weight: 500;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul > li {
+    background-color: #c5c5c5;
+    border: 1px solid #808080;
+    border-radius: 10px;
+}
+
+.custom-checkbox {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #7B74D8;
+    cursor: pointer;
+    position: relative;
+}
+
+.custom-checkbox:checked {
+    background-color: #7B74D8;
+}
+
+.custom-checkbox:checked::after {
+    content: "✓";
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pendiente {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.finalizado {
+    background-color: #dcfce7;
+    color: #16a34a;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.baja {
+    background-color: #fee2e2 !important;
+    color: #dc2626 !important;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.tachado {
+    text-decoration: line-through;
+}
+
+.baja-section {
+    color: rgb(177, 41, 41);
+}
+
+.baja-list {
+    background-color: #e7e7e7 !important;
+}
