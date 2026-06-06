@@ -1,12 +1,12 @@
 import { Component, computed, inject, input, output, signal } from '@angular/core';
-import { LowerCasePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ButtonRegular } from "../buttons/button-regular/button-regular";
 import { TareasApiClient } from '../../tareas-api';
 
 @Component({
   selector: 'app-tareas-panel',
   standalone: true,
-  imports: [LowerCasePipe, ButtonRegular],
+  imports: [CommonModule, ButtonRegular],
   templateUrl: './tareas-panel.html',
   styleUrl: './tareas-panel.css',
 })

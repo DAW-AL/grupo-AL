@@ -8,7 +8,9 @@ export declare class TareaController {
     findAll(proyecto_id: number): Promise<import("../entities/tarea.entity").Tarea[]>;
     findOne(id: number): Promise<import("../entities/tarea.entity").Tarea>;
     create(proyecto_id: number, crearTarea: CrearTareaDto, req: any): Promise<import("../entities/tarea.entity").Tarea>;
-    update(id: number, actualizarTarea: ActualizarTareaDto, req: any): Promise<import("../entities/tarea.entity").Tarea>;
+    update(id: number, actualizarTarea: ActualizarTareaDto, req: any): Promise<import("../entities/tarea.entity").Tarea | {
+        message: string;
+    }>;
     reactivarCliente(id: number, req: any): Promise<{
         id: number;
         descripcion: string;

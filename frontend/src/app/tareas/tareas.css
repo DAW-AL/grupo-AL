@@ -1,5 +1,6 @@
 * {
     overflow-x: none;
+    font-family: "Montserrat", sans-serif !important;
 }
 
 section {
@@ -17,6 +18,7 @@ section {
     margin: 20px;
     border-radius: 10px;
     gap: 2px;
+    font-family: "Montserrat", sans-serif !important;
 }
 
 .proyecto > *, .cliente > *, .estado > * {

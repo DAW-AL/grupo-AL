@@ -1,6 +1,7 @@
 section > * {
     font-size: 12px;
     margin: 30px 20px;
+    font-family: "Montserrat", sans-serif !important;
 }
 
 .header {
@@ -25,6 +26,10 @@ section > * {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.flex-label-button {
+    gap: 15px !important;
 }
 
 .btn {
@@ -87,22 +92,28 @@ ul > li {
 .pendiente {
     background-color: #fef3c7;
     color: #92400e;
-    padding: 5px 10px;
-    border-radius: 10px;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
 }
 
 .finalizado {
     background-color: #dcfce7;
     color: #16a34a;
-    padding: 5px 10px;
-    border-radius: 10px;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
 }
 
 .baja {
     background-color: #fee2e2 !important;
     color: #dc2626 !important;
-    padding: 5px 10px;
-    border-radius: 10px;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
 }
 
 .tachado {

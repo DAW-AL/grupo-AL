@@ -18,7 +18,9 @@ export declare class TareaService {
     findAll(proyecto_id: number): Promise<Tarea[]>;
     findOne(id: number): Promise<Tarea>;
     create(proyecto_id: number, crearTarea: CrearTareaDto, usuarioActivo: UsuarioActivo): Promise<Tarea>;
-    update(id: number, actualizarTarea: ActualizarTareaDto, usuarioActivo: UsuarioActivo): Promise<Tarea>;
+    update(id: number, actualizarTarea: ActualizarTareaDto, usuarioActivo: UsuarioActivo): Promise<Tarea | {
+        message: string;
+    }>;
     reactivarTarea(id: number, usuarioActivo: UsuarioActivo): Promise<{
         id: number;
         descripcion: string;
