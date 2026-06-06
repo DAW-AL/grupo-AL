@@ -75,6 +75,7 @@ h4 {
     cursor: pointer;
     font-size: 16px !important;
     font-weight: 500 !important;
+    font-family: "Montserrat", sans-serif;
 }
 
 .bienvenida-admin, .bienvenida-user {
