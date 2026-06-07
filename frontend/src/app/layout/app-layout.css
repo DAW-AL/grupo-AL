@@ -7,7 +7,6 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-/* ===== SIDEBAR ===== */
 
 .sidebar {
   background: #fff;
@@ -29,7 +28,6 @@
   min-width: 52px;
 }
 
-/* ===== HEADER ===== */
 
 .sidebar-header {
   display: flex;
@@ -56,7 +54,6 @@
   display: block;
 }
 
-/* ===== BOTÓN ===== */
 
 .toggle-btn {
   display: flex;
@@ -94,7 +91,6 @@
   padding: 10px 0;
 }
 
-/* ===== NAV ===== */
 
 .sidebar-nav {
   flex: 1;
@@ -160,7 +156,6 @@
   flex-shrink: 0;
 }
 
-/* ===== FOOTER ===== */
 
 .sidebar-footer {
   display: flex;
@@ -230,7 +225,6 @@
   color: #dc2626;
 }
 
-/* ===== MAIN ===== */
 
 .main-content {
   flex: 1;

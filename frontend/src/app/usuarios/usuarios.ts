@@ -83,7 +83,7 @@ abrirEditar(u: Usuario): void {
     this.form.get('clave')?.clearValidators();
     this.form.get('clave')?.updateValueAndValidity();
 
-    // Si el usuario está en baja, desactivamos nombre, clave y rol
+    // Si el usuario está en baja, desac nombre, clave y rol
     if (!this.isActivo(u)) {
       this.form.get('nombre')?.disable();
       this.form.get('clave')?.disable();

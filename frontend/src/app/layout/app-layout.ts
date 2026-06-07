@@ -19,7 +19,7 @@ export class AppLayout {
   fotoUrl = signal<string | null>(null); // NUEVO
 
   constructor() {
-    // NUEVO: cada vez que navegás a cualquier ruta, re-lee la foto del sessionStorage
+    // navegás a cualquier ruta, relee la foto del sessionStorage
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
     ).subscribe(() => {

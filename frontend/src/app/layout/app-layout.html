@@ -2,12 +2,10 @@
   <aside class="sidebar" [class.expandido]="sidebarExpandido()" [class.colapsado]="!sidebarExpandido()">
 
     <div class="sidebar-header">
-      <!-- Logo grande cuando está expandido, pequeño cuando colapsado -->
       <img *ngIf="sidebarExpandido()" src="/logo.svg" alt="Logo" class="sidebar-logo" />
       <img *ngIf="!sidebarExpandido()" src="/logo-small.svg" alt="Logo" class="sidebar-logo-small" />
     </div>
 
-    <!-- Botón toggle debajo del logo, alineado igual que los links del nav -->
  <button
   class="toggle-btn"
   (click)="toggleSidebar()"
