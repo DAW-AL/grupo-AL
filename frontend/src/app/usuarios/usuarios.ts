@@ -16,10 +16,10 @@ import { UsuariosApiClient, Usuario } from './usuarios-api-client';
     CommonModule,
     ReactiveFormsModule,
     ToastModule,
-    ButtonModule,      // p-button
-    PasswordModule,    // p-password
-    SelectModule,      // p-select
-    InputTextModule,   // input 
+    ButtonModule,
+    PasswordModule,
+    SelectModule,
+    InputTextModule,
   ],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css'
@@ -77,11 +77,23 @@ export class Usuarios implements OnInit {
     this.drawerOpen.set(true);
   }
 
-  abrirEditar(u: Usuario): void {
+abrirEditar(u: Usuario): void {
     this.editando.set(u);
     this.form.reset({ nombre: u.nombre, clave: '', rol: u.rol, estado: u.estado });
     this.form.get('clave')?.clearValidators();
     this.form.get('clave')?.updateValueAndValidity();
+
+    // Si el usuario está en baja, desactivamos nombre, clave y rol
+    if (!this.isActivo(u)) {
+      this.form.get('nombre')?.disable();
+      this.form.get('clave')?.disable();
+      this.form.get('rol')?.disable();
+    } else {
+      this.form.get('nombre')?.enable();
+      this.form.get('clave')?.enable();
+      this.form.get('rol')?.enable();
+    }
+
     this.drawerOpen.set(true);
   }
 
@@ -92,13 +104,19 @@ export class Usuarios implements OnInit {
   }
 
   guardar(): void {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     this.guardando.set(true);
     const { nombre, clave, rol, estado } = this.form.value;
 
     const obs = this.editando()
       ? this.api.modificar(this.editando()!.id, {
-          nombre, rol, estado,
+          nombre,
+          rol,
+          estado,
           ...(clave ? { clave } : {})
         })
       : this.api.crear(nombre, clave, rol);
@@ -113,8 +131,14 @@ export class Usuarios implements OnInit {
         this.cerrarDrawer();
         this.cargar();
       },
-      error: () => {
-        this.toast.add({ severity: 'error', summary: 'Error al guardar' });
+      error: (err) => {
+        this.toast.add({
+          severity: 'error',
+          summary: 'Error al guardar',
+          detail: Array.isArray(err.error?.message)
+            ? err.error.message.join(', ')
+            : err.error?.message
+        });
         this.guardando.set(false);
       }
     });

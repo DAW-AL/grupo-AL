@@ -7,7 +7,8 @@ export declare enum EntidadTipoEnum {
 export declare enum AccionTipoEnum {
     CREAR = "crear",
     MODIFICAR = "modificar",
-    ELIMINAR = "eliminar"
+    ELIMINAR = "eliminar",
+    REACTIVAR = "reactivar"
 }
 export declare class HistorialCambio {
     id: number;

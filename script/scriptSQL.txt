@@ -70,7 +70,7 @@ VALUES (
 
 CREATE TYPE entidad_tipo_enum AS ENUM ('proyecto', 'cliente', 'tarea', 'usuario');
 
-CREATE TYPE accion_tipo_enum AS ENUM ('crear', 'modificar', 'eliminar');
+CREATE TYPE accion_tipo_enum AS ENUM ('crear', 'modificar', 'eliminar','reactivar');
 
 CREATE TABLE historial_cambios (
     id SERIAL PRIMARY KEY,

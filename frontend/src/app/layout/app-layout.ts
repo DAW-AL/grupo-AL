@@ -1,36 +1,37 @@
-import { Component, inject } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthStore } from '../auth/auth-store';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
-    CommonModule
-  ],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './app-layout.html',
   styleUrl: './app-layout.css'
 })
 export class AppLayout {
   private readonly authStore = inject(AuthStore);
+  private readonly router = inject(Router);
 
-  get usuarioNombre(): string {
-    return this.authStore.obtenerNombre();
+  sidebarExpandido = signal(true);
+  fotoUrl = signal<string | null>(null); // NUEVO
+
+  constructor() {
+    // NUEVO: cada vez que navegás a cualquier ruta, re-lee la foto del sessionStorage
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.fotoUrl.set(sessionStorage.getItem('fotoPerfilUrl'));
+    });
   }
 
-  get usuarioInicial(): string {
-    return this.usuarioNombre.charAt(0).toUpperCase();
-  }
+  get usuarioNombre(): string { return this.authStore.obtenerNombre(); }
+  get usuarioInicial(): string { return this.usuarioNombre.charAt(0).toUpperCase(); }
+  get esAdmin(): boolean { return this.authStore.obtenerRol() === 'admin'; }
 
-  get esAdmin(): boolean {
-    return this.authStore.obtenerRol() === 'admin';
-  }
-
-  cerrarSesion(): void {
-    this.authStore.cerrarSesion();
-  }
+  toggleSidebar(): void { this.sidebarExpandido.update(v => !v); }
+  cerrarSesion(): void { this.authStore.cerrarSesion(); }
 }
+

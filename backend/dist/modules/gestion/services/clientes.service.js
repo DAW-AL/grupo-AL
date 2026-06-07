@@ -139,7 +139,7 @@ let ClientesService = class ClientesService {
         await this.historialService.registrar({
             entidad: historial_cambio_entity_1.EntidadTipoEnum.CLIENTE,
             entidadId: cliente.id,
-            accion: historial_cambio_entity_1.AccionTipoEnum.MODIFICAR,
+            accion: historial_cambio_entity_1.AccionTipoEnum.REACTIVAR,
             usuarioNombre: usuarioActivo.nombre,
             descripcion: `${usuarioActivo.nombre} reactivó el cliente "${cliente.nombre}"`,
         });

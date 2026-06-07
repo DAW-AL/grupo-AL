@@ -21,21 +21,29 @@
       </thead>
       <tbody>
         <tr *ngFor="let u of usuarios()">
-          <td>{{ u.nombre }}</td>
-          <td><span class="rol-tag">{{ u.rol }}</span></td>
-          <td>
+          <td data-label="Usuario">{{ u.nombre }}</td>
+
+          <td data-label="Rol">
+            <span class="rol-tag">{{ u.rol }}</span>
+          </td>
+
+          <td data-label="Estado">
             <span class="badge" [class.badge-activo]="isActivo(u)" [class.badge-baja]="!isActivo(u)">
               {{ isActivo(u) ? 'Activo' : 'Baja' }}
             </span>
           </td>
-          <td>
-            <p-button
-              label="Editar"
-              severity="secondary"
-              size="small"
-              (onClick)="abrirEditar(u)" />
+
+          <td data-label="Acciones">
+            <div class="actions-cell">
+              <p-button
+                label="Editar"
+                severity="secondary"
+                size="small"
+                (onClick)="abrirEditar(u)" />
+            </div>
           </td>
         </tr>
+
         <tr *ngIf="usuarios().length === 0">
           <td colspan="4" class="empty-state">No hay usuarios registrados.</td>
         </tr>

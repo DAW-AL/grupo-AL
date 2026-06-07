@@ -23,6 +23,7 @@ var AccionTipoEnum;
     AccionTipoEnum["CREAR"] = "crear";
     AccionTipoEnum["MODIFICAR"] = "modificar";
     AccionTipoEnum["ELIMINAR"] = "eliminar";
+    AccionTipoEnum["REACTIVAR"] = "reactivar";
 })(AccionTipoEnum || (exports.AccionTipoEnum = AccionTipoEnum = {}));
 let HistorialCambio = class HistorialCambio {
     id;

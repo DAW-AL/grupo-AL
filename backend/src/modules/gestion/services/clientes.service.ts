@@ -188,7 +188,7 @@ export class ClientesService {
     await this.historialService.registrar({
       entidad: EntidadTipoEnum.CLIENTE,
       entidadId: cliente.id,
-      accion: AccionTipoEnum.MODIFICAR,
+      accion: AccionTipoEnum.REACTIVAR,
       usuarioNombre: usuarioActivo.nombre,
       descripcion: `${usuarioActivo.nombre} reactivó el cliente "${cliente.nombre}"`,
     });
