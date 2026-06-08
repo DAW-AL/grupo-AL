@@ -1,0 +1,54 @@
+<div class="perfil-wrapper">
+  <div class="perfil-card">
+
+    <div class="card-topbar">
+      <button class="btn-volver" (click)="volver()">
+        <i class="pi pi-arrow-left"></i>
+        <span>Volver</span>
+      </button>
+      <button class="btn-logout-icono" (click)="cerrarSesion()" title="Cerrar sesión">
+        <i class="pi pi-sign-out"></i>
+      </button>
+    </div>
+
+    <div class="avatar-contenedor" (click)="abrirSelectorFoto()" title="Cambiar foto">
+      <img *ngIf="fotoUrl()" [src]="fotoUrl()" alt="Foto de perfil" class="avatar-foto" />
+      <div *ngIf="!fotoUrl()" class="avatar-grande">{{ inicial() }}</div>
+      <div class="avatar-overlay">
+        <i class="pi pi-pencil"></i>
+      </div>
+    </div>
+    <input id="inputFoto" type="file" accept="image/*" style="display:none" (change)="cambiarFoto($event)" />
+
+    <h2 class="nombre">{{ nombreUsuario() }}</h2>
+    <p-tag
+      [value]="rolUsuario() === 'admin' ? 'Administrador' : 'Usuario'"
+      [severity]="rolUsuario() === 'admin' ? 'warn' : 'secondary'"
+    />
+
+    <div class="info-lista">
+      <div class="info-fila">
+        <span class="info-label">Nombre</span>
+        <span class="info-valor">{{ nombreUsuario() }}</span>
+      </div>
+      <div class="info-fila">
+        <span class="info-label">Rol</span>
+        <span class="info-valor">{{ rolUsuario() }}</span>
+      </div>
+      <div class="info-fila">
+        <span class="info-label">Estado</span>
+        <span class="info-valor activo">Activo</span>
+      </div>
+    </div>
+
+    <div class="acciones" *ngIf="esAdmin()">
+<p-button
+  label="Editar usuario"
+  icon="pi pi-users"
+  [style]="{'width': '100%'}"
+  (onClick)="irAUsuarios()"
+/>
+    </div>
+
+  </div>
+</div>

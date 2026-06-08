@@ -176,9 +176,9 @@ export class TareaService {
     await this.historialService.registrar({
       entidad: EntidadTipoEnum.TAREA,
       entidadId: tarea.id,
-      accion: AccionTipoEnum.MODIFICAR,
+      accion: AccionTipoEnum.REACTIVAR,
       usuarioNombre: usuarioActivo.nombre,
-      descripcion: `${usuarioActivo.nombre} reactivó la teare "${tarea.descripcion}"`,
+      descripcion: `${usuarioActivo.nombre} reactivó la tarea "${tarea.descripcion}"`,
     });
 
     return {

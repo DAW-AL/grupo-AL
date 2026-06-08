@@ -209,7 +209,7 @@ let ProyectosService = class ProyectosService {
         await this.historialService.registrar({
             entidad: historial_cambio_entity_1.EntidadTipoEnum.PROYECTO,
             entidadId: proyecto.id,
-            accion: historial_cambio_entity_1.AccionTipoEnum.MODIFICAR,
+            accion: historial_cambio_entity_1.AccionTipoEnum.REACTIVAR,
             usuarioNombre: usuarioActivo.nombre,
             descripcion: `${usuarioActivo.nombre} reactivó el proyecto "${proyecto.nombre}"`,
         });

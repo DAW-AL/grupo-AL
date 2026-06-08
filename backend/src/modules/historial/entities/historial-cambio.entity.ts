@@ -18,6 +18,7 @@ export enum AccionTipoEnum {
   CREAR = 'crear',
   MODIFICAR = 'modificar',
   ELIMINAR = 'eliminar',
+  REACTIVAR = 'reactivar',
 }
 
 @Entity('historial_cambios')

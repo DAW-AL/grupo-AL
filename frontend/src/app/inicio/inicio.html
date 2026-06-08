@@ -7,13 +7,13 @@
     />
     @if (esAdmin()) {
         <div class="bienvenida-admin">
-            <h2>¡Bienvenido, <span class="nombreUsuario">{{ nombreUsuario() }}</span>!</h2>
-            <p>Este espacio es exclusivo para <span class="enfasis">vos</span></p>
+            <h2>¡Hola, <span class="nombreUsuario">{{ nombreUsuario() }}</span>!</h2>
+            <p>Este espacio es exclusivo para vos</p>
         </div>
     } @else {
         <div class="bienvenida-user">
-            <h2>¡Bienvenido, <span class="nombreUsuario">{{ nombreUsuario() }}</span>!</h2>
-            <p>Explorá y administrá los proyectos y ayuda a mantener las tareas al día.</p>
+            <h2>¡Hola, <span class="nombreUsuario">{{ nombreUsuario() }}</span>!</h2>
+            <p>Explorá y administrá los proyectos y ayudá a mantener las tareas al día.</p>
             <button routerLink="/proyectos">Ver proyectos</button>
         </div>
     }
@@ -21,13 +21,13 @@
     @if (tareas().length > 0) {
         <div class="panel-tareas">
             <div class="anuncio">
-                <p>Consulta el <span class="enfasis">panel de tareas</span> para mayor visualización de tareas pendientes, finalizadas o de baja. <br> ¡Toma acción y completa tantas tareas como sea posible o prioritario!</p>
+                <p>Consultá el panel de tareas para mayor visualización de tareas pendientes, finalizadas o de baja. <br> ¡Tomá acción y completá tantas tareas como sea posible o prioritario!</p>
             </div>
-            <!-- <h4>Tareas</h4> -->
+            <h4>Tareas</h4>
             <div class="tarea-section">
                 @if (pendientes().length > 0) {
                     <div class="pendiente">
-                        <!-- <h6>Pendientes</h6> -->
+                        <h6>Pendientes</h6>
                         <div class="contenedor-tareas">
                             @for (t of pendientes(); track t.tareaId) {
                                     <app-tarea-card 
@@ -44,7 +44,7 @@
                 }
                 @if (finalizadas().length > 0) {
                     <div class="finalizada">
-                        <!-- <h6>Finalizadas</h6> -->
+                        <h6>Finalizadas</h6>
                         <div class="contenedor-tareas">
                             @for (t of finalizadas(); track t.tareaId) { 
                                 <app-tarea-card 
@@ -61,7 +61,7 @@
                 }
                 @if (bajas().length > 0) {
                     <div class="baja">
-                        <!-- <h6>Baja</h6> -->
+                        <h6>Baja</h6>
                         <div class="contenedor-tareas">
                             @for (t of bajas(); track t.tareaId) {
                                 <app-tarea-card 
@@ -119,7 +119,7 @@
             <div class="graph-wrapper">
                 <!-- <h4>Porcentajes</h4> -->
                 <div class="anuncio">
-                    <p>Consulta la <span class="enfasis">gráfica de porcentajes</span> y obtén datos para estudios generales de factibilidad. <br> ¡Mirá el estado actual de los proyectos, clientes y tareas!</p>
+                    <p>Consultá la gráfica de porcentajes y obtén datos para estudios generales de factibilidad. <br> ¡Mirá el estado actual de los proyectos, clientes y tareas!</p>
                 </div>
                 <div class="graphs">
                     @for (p of porcentajes(); track $index) {

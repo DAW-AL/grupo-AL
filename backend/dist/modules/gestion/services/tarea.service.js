@@ -128,9 +128,9 @@ let TareaService = class TareaService {
         await this.historialService.registrar({
             entidad: historial_cambio_entity_1.EntidadTipoEnum.TAREA,
             entidadId: tarea.id,
-            accion: historial_cambio_entity_1.AccionTipoEnum.MODIFICAR,
+            accion: historial_cambio_entity_1.AccionTipoEnum.REACTIVAR,
             usuarioNombre: usuarioActivo.nombre,
-            descripcion: `${usuarioActivo.nombre} reactivó la teare "${tarea.descripcion}"`,
+            descripcion: `${usuarioActivo.nombre} reactivó la tarea "${tarea.descripcion}"`,
         });
         return {
             id: tarea.id,

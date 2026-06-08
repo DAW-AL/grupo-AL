@@ -1,7 +1,10 @@
-section > * {
-    max-width: 1200px;
-    margin: auto;
-    font-family: "Montserrat", sans-serif !important;
+.bienvenida-admin,
+.bienvenida-user {
+    text-align: center;
+    padding: 10em;
+    background: linear-gradient(to right bottom, white, white, #e0dcfd);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 section > .app-header {
@@ -78,10 +81,13 @@ h4 {
     font-family: "Montserrat", sans-serif;
 }
 
-.bienvenida-admin, .bienvenida-user {
+.bienvenida-admin,
+.bienvenida-user {
     text-align: center;
     padding: 10em;
-    background: linear-gradient(to right bottom, white, white, #e0dcfd)
+    background: linear-gradient(to right bottom, white, white, #e0dcfd);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .enfasis {

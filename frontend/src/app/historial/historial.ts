@@ -11,9 +11,9 @@ import { HistorialApiClient, HistorialCambio } from './historial-api-client';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,   // para p-select
+    FormsModule,
     ToastModule,
-    SelectModule,  // para p-select
+    SelectModule,
   ],
   templateUrl: './historial.html',
   styleUrl: './historial.css'
@@ -25,11 +25,12 @@ export class Historial implements OnInit {
   todos = signal<HistorialCambio[]>([]);
   filtrados = signal<HistorialCambio[]>([]);
   loading = signal(false);
-  filtroEntidad = signal<string | null>(null);
+  filtroEntidad: string = '';
 
   sinResultados = computed(() => this.filtrados().length === 0);
 
   entidadOpciones = [
+    { label: 'Todas', value: '' },
     { label: 'Proyectos', value: 'proyecto' },
     { label: 'Clientes', value: 'cliente' },
     { label: 'Tareas', value: 'tarea' },
@@ -54,14 +55,14 @@ export class Historial implements OnInit {
   }
 
   aplicarFiltro(): void {
-    const entidad = this.filtroEntidad();
+    const entidad = this.filtroEntidad;
     this.filtrados.set(
       entidad ? this.todos().filter(h => h.entidad === entidad) : [...this.todos()]
     );
   }
 
-  onFiltroChange(valor: string | null): void {
-    this.filtroEntidad.set(valor);
+  onFiltroChange(valor: string): void {
+    this.filtroEntidad = valor;
     this.aplicarFiltro();
   }
 
@@ -76,7 +77,8 @@ export class Historial implements OnInit {
     const a = accion?.toLowerCase();
     if (a === 'crear') return 'accion-crear';
     if (a === 'modificar') return 'accion-modificar';
-    if (a === "eliminar") return "accion-baja";
+    if (a === 'eliminar') return 'accion-baja';
+    if (a === 'reactivar') return 'accion-reactivar';
     return '';
   }
 }

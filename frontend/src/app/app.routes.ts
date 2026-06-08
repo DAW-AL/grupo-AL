@@ -52,5 +52,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./auth/login').then(m => m.Login)
   },
+
+  {
+  path: 'perfil',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./perfil/perfil').then(m => m.PerfilComponent)
+},
+
   { path: '**', redirectTo: '/login' }
 ];

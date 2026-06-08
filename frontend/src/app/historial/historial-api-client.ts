@@ -22,7 +22,4 @@ export class HistorialApiClient {
     return this.http.get<HistorialCambio[]>(this.base);
   }
 
-  obtenerPorEntidad(entidad: string, id: number): Observable<HistorialCambio[]> {
-    return this.http.get<HistorialCambio[]>(`${this.base}/${entidad}/${id}`);
-  }
 }

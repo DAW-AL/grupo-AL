@@ -295,7 +295,7 @@ export class ProyectosService {
     await this.historialService.registrar({
       entidad: EntidadTipoEnum.PROYECTO,
       entidadId: proyecto.id,
-      accion: AccionTipoEnum.MODIFICAR,
+      accion: AccionTipoEnum.REACTIVAR,
       usuarioNombre: usuarioActivo.nombre,
       descripcion: `${usuarioActivo.nombre} reactivó el proyecto "${proyecto.nombre}"`,
     });

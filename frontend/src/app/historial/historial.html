@@ -4,14 +4,16 @@
   <div class="page-header">
     <h1 class="page-title">Historial de cambios</h1>
     <div class="header-actions">
-      <p-select
-        [options]="entidadOpciones"
-        optionLabel="label"
-        optionValue="value"
-        [showClear]="true"
-        placeholder="Todas las entidades"
-        [ngModel]="filtroEntidad()"
-        (ngModelChange)="onFiltroChange($event)" />
+      <div class="filter-group">
+        <span>Entidad:</span>
+        <p-select
+          [options]="entidadOpciones"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Todas"
+          [(ngModel)]="filtroEntidad"
+          (ngModelChange)="onFiltroChange($event)" />
+      </div>
     </div>
   </div>
 
@@ -30,11 +32,11 @@
       </thead>
       <tbody>
         <tr *ngFor="let h of filtrados()">
-          <td class="col-fecha">{{ formatFecha(h.fechaCambio) }}</td>
-          <td><span class="entidad-tag">{{ h.entidad }} #{{ h.entidadId }}</span></td>
-          <td><span class="accion-badge" [class]="accionClass(h.accion)">{{ h.accion }}</span></td>
-          <td class="col-usuario">{{ h.usuarioNombre }}</td>
-          <td class="col-desc">{{ h.descripcion }}</td>
+          <td data-label="Fecha" class="col-fecha">{{ formatFecha(h.fechaCambio) }}</td>
+          <td data-label="Entidad"><span class="entidad-tag">{{ h.entidad }} #{{ h.entidadId }}</span></td>
+          <td data-label="Acción"><span class="accion-badge" [class]="accionClass(h.accion)">{{ h.accion }}</span></td>
+          <td data-label="Usuario" class="col-usuario">{{ h.usuarioNombre }}</td>
+          <td data-label="Descripción" class="col-desc">{{ h.descripcion }}</td>
         </tr>
         <tr *ngIf="sinResultados()">
           <td colspan="5" class="empty-state">No hay registros en el historial.</td>

@@ -29,7 +29,6 @@ export class AuthStore {
             return JSON.parse(atob(base64.replace(/-/g, '+').replace(/_/g, '/')));
         } catch {
             // Si el token está malformado o corrupto, devolvemos null
-            // en lugar de romper la aplicación con un error.
             return null;
         }
     }
