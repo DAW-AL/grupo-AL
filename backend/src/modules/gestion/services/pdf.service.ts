@@ -1,6 +1,5 @@
 import { Proyecto } from '../entities/proyecto.entity';
 import { Cliente } from '../entities/cliente.entity';
-import { Usuario } from '../../auth/entities/usuario.entity';
 import { EstadosProyectosEnum } from '../enums/estados-proyectos.enum';
 import { EstadosClientesEnum } from '../enums/estados-clientes.enum';
 import { Injectable } from '@nestjs/common';
@@ -93,7 +92,6 @@ export class PdfService {
     this.agregarEncabezado(doc, 'REPORTE DE PROYECTOS');
 
     // ESTADISTICAS
-
     const activos = proyectos.filter(
       (p) => p.estado === EstadosProyectosEnum.ACTIVO,
     ).length;
@@ -116,7 +114,6 @@ export class PdfService {
     doc.moveDown(1.5);
 
     // TRADUCCIONES
-
     const estadosProyecto = {
       ACTIVO: 'Activo',
       FINALIZADO: 'Finalizado',
@@ -130,7 +127,6 @@ export class PdfService {
     };
 
     // PROYECTOS
-
     let numeroProyecto = 1;
 
     for (const proyecto of proyectos) {
@@ -139,7 +135,6 @@ export class PdfService {
       }
 
       // Título del proyecto
-
       doc
         .font('Helvetica-Bold')
         .fontSize(15)
@@ -151,7 +146,6 @@ export class PdfService {
       doc.moveDown(0.5);
 
       // Cliente
-
       doc
         .font('Helvetica-Bold')
         .fontSize(11)
@@ -163,7 +157,6 @@ export class PdfService {
       doc.font('Helvetica').text(` ${proyecto.cliente?.nombre ?? 'Interno'}`);
 
       // Estado
-
       let colorEstado = '#16a34a';
 
       if (proyecto.estado === EstadosProyectosEnum.FINALIZADO) {
@@ -188,7 +181,6 @@ export class PdfService {
       doc.moveDown(0.5);
 
       // Tareas
-
       doc.font('Helvetica-Bold').text('Tareas:');
 
       doc.moveDown(0.2);
@@ -206,7 +198,6 @@ export class PdfService {
       doc.moveDown(1);
 
       // Línea separadora
-
       doc
         .moveTo(50, doc.y)
         .lineTo(550, doc.y)
@@ -232,7 +223,6 @@ export class PdfService {
     this.agregarEncabezado(doc, 'REPORTE DE CLIENTES');
 
     // ESTADÍSTICAS
-
     const activos = clientes.filter(
       (c) => c.estado === EstadosClientesEnum.ACTIVO,
     ).length;
@@ -250,14 +240,12 @@ export class PdfService {
     doc.moveDown(1.5);
 
     // TRADUCCIONES
-
     const estadosClientes = {
       ACTIVO: 'Activo',
       BAJA: 'Baja',
     };
 
     // CLIENTES
-
     let numeroCliente = 1;
 
     for (const cliente of clientes) {
@@ -266,7 +254,6 @@ export class PdfService {
       }
 
       // TÍTULO DEL CLIENTE
-
       doc
         .font('Helvetica-Bold')
         .fontSize(15)
@@ -278,7 +265,6 @@ export class PdfService {
       doc.moveDown(0.5);
 
       // EMAIL
-
       doc
         .font('Helvetica')
         .fontSize(11)
@@ -286,13 +272,11 @@ export class PdfService {
         .text(`Email: ${cliente.email}`);
 
       // TELÉFONO
-
       doc.text(`Teléfono: ${cliente.telefono}`);
 
       doc.moveDown(0.5);
 
       // ESTADO
-
       const colorEstado =
         cliente.estado === EstadosClientesEnum.BAJA ? '#dc2626' : '#16a34a';
 
@@ -310,7 +294,6 @@ export class PdfService {
       doc.moveDown();
 
       // LÍNEA SEPARADORA
-
       doc
         .moveTo(50, doc.y)
         .lineTo(550, doc.y)
