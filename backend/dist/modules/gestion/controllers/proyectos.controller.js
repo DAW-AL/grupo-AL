@@ -47,8 +47,8 @@ let ProyectosController = class ProyectosController {
     async darBajaProyecto(id, req) {
         return await this.proyectosService.darBajaProyecto(id, req.usuario);
     }
-    async reactivarProyecto(id, Req) {
-        return await this.proyectosService.reactivarProyecto(id, Req.usuario);
+    async reactivarProyecto(id, req) {
+        return await this.proyectosService.reactivarProyecto(id, req.usuario);
     }
 };
 exports.ProyectosController = ProyectosController;

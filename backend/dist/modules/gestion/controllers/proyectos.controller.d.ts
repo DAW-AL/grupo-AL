@@ -16,5 +16,5 @@ export declare class ProyectosController {
     obtenerProyectos(estado?: EstadosProyectosEnum): Promise<ListProyectoDTO[]>;
     obtenerProyecto(id: number): Promise<ProyectoDTO>;
     darBajaProyecto(id: number, req: any): Promise<void>;
-    reactivarProyecto(id: number, Req: any): Promise<void>;
+    reactivarProyecto(id: number, req: any): Promise<void>;
 }
