@@ -30,7 +30,7 @@ export class TareaService {
     private readonly tareaRepositorio: Repository<Tarea>,
 
     private readonly proyectoServices: ProyectosService,
-    private readonly historialService: HistorialService, // ← NUEVO
+    private readonly historialService: HistorialService,
   ) {}
 
   async findAll(proyecto_id: number): Promise<Tarea[]> {
