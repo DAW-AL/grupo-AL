@@ -68,11 +68,12 @@ export class TareaService {
     crearTarea: CrearTareaDto,
     usuarioActivo: UsuarioActivo,
   ): Promise<Tarea> {
-
     const proyecto = await this.proyectoServices.obtenerProyecto(proyecto_id);
-    
+
     if (proyecto.estado === EstadosProyectosEnum.BAJA) {
-        throw new BadRequestException('El proyecto asociado a la tarea esta de baja');
+      throw new BadRequestException(
+        'El proyecto asociado a la tarea esta de baja',
+      );
     }
 
     const nuevaTarea = this.tareaRepositorio.create({
@@ -99,8 +100,7 @@ export class TareaService {
     id: number,
     actualizarTarea: ActualizarTareaDto,
     usuarioActivo: UsuarioActivo,
-  ): Promise<Tarea | {message: string}> {
-
+  ): Promise<Tarea | { message: string }> {
     const tareaModificar = await this.tareaRepositorio.findOne({
       where: { id },
       relations: ['proyecto'],
@@ -111,16 +111,17 @@ export class TareaService {
     }
 
     if (tareaModificar.proyecto.estado === EstadosProyectosEnum.BAJA) {
-      throw new BadRequestException('No se puede modificar una tarea cuyo proyecto este de baja');
+      throw new BadRequestException(
+        'No se puede modificar una tarea cuyo proyecto este de baja',
+      );
     }
 
     //Si viene estado que es baja...
     if (actualizarTarea.estado === Estados_Tareas.BAJA) {
       if (actualizarTarea.descripcion) {
-        const tareaActualizada = await this.tareaRepositorio.update(
-          id,
-          {descripcion: actualizarTarea.descripcion},
-        );
+        const tareaActualizada = await this.tareaRepositorio.update(id, {
+          descripcion: actualizarTarea.descripcion,
+        });
         if (tareaActualizada.affected === 0) {
           throw new NotFoundException('No se pudo actualizar la tarea');
         }
@@ -163,7 +164,9 @@ export class TareaService {
     if (!tarea) throw new BadRequestException('Tarea no encontrada');
 
     if (tarea.proyecto.estado === EstadosProyectosEnum.BAJA) {
-      throw new BadRequestException('El proyecto asociado a la tarea esta de baja');
+      throw new BadRequestException(
+        'El proyecto asociado a la tarea esta de baja',
+      );
     }
 
     if (tarea.estado === Estados_Tareas.PENDIENTE) {

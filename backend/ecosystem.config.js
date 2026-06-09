@@ -9,11 +9,11 @@ module.exports = {
         DB_HOST: 'localhost',
         DB_PORT: 5432,
         DB_USERNAME: 'postgres',
-        DB_PASSWORD: 'micadb',
+        DB_PASSWORD: 'daw2026',
         DB_NAME: 'gestor_de_proyectos',
         DB_LOGGING: 'false',
         SWAGGER_HABILITADO: false,
-        JWT_SECRET: "gtT0zY6&5Sx%7c29x&O4@^@73D&uz^xQ"
+        JWT_SECRET: 'gtT0zY6&5Sx%7c29x&O4@^@73D&uz^xQ',
       },
       time: true,
     },

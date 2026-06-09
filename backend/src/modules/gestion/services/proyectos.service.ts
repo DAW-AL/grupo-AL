@@ -83,7 +83,6 @@ export class ProyectosService {
     dto: UpdateProyectoDto,
     usuarioActivo: UsuarioActivo,
   ): Promise<void> {
-    
     const proyecto: Proyecto | null = await this.repository.findOne({
       where: { id },
       relations: ['cliente'],
@@ -93,10 +92,7 @@ export class ProyectosService {
       throw new BadRequestException('Proyecto no encontrado');
     }
 
-    if (
-      dto.estado &&
-      usuarioActivo.rol !== RolUsuarioEnum.ADMIN
-    ) {
+    if (dto.estado && usuarioActivo.rol !== RolUsuarioEnum.ADMIN) {
       throw new BadRequestException(
         'Solo un administrador puede modificar el estado de un proyecto',
       );
@@ -227,13 +223,12 @@ export class ProyectosService {
     if (proyecto.estado === EstadosProyectosEnum.FINALIZADO)
       throw new BadRequestException('El proyecto se encuentra finalizado');
 
-    const tieneTareasPendientes =
-      await this.tareaRepository.exists({
-        where: {
-          proyecto: { id: proyecto.id },
-          estado: Estados_Tareas.PENDIENTE,
-        },
-      });
+    const tieneTareasPendientes = await this.tareaRepository.exists({
+      where: {
+        proyecto: { id: proyecto.id },
+        estado: Estados_Tareas.PENDIENTE,
+      },
+    });
 
     if (tieneTareasPendientes) {
       throw new BadRequestException(
