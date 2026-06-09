@@ -38,7 +38,6 @@
 .badge-activo { background: #dcfce7; color: #16a34a; }
 .badge-baja   { background: #fee2e2; color: #dc2626; }
 .badge-finalizado { background: #dbeafe; color: #2563eb}
-.badge-interno { background: #f3f4f6; color: #4b5563}
 .actions-cell { display: flex; gap: 6px; }
 .empty-state { text-align: center; color: var(--p-surface-400); padding: 40px 0 !important; font-size: 14px; }
 

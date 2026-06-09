@@ -28,6 +28,7 @@ const tarea_entity_1 = require("../entities/tarea.entity");
 const estados_tareas_enum_1 = require("../enums/estados-tareas.enum");
 const historial_service_1 = require("../../historial/services/historial.service");
 const historial_cambio_entity_1 = require("../../historial/entities/historial-cambio.entity");
+const rol_usuario_enum_1 = require("../../auth/enums/rol-usuario.enum");
 let ProyectosService = class ProyectosService {
     repository;
     clientesService;
@@ -67,6 +68,10 @@ let ProyectosService = class ProyectosService {
         });
         if (!proyecto) {
             throw new common_1.BadRequestException('Proyecto no encontrado');
+        }
+        if (dto.estado &&
+            usuarioActivo.rol !== rol_usuario_enum_1.RolUsuarioEnum.ADMIN) {
+            throw new common_1.BadRequestException('Solo un administrador puede modificar el estado de un proyecto');
         }
         if (dto.idCliente) {
             const clienteActivo = await this.clientesService.existeClienteActivoPorId(dto.idCliente);
@@ -161,6 +166,15 @@ let ProyectosService = class ProyectosService {
             throw new common_1.BadRequestException('El proyecto ya esta dado de baja');
         if (proyecto.estado === estados_proyectos_enum_1.EstadosProyectosEnum.FINALIZADO)
             throw new common_1.BadRequestException('El proyecto se encuentra finalizado');
+        const tieneTareasPendientes = await this.tareaRepository.exists({
+            where: {
+                proyecto: { id: proyecto.id },
+                estado: estados_tareas_enum_1.Estados_Tareas.PENDIENTE,
+            },
+        });
+        if (tieneTareasPendientes) {
+            throw new common_1.BadRequestException('No se puede dar de baja un proyecto con tareas pendientes');
+        }
         proyecto.estado = estados_proyectos_enum_1.EstadosProyectosEnum.BAJA;
         await this.repository.save(proyecto);
         await this.historialService.registrar({

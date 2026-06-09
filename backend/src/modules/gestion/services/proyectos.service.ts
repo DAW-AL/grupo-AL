@@ -24,9 +24,8 @@ import {
   AccionTipoEnum,
   EntidadTipoEnum,
 } from '../../historial/entities/historial-cambio.entity';
-import { error } from 'console';
-import PDFDocument from 'pdfkit';
 import type { Response } from 'express';
+import { RolUsuarioEnum } from '../../auth/enums/rol-usuario.enum';
 
 // la forma del objeto que viene del JWT
 interface UsuarioActivo {
@@ -84,6 +83,7 @@ export class ProyectosService {
     dto: UpdateProyectoDto,
     usuarioActivo: UsuarioActivo,
   ): Promise<void> {
+    
     const proyecto: Proyecto | null = await this.repository.findOne({
       where: { id },
       relations: ['cliente'],
@@ -91,6 +91,15 @@ export class ProyectosService {
 
     if (!proyecto) {
       throw new BadRequestException('Proyecto no encontrado');
+    }
+
+    if (
+      dto.estado &&
+      usuarioActivo.rol !== RolUsuarioEnum.ADMIN
+    ) {
+      throw new BadRequestException(
+        'Solo un administrador puede modificar el estado de un proyecto',
+      );
     }
 
     if (dto.idCliente) {
@@ -218,6 +227,20 @@ export class ProyectosService {
     if (proyecto.estado === EstadosProyectosEnum.FINALIZADO)
       throw new BadRequestException('El proyecto se encuentra finalizado');
 
+    const tieneTareasPendientes =
+      await this.tareaRepository.exists({
+        where: {
+          proyecto: { id: proyecto.id },
+          estado: Estados_Tareas.PENDIENTE,
+        },
+      });
+
+    if (tieneTareasPendientes) {
+      throw new BadRequestException(
+        'No se puede dar de baja un proyecto con tareas pendientes',
+      );
+    }
+
     proyecto.estado = EstadosProyectosEnum.BAJA;
 
     await this.repository.save(proyecto);
@@ -231,8 +254,6 @@ export class ProyectosService {
     });
   }
 
-  /* Funcion para validar cambios de estado en actualizarProyecto */
-  /* Baja desde endpoint DELETE, Finalizar desde endpoint PUT */
   private async validarCambioDeEstado(
     proyecto: Proyecto,
     dto: UpdateProyectoDto,
