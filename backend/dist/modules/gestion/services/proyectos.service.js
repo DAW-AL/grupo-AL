@@ -69,8 +69,7 @@ let ProyectosService = class ProyectosService {
         if (!proyecto) {
             throw new common_1.BadRequestException('Proyecto no encontrado');
         }
-        if (dto.estado &&
-            usuarioActivo.rol !== rol_usuario_enum_1.RolUsuarioEnum.ADMIN) {
+        if (dto.estado && usuarioActivo.rol !== rol_usuario_enum_1.RolUsuarioEnum.ADMIN) {
             throw new common_1.BadRequestException('Solo un administrador puede modificar el estado de un proyecto');
         }
         if (dto.idCliente) {
