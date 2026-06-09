@@ -83,41 +83,46 @@ export class ProyectosService {
     dto: UpdateProyectoDto,
     usuarioActivo: UsuarioActivo,
   ): Promise<void> {
-    
-    const proyecto: Proyecto | null = await this.repository.findOne({
+    const proyecto = await this.repository.findOne({
       where: { id },
       relations: ['cliente'],
     });
 
     if (!proyecto) {
-      throw new BadRequestException('Proyecto no encontrado');
+      throw new NotFoundException('Proyecto no encontrado');
     }
-
+    if (dto.estado && dto.estado !== proyecto.estado) {
+      if (usuarioActivo.rol !== RolUsuarioEnum.ADMIN) {
+        throw new BadRequestException(
+          'Solo un administrador puede cambiar el estado de un proyecto',
+        );
+      }
+      await this.validarCambioDeEstado(proyecto, dto);
+    }
     if (
-      dto.estado &&
-      usuarioActivo.rol !== RolUsuarioEnum.ADMIN
+      dto.idCliente === null ||
+      dto.idCliente === undefined ||
+      (dto.idCliente as any) === ''
     ) {
-      throw new BadRequestException(
-        'Solo un administrador puede modificar el estado de un proyecto',
+      proyecto.idCliente = null as any;
+      proyecto.cliente = null as any;
+    } else {
+      const clienteActivo = await this.clientesService.existeClienteActivoPorId(
+        dto.idCliente,
       );
-    }
-
-    if (dto.idCliente) {
-      const clienteActivo: boolean =
-        await this.clientesService.existeClienteActivoPorId(dto.idCliente);
-
       if (!clienteActivo) {
         throw new BadRequestException(
           'Se debe especificar un cliente activo para el proyecto',
         );
       }
+      proyecto.idCliente = dto.idCliente;
+      proyecto.cliente = null as any;
     }
-
-    await this.validarCambioDeEstado(proyecto, dto);
 
     const nombreAnterior = proyecto.nombre;
 
-    this.repository.merge(proyecto, dto);
+    const { idCliente, ...datosAMergear } = dto;
+    this.repository.merge(proyecto, datosAMergear);
 
     await this.repository.save(proyecto);
 
@@ -129,7 +134,6 @@ export class ProyectosService {
       descripcion: `${usuarioActivo.nombre} modificó el proyecto "${nombreAnterior}"`,
     });
   }
-
   async obtenerProyectos(
     estado?: EstadosProyectosEnum,
   ): Promise<ListProyectoDTO[]> {
@@ -227,13 +231,12 @@ export class ProyectosService {
     if (proyecto.estado === EstadosProyectosEnum.FINALIZADO)
       throw new BadRequestException('El proyecto se encuentra finalizado');
 
-    const tieneTareasPendientes =
-      await this.tareaRepository.exists({
-        where: {
-          proyecto: { id: proyecto.id },
-          estado: Estados_Tareas.PENDIENTE,
-        },
-      });
+    const tieneTareasPendientes = await this.tareaRepository.exists({
+      where: {
+        proyecto: { id: proyecto.id },
+        estado: Estados_Tareas.PENDIENTE,
+      },
+    });
 
     if (tieneTareasPendientes) {
       throw new BadRequestException(

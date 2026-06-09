@@ -88,7 +88,9 @@ let TareaService = class TareaService {
         }
         if (actualizarTarea.estado === estados_tareas_enum_1.Estados_Tareas.BAJA) {
             if (actualizarTarea.descripcion) {
-                const tareaActualizada = await this.tareaRepositorio.update(id, { descripcion: actualizarTarea.descripcion });
+                const tareaActualizada = await this.tareaRepositorio.update(id, {
+                    descripcion: actualizarTarea.descripcion,
+                });
                 if (tareaActualizada.affected === 0) {
                     throw new common_1.NotFoundException('No se pudo actualizar la tarea');
                 }

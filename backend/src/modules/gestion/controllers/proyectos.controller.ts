@@ -113,8 +113,8 @@ export class ProyectosController {
   @Patch(':id/reactivar')
   async reactivarProyecto(
     @Param('id', ParseIntPipe) id: number,
-    @Request() Req,
+    @Request() req,
   ): Promise<void> {
-    return await this.proyectosService.reactivarProyecto(id, Req.usuario);
+    return await this.proyectosService.reactivarProyecto(id, req.usuario);
   }
 }

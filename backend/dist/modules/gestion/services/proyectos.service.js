@@ -67,21 +67,31 @@ let ProyectosService = class ProyectosService {
             relations: ['cliente'],
         });
         if (!proyecto) {
-            throw new common_1.BadRequestException('Proyecto no encontrado');
+            throw new common_1.NotFoundException('Proyecto no encontrado');
         }
-        if (dto.estado &&
-            usuarioActivo.rol !== rol_usuario_enum_1.RolUsuarioEnum.ADMIN) {
-            throw new common_1.BadRequestException('Solo un administrador puede modificar el estado de un proyecto');
+        if (dto.estado && dto.estado !== proyecto.estado) {
+            if (usuarioActivo.rol !== rol_usuario_enum_1.RolUsuarioEnum.ADMIN) {
+                throw new common_1.BadRequestException('Solo un administrador puede cambiar el estado de un proyecto');
+            }
+            await this.validarCambioDeEstado(proyecto, dto);
         }
-        if (dto.idCliente) {
+        if (dto.idCliente === null ||
+            dto.idCliente === undefined ||
+            dto.idCliente === '') {
+            proyecto.idCliente = null;
+            proyecto.cliente = null;
+        }
+        else {
             const clienteActivo = await this.clientesService.existeClienteActivoPorId(dto.idCliente);
             if (!clienteActivo) {
                 throw new common_1.BadRequestException('Se debe especificar un cliente activo para el proyecto');
             }
+            proyecto.idCliente = dto.idCliente;
+            proyecto.cliente = null;
         }
-        await this.validarCambioDeEstado(proyecto, dto);
         const nombreAnterior = proyecto.nombre;
-        this.repository.merge(proyecto, dto);
+        const { idCliente, ...datosAMergear } = dto;
+        this.repository.merge(proyecto, datosAMergear);
         await this.repository.save(proyecto);
         await this.historialService.registrar({
             entidad: historial_cambio_entity_1.EntidadTipoEnum.PROYECTO,
